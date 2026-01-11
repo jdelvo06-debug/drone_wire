@@ -19,6 +19,11 @@ export const metadata: Metadata = {
   authors: [{ name: 'DroneWire' }],
   creator: 'DroneWire',
   publisher: 'DroneWire',
+  alternates: {
+    types: {
+      'application/rss+xml': '/feed.xml',
+    },
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',

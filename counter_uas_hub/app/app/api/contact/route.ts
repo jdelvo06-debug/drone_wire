@@ -1,10 +1,8 @@
-
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/lib/db'
+import { sendContactNotification } from '@/lib/services/email'
 
 export const dynamic = "force-dynamic"
-
-const prisma = new PrismaClient()
 
 export async function POST(req: NextRequest) {
   try {
@@ -41,11 +39,15 @@ export async function POST(req: NextRequest) {
       }
     })
 
-    // In a real application, you might want to:
-    // 1. Send an email notification to admins
-    // 2. Send a confirmation email to the user
-    // 3. Add to a CRM system
-    // 4. Trigger other workflows
+    // Send email notification to admin (fire and forget)
+    sendContactNotification({
+      name,
+      email,
+      company,
+      subject,
+      message,
+      type,
+    }).catch(console.error)
 
     return NextResponse.json({
       message: 'Message sent successfully!',
@@ -58,15 +60,12 @@ export async function POST(req: NextRequest) {
       { error: 'Internal server error' },
       { status: 500 }
     )
-  } finally {
-    await prisma.$disconnect()
   }
 }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     // This endpoint could be used by admins to fetch contact submissions
-    // For now, we'll return basic stats
     const stats = await prisma.contactSubmission.groupBy({
       by: ['status'],
       _count: {
@@ -87,7 +86,5 @@ export async function GET(req: NextRequest) {
       { error: 'Internal server error' },
       { status: 500 }
     )
-  } finally {
-    await prisma.$disconnect()
   }
 }

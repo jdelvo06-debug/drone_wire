@@ -18,6 +18,28 @@ interface AIProcessingResult {
   category: string;
 }
 
+async function generateEmbedding(text: string): Promise<number[] | null> {
+  // Only generate embeddings if using a provider that supports them
+  // RouteLLM doesn't support embeddings, so skip for now
+  // To enable: set OPENAI_API_KEY and update this function to use OpenAI directly
+  if (!process.env.OPENAI_API_KEY) {
+    return null;
+  }
+
+  try {
+    const OpenAI = (await import('openai')).default;
+    const openaiDirect = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const response = await openaiDirect.embeddings.create({
+      model: 'text-embedding-3-small',
+      input: text.slice(0, 8000),
+    });
+    return response.data[0]?.embedding || null;
+  } catch (error) {
+    console.error('Embedding generation error:', error);
+    return null;
+  }
+}
+
 const SYSTEM_PROMPT = `You are an expert defense analyst specializing in counter-UAS (Unmanned Aerial Systems) technology, drone warfare, and military defense systems. Your task is to analyze news articles and provide structured intelligence summaries.
 
 When analyzing articles, focus on:
@@ -119,6 +141,10 @@ Confidence score (0-1) reflects how well this article fits the counter-UAS/drone
     return false;
   }
 
+  // Generate embedding for similarity search
+  const embeddingText = `${article.title}. ${result.aiSummary}. ${result.keyPoints.join('. ')}`;
+  const embedding = await generateEmbedding(embeddingText);
+
   // Update article with AI-generated content
   await prisma.article.update({
     where: { id: articleId },
@@ -131,6 +157,7 @@ Confidence score (0-1) reflects how well this article fits the counter-UAS/drone
       confidence: result.confidence,
       category: result.category || article.category,
       status: 'published',
+      ...(embedding && { embedding }),
     },
   });
 

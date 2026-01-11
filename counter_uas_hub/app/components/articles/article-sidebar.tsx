@@ -15,25 +15,19 @@ interface Article {
   tags: string[]
 }
 
-interface ArticleSidebarProps {
-  article: Article
+interface RelatedArticle {
+  id: string
+  title: string
+  excerpt?: string | null
+  imageUrl?: string | null
+  publishedAt?: Date | null
+  category: string
 }
 
-// Mock related articles and explainers
-const relatedArticles = [
-  {
-    id: '2',
-    title: 'Israel Deploys Advanced Laser System Against Gaza Drone Swarms',
-    category: 'drone-warfare',
-    readTime: 6,
-  },
-  {
-    id: '3',
-    title: 'Raytheon Wins $450M Navy Contract for Ship-Based C-UAS',
-    category: 'contracts',
-    readTime: 4,
-  },
-]
+interface ArticleSidebarProps {
+  article: Article
+  relatedArticles?: RelatedArticle[]
+}
 
 const relatedExplainers = [
   {
@@ -58,7 +52,7 @@ const trendingTopics = [
   { name: 'AI Defense', count: 19 },
 ]
 
-export default function ArticleSidebar({ article }: ArticleSidebarProps) {
+export default function ArticleSidebar({ article, relatedArticles = [] }: ArticleSidebarProps) {
   const handleShare = async () => {
     if (navigator.share) {
       try {
@@ -90,39 +84,36 @@ export default function ArticleSidebar({ article }: ArticleSidebarProps) {
       <NewsletterSignup />
 
       {/* Related Articles */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center">
-            <TrendingUp className="w-5 h-5 mr-2 text-primary" />
-            Related Articles
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-4">
-          {relatedArticles.map((relatedArticle) => (
-            <Link key={relatedArticle.id} href={`/articles/${relatedArticle.id}`}>
-              <div className="group p-3 rounded-lg border border-border/50 hover:border-primary/20 hover:bg-muted/30 transition-all cursor-pointer">
-                <h4 className="font-medium text-sm text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-2">
-                  {relatedArticle.title}
-                </h4>
-                <div className="flex items-center justify-between">
+      {relatedArticles.length > 0 && (
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg flex items-center">
+              <TrendingUp className="w-5 h-5 mr-2 text-primary" />
+              Related Articles
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0 space-y-4">
+            {relatedArticles.map((relatedArticle) => (
+              <Link key={relatedArticle.id} href={`/articles/${relatedArticle.id}`}>
+                <div className="group p-3 rounded-lg border border-border/50 hover:border-primary/20 hover:bg-muted/30 transition-all cursor-pointer">
+                  <h4 className="font-medium text-sm text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-2">
+                    {relatedArticle.title}
+                  </h4>
                   <Badge variant="outline" className="text-xs">
                     {relatedArticle.category.replace('-', ' ')}
                   </Badge>
-                  <span className="text-xs text-muted-foreground">
-                    {relatedArticle.readTime}m read
-                  </span>
                 </div>
-              </div>
+              </Link>
+            ))}
+            <Link href="/articles">
+              <Button variant="ghost" size="sm" className="w-full">
+                <ArrowRight className="w-4 h-4 mr-2" />
+                More Articles
+              </Button>
             </Link>
-          ))}
-          <Link href="/articles">
-            <Button variant="ghost" size="sm" className="w-full">
-              <ArrowRight className="w-4 h-4 mr-2" />
-              More Articles
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Related Explainers */}
       <Card>

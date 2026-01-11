@@ -1,10 +1,9 @@
 
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/lib/db'
+import { sendWelcomeEmail } from '@/lib/services/email'
 
 export const dynamic = "force-dynamic"
-
-const prisma = new PrismaClient()
 
 export async function POST(req: NextRequest) {
   try {
@@ -40,7 +39,10 @@ export async function POST(req: NextRequest) {
             subscriptionDate: new Date(),
           }
         })
-        
+
+        // Send welcome email (fire and forget)
+        sendWelcomeEmail(email, firstName).catch(console.error)
+
         return NextResponse.json({
           message: 'Successfully resubscribed!',
           subscriber: {
@@ -62,6 +64,9 @@ export async function POST(req: NextRequest) {
       }
     })
 
+    // Send welcome email (fire and forget)
+    sendWelcomeEmail(email, firstName).catch(console.error)
+
     return NextResponse.json({
       message: 'Successfully subscribed!',
       subscriber: {
@@ -76,7 +81,5 @@ export async function POST(req: NextRequest) {
       { error: 'Internal server error' },
       { status: 500 }
     )
-  } finally {
-    await prisma.$disconnect()
   }
 }

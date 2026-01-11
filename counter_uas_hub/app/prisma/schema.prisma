@@ -24,12 +24,15 @@ model Article {
   category    String   @default("general") // drone-warfare, counter-uas, contracts, policy
   status      String   @default("published") // published, draft, archived
   views       Int      @default(0)
-  
+  readTime    Int?     // estimated read time in minutes
+
   // AI-generated content
   aiSummary      String?
   whyItMatters   String?
   keyPoints      String[] // Array of key takeaways
   confidence     Float?   // AI confidence score 0-1
+  embedding      Float[]  // Vector embedding for similarity search
+  alertSent      Boolean  @default(false) // Whether alert was sent for this article
   
   // Relations
   tags           ArticleTag[]
@@ -178,19 +181,28 @@ model NewsletterSubscriber {
   subscriptionDate DateTime @default(now())
   status          String   @default("active") // active, unsubscribed, bounced
   source          String   @default("website") // website, referral, etc.
-  
+
+  // Alert preferences
+  alertsEnabled   Boolean  @default(true) // Receive breaking news alerts
+  alertCategories String[] // Categories to receive alerts for (empty = all)
+  alertFrequency  String   @default("instant") // instant, daily, weekly
+  minConfidence   Float    @default(0.8) // Minimum AI confidence for alerts
+  lastAlertSent   DateTime?
+
   // Engagement tracking
   lastEmailSent   DateTime?
   lastEmailOpened DateTime?
   emailsReceived  Int      @default(0)
   emailsOpened    Int      @default(0)
-  
+  alertsReceived  Int      @default(0)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("newsletter_subscribers")
   @@index([status])
   @@index([subscriptionDate])
+  @@index([alertsEnabled])
 }
 
 model RssFeed {
