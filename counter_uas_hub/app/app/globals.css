@@ -1,0 +1,147 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-inter;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/20 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/30;
+  }
+}
+
+@layer components {
+  /* Custom military/tech themed components */
+  .military-card {
+    @apply bg-card border border-border/50 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:bg-card/80;
+  }
+  
+  .tech-gradient {
+    @apply bg-gradient-to-r from-blue-600 via-blue-700 to-slate-800;
+  }
+  
+  .danger-gradient {
+    @apply bg-gradient-to-r from-red-600 via-red-700 to-orange-600;
+  }
+  
+  .success-gradient {
+    @apply bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600;
+  }
+  
+  .hero-text {
+    @apply text-4xl lg:text-6xl xl:text-7xl font-bold leading-tight;
+    background: linear-gradient(135deg, #3B82F6, #1E40AF, #1E293B);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .article-card {
+    @apply military-card p-6 hover:border-primary/20 cursor-pointer;
+  }
+  
+  .tag-pill {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20;
+  }
+  
+  .nav-link {
+    @apply text-muted-foreground hover:text-foreground transition-colors duration-200 font-medium;
+  }
+  
+  /* Animation classes */
+  .fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+  
+  .stagger-children > * {
+    animation: slideUp 0.6s ease-out;
+  }
+  
+  .stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
+  .stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
+  .stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
+  .stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
+  .stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom focus styles for accessibility */
+@layer utilities {
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
+  }
+  
+  .font-inter {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+/* Dark mode improvements */
+html.dark {
+  color-scheme: dark;
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .military-card {
+    @apply border-2;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

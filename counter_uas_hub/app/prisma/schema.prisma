@@ -1,0 +1,235 @@
+// Counter-UAS Knowledge Hub Database Schema
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Article {
+  id          String   @id @default(cuid())
+  title       String
+  content     String?
+  excerpt     String?
+  sourceUrl   String?
+  sourceName  String
+  publishedAt DateTime
+  scrapedAt   DateTime @default(now())
+  imageUrl    String?
+  category    String   @default("general") // drone-warfare, counter-uas, contracts, policy
+  status      String   @default("published") // published, draft, archived
+  views       Int      @default(0)
+  
+  // AI-generated content
+  aiSummary      String?
+  whyItMatters   String?
+  keyPoints      String[] // Array of key takeaways
+  confidence     Float?   // AI confidence score 0-1
+  
+  // Relations
+  tags           ArticleTag[]
+  relatedArticles ArticleRelation[] @relation("MainArticle")
+  relatedFrom     ArticleRelation[] @relation("RelatedArticle")
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("articles")
+  @@index([category])
+  @@index([publishedAt])
+  @@index([sourceName])
+}
+
+model Tag {
+  id       String @id @default(cuid())
+  name     String @unique
+  slug     String @unique
+  category String @default("general") // technology, company, country, system-type
+  color    String @default("#3B82F6") // Hex color for UI
+  
+  articles ArticleTag[]
+  explainers ExplainerTag[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("tags")
+  @@index([category])
+}
+
+model ArticleTag {
+  id        String @id @default(cuid())
+  articleId String
+  tagId     String
+  
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  
+  @@unique([articleId, tagId])
+  @@map("article_tags")
+}
+
+model ArticleRelation {
+  id              String @id @default(cuid())
+  mainArticleId   String
+  relatedArticleId String
+  relationshipType String @default("related") // related, follow-up, background
+  
+  mainArticle    Article @relation("MainArticle", fields: [mainArticleId], references: [id], onDelete: Cascade)
+  relatedArticle Article @relation("RelatedArticle", fields: [relatedArticleId], references: [id], onDelete: Cascade)
+  
+  @@unique([mainArticleId, relatedArticleId])
+  @@map("article_relations")
+}
+
+model Explainer {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String
+  content     String   // Rich content with sections
+  imageUrl    String?
+  category    String   // systems, threats, countermeasures, policy
+  difficulty  String   @default("beginner") // beginner, intermediate, advanced
+  readTime    Int      @default(5) // estimated minutes
+  views       Int      @default(0)
+  featured    Boolean  @default(false)
+  
+  // Structured content fields
+  whatItIs       String?
+  howItWorks     String?
+  keyFeatures    String[]
+  advantages     String[]
+  disadvantages  String[]
+  realWorldUse   String?
+  relatedSystems String[]
+  
+  tags       ExplainerTag[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("explainers")
+  @@index([category])
+  @@index([featured])
+}
+
+model ExplainerTag {
+  id          String @id @default(cuid())
+  explainerId String
+  tagId       String
+  
+  explainer Explainer @relation(fields: [explainerId], references: [id], onDelete: Cascade)
+  tag       Tag       @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  
+  @@unique([explainerId, tagId])
+  @@map("explainer_tags")
+}
+
+model Contract {
+  id              String   @id @default(cuid())
+  contractNumber  String?  @unique
+  title           String
+  description     String?
+  awardDate       DateTime
+  company         String
+  contractorType  String   @default("prime") // prime, subcontractor
+  value           Decimal  @db.Decimal(12,2)
+  currency        String   @default("USD")
+  duration        Int?     // months
+  status          String   @default("active") // active, completed, terminated
+  category        String   // counter-uas, surveillance, research, training
+  
+  // Government details
+  agency          String   // DOD, DHS, etc.
+  office          String?  // specific office/division
+  location        String?  // primary performance location
+  
+  // Additional details
+  keyPersonnel    String[] // Key personnel if available
+  relatedSystems  String[] // Related systems/technologies
+  
+  sourceUrl    String?
+  scrapedAt    DateTime @default(now())
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("contracts")
+  @@index([awardDate])
+  @@index([company])
+  @@index([category])
+  @@index([agency])
+}
+
+model NewsletterSubscriber {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  firstName       String?
+  lastName        String?
+  company         String?
+  jobTitle        String?
+  interests       String[] // Array of interest categories
+  subscriptionDate DateTime @default(now())
+  status          String   @default("active") // active, unsubscribed, bounced
+  source          String   @default("website") // website, referral, etc.
+  
+  // Engagement tracking
+  lastEmailSent   DateTime?
+  lastEmailOpened DateTime?
+  emailsReceived  Int      @default(0)
+  emailsOpened    Int      @default(0)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("newsletter_subscribers")
+  @@index([status])
+  @@index([subscriptionDate])
+}
+
+model RssFeed {
+  id          String   @id @default(cuid())
+  name        String
+  url         String   @unique
+  category    String   // defense-news, contracts, industry
+  isActive    Boolean  @default(true)
+  lastChecked DateTime?
+  lastSuccess DateTime?
+  errorCount  Int      @default(0)
+  
+  // Feed metadata
+  description String?
+  language    String   @default("en")
+  updateFreq  String?  // daily, weekly, etc.
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("rss_feeds")
+  @@index([isActive])
+  @@index([lastChecked])
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  company   String?
+  subject   String
+  message   String
+  type      String   @default("general") // general, press, partnership, tip
+  status    String   @default("new") // new, reviewing, responded, closed
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("contact_submissions")
+  @@index([status])
+  @@index([createdAt])
+}

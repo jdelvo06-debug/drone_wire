@@ -1,0 +1,100 @@
+[
+  {
+    "title": "Russian Drones Violate Polish Airspace in Historic NATO Response",
+    "excerpt": "Russian drones entered Polish airspace during a large-scale assault on Ukraine on September 9-10, 2025, marking the first time NATO forces fired shots in response to Russian actions since the 2022 invasion. Poland shot down several drones with support from NATO allies.",
+    "date": "September 10, 2025",
+    "source": "Reuters",
+    "category": "drone-warfare",
+    "tags": [
+      "NATO",
+      "Poland",
+      "Russia",
+      "Ukraine",
+      "airspace-violation",
+      "international-incident"
+    ],
+    "url": "https://www.reuters.com/business/aerospace-defense/poland-downs-drones-its-airspace-becoming-first-nato-member-fire-during-war-2025-09-10/",
+    "why_matters": "This incident represents a significant escalation in the Russia-Ukraine conflict, marking the first direct NATO military engagement with Russian forces since 2022. It demonstrates how drone warfare can rapidly expand conflicts beyond intended borders and test alliance commitments."
+  },
+  {
+    "title": "DroneShield Expands US R&D Operations for Counter-UAS Technology",
+    "excerpt": "DroneShield announced a significant expansion of its U.S.-based research and development operations on September 22, 2025, aiming to double its workforce and enhance AI and machine learning capabilities for improved drone detection and neutralization.",
+    "date": "September 22, 2025",
+    "source": "DroneLife",
+    "category": "counter-uas",
+    "tags": [
+      "DroneShield",
+      "R&D",
+      "AI",
+      "machine-learning",
+      "detection",
+      "neutralization"
+    ],
+    "url": "https://dronelife.com/2025/09/22/droneshield-announces-new-us-research-and-development-expansion/",
+    "why_matters": "This expansion reflects the growing demand for sophisticated counter-drone solutions as threats become more complex. The focus on AI and ML integration represents the next generation of C-UAS technology that can adapt to evolving drone threats in real-time."
+  },
+  {
+    "title": "US Navy Awards Major Drone Contracts to Five Defense Giants",
+    "excerpt": "The U.S. Navy contracted Anduril, Northrop Grumman, Boeing, General Atomics, and Lockheed Martin on September 5, 2025, for the development of Collaborative Combat Aircraft (CCA) - autonomous carrier-based drones designed to augment manned aircraft operations.",
+    "date": "September 5, 2025",
+    "source": "Navy Times",
+    "category": "contracts",
+    "tags": [
+      "US-Navy",
+      "CCA",
+      "autonomous-drones",
+      "carrier-based",
+      "defense-contracts"
+    ],
+    "url": "https://www.navytimes.com/newsletters/2025/09/10/navy-awards-drone-contracts-to-the-big-five-defense-contractors/",
+    "why_matters": "These contracts represent a major shift toward autonomous naval warfare capabilities. The development of carrier-based autonomous drones will significantly enhance naval strike capabilities while reducing risk to human pilots in contested environments."
+  },
+  {
+    "title": "Sentrycs Wins Army Innovation Award for Breakthrough C-UAS Technology",
+    "excerpt": "Sentrycs was awarded the 2025 Army Technology Innovation Award on September 17, 2025, for its Cyber over RF (CoRF) system that uses protocol-level analysis to provide detailed intelligence on drone threats, including serial numbers and operator locations.",
+    "date": "September 17, 2025",
+    "source": "Sentrycs",
+    "category": "counter-uas",
+    "tags": [
+      "Sentrycs",
+      "Army-award",
+      "CoRF-system",
+      "drone-intelligence",
+      "protocol-analysis"
+    ],
+    "url": "https://sentrycs.com/news/sentrycs-wins-the-2025-army-technology-innovation-award-for-groundbreaking-counter-uas-technology/",
+    "why_matters": "This award highlights the importance of intelligence-gathering in counter-drone operations. The ability to identify drone operators and track flight patterns represents a significant advancement in attribution and response capabilities for military and security forces."
+  },
+  {
+    "title": "Ukraine Destroys Russian Aircraft in Historic Crimea Drone Strike",
+    "excerpt": "Ukrainian military intelligence used drones to destroy two Russian Be-12 amphibious aircraft and an Mi-8 helicopter in occupied Crimea on September 22, 2025, marking the first successful strike on the Be-12 model and demonstrating Ukraine's growing deep-strike capabilities.",
+    "date": "September 22, 2025",
+    "source": "UPI",
+    "category": "drone-warfare",
+    "tags": [
+      "Ukraine",
+      "Crimea",
+      "deep-strike",
+      "Be-12",
+      "military-intelligence"
+    ],
+    "url": "https://www.upi.com/Top_News/World-News/2025/09/22/ukraine-Russia-drone-amphibious-aircraft/9731758540159/",
+    "why_matters": "This strike demonstrates Ukraine's evolving drone warfare capabilities and ability to conduct precision strikes deep in Russian-controlled territory. It shows how smaller nations can use drone technology to level the playing field against larger military powers."
+  },
+  {
+    "title": "US Commerce Department Prepares Chinese Drone Import Restrictions",
+    "excerpt": "The U.S. Commerce Department is expected to issue new rules in September 2025 restricting imports of Chinese-made drones, particularly targeting companies like DJI, as part of ongoing national security efforts to address data privacy and supply chain concerns.",
+    "date": "September 2025",
+    "source": "UAV Coach",
+    "category": "policy",
+    "tags": [
+      "Commerce-Department",
+      "Chinese-drones",
+      "DJI",
+      "import-restrictions",
+      "national-security"
+    ],
+    "url": "https://uavcoach.com/dji-ban/",
+    "why_matters": "These restrictions could fundamentally reshape the consumer and commercial drone market in the US, forcing users to seek alternatives while addressing legitimate security concerns about data collection and foreign influence in critical infrastructure."
+  }
+]
