@@ -1,5 +1,4 @@
 import { prisma } from '@/lib/db';
-import { isRelevantContract } from '@/lib/constants/rss-feeds';
 import { Decimal } from '@prisma/client/runtime/library';
 
 // SAM.gov Opportunities API (Contract Awards API is suspended)
@@ -182,12 +181,13 @@ function parseContractFromSamGov(item: SamGovOpportunity): ParsedContract | null
   const company = item.award?.awardee?.name || 'TBD';
   const agency = item.department || item.subTier || 'Department of Defense';
 
-  const combinedText = `${title} ${description} ${company} ${agency}`;
-
-  // Check if relevant to counter-UAS/defense
-  if (!isRelevantContract(combinedText)) {
+  // Since we search by title for relevant terms, all results are relevant
+  // Skip only if no title
+  if (!title) {
     return null;
   }
+
+  const combinedText = `${title} ${description} ${company} ${agency}`;
 
   // Parse award amount (can be string like "$1,000,000")
   let value = 0;
@@ -229,36 +229,54 @@ export async function scrapeContracts(): Promise<ContractScrapingResult> {
   try {
     console.log('Fetching DoD contract opportunities from SAM.gov API...');
 
-    // Get opportunities from the last 30 days
+    // Get opportunities from the last 6 months (API has 1-year max range)
     const toDate = new Date();
     const fromDate = new Date();
-    fromDate.setDate(fromDate.getDate() - 30);
+    fromDate.setMonth(fromDate.getMonth() - 6);
 
     const formatDate = (d: Date) =>
       `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}/${d.getFullYear()}`;
 
-    // Search for Award Notices (ptype=a) related to defense
-    const params = new URLSearchParams({
-      api_key: SAM_GOV_API_KEY,
-      postedFrom: formatDate(fromDate),
-      postedTo: formatDate(toDate),
-      ptype: 'a', // Award notices
-      limit: '100',
-    });
+    // Search terms for drone/counter-UAS contracts
+    const searchTerms = ['drone', 'UAS', 'counter-uas', 'unmanned', 'anti-drone'];
+    const allContracts: SamGovOpportunity[] = [];
+    const seenIds = new Set<string>();
 
-    const response = await fetch(`${SAM_GOV_API_URL}?${params.toString()}`, {
-      headers: {
-        'Accept': 'application/json',
-      },
-    });
+    for (const term of searchTerms) {
+      try {
+        const params = new URLSearchParams({
+          api_key: SAM_GOV_API_KEY,
+          postedFrom: formatDate(fromDate),
+          postedTo: formatDate(toDate),
+          title: term,
+          limit: '100',
+        });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`SAM.gov API error (${response.status}): ${errorText}`);
+        const response = await fetch(`${SAM_GOV_API_URL}?${params.toString()}`, {
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json() as { opportunitiesData?: SamGovOpportunity[] };
+          const opportunities = data.opportunitiesData || [];
+
+          // Deduplicate by noticeId
+          for (const opp of opportunities) {
+            if (opp.noticeId && !seenIds.has(opp.noticeId)) {
+              seenIds.add(opp.noticeId);
+              allContracts.push(opp);
+            }
+          }
+          console.log(`Found ${opportunities.length} opportunities for "${term}"`);
+        }
+      } catch (err) {
+        console.error(`Error searching for "${term}":`, err);
+      }
     }
 
-    const data = await response.json() as { opportunitiesData?: SamGovOpportunity[] };
-    const contracts = data.opportunitiesData || [];
+    const contracts = allContracts;
 
     console.log(`Found ${contracts.length} DoD contracts from SAM.gov`);
 
