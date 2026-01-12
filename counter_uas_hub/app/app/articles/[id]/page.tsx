@@ -1,6 +1,8 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/db'
+
+export const dynamic = 'force-dynamic'
 import ArticleContent from '@/components/articles/article-content'
 import ArticleSidebar from '@/components/articles/article-sidebar'
 

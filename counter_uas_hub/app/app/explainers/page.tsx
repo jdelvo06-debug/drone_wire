@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+
+export const dynamic = 'force-dynamic'
 import Image from 'next/image'
 import { Clock, ArrowRight, Users, BookOpen } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'

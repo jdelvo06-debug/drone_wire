@@ -8,6 +8,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { prisma } from '@/lib/db'
+
+export const dynamic = 'force-dynamic'
 import ReactMarkdown from 'react-markdown'
 
 interface ExplainerPageProps {
