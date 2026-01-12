@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 DroneWire is a Next.js 14 web application serving as an AI-curated intelligence hub for drone warfare, counter-UAS technology, defense contracts, and related policy. The main application code lives in `/counter_uas_hub/app/`.
 
+**Live Site:** https://drone-wire.vercel.app
+
 ## Commands
 
 All commands should be run from the `/counter_uas_hub/app/` directory:
@@ -29,23 +31,45 @@ npx prisma generate    # Regenerate Prisma client after schema changes
 npx prisma db push     # Push schema changes to database
 npx prisma studio      # Open database GUI
 
-# Manually trigger scraping (for testing)
+# Manually trigger cron jobs (for testing)
 curl http://localhost:3000/api/cron/scrape-news -H "Authorization: Bearer $CRON_SECRET"
 curl http://localhost:3000/api/cron/scrape-contracts -H "Authorization: Bearer $CRON_SECRET"
 curl http://localhost:3000/api/cron/process-ai -H "Authorization: Bearer $CRON_SECRET"
 ```
 
+## Deployment
+
+### Vercel Configuration
+- **Platform:** Vercel (hobby tier)
+- **Node.js Version:** 20.x (specified in `.nvmrc` and `package.json` engines)
+- **Build Command:** `prisma generate && next build`
+- **Cron Jobs:** 2 jobs configured (free tier limit)
+  - `/api/cron/scrape-news` - Daily at 6 AM UTC
+  - `/api/cron/process-ai` - Daily at 8 AM UTC
+
+### Database (Supabase)
+- **Provider:** Supabase PostgreSQL (free tier)
+- **Connection:** Transaction pooler (IPv4 compatible)
+- **Host:** `aws-0-us-west-2.pooler.supabase.com:6543`
+- **Important:** Must use `?pgbouncer=true` for Prisma compatibility
+
+### Environment Variables (Vercel)
+- `DATABASE_URL` - Supabase pooler connection string
+- `ABACUSAI_API_KEY` - AI processing key
+- `ROUTELLM_API_KEY` - Alternative AI routing key
+- `CRON_SECRET` - Authentication for cron endpoints
+
 ## Architecture
 
 ### Tech Stack
-- **Framework:** Next.js 14 with App Router and Server Components
+- **Framework:** Next.js 14.2.28 with App Router and Server Components
 - **Language:** TypeScript (strict mode)
-- **Database:** PostgreSQL via Prisma ORM
+- **Database:** PostgreSQL via Prisma ORM (Supabase hosted)
 - **Styling:** Tailwind CSS with dark mode support
 - **UI Components:** Shadcn/UI (49 components in `/components/ui/`)
 - **State Management:** Zustand + Jotai + TanStack Query
 - **Forms:** React Hook Form + Zod validation
-- **Package Manager:** Yarn
+- **AI Processing:** AbacusAI / RouteLLM
 
 ### Directory Structure
 
@@ -53,23 +77,28 @@ curl http://localhost:3000/api/cron/process-ai -H "Authorization: Bearer $CRON_S
 /counter_uas_hub/app/
 ├── /app                    # Next.js App Router
 │   ├── /api
-│   │   ├── /articles      # Articles REST API
+│   │   ├── /articles      # Articles REST API (GET, POST)
 │   │   ├── /contracts     # Contracts REST API
+│   │   ├── /explainers    # Explainers REST API
 │   │   ├── /cron          # Automated scraping endpoints
 │   │   │   ├── /scrape-news
 │   │   │   ├── /scrape-contracts
 │   │   │   └── /process-ai
 │   │   ├── /contact
 │   │   └── /newsletter
-│   ├── /articles          # Article pages
+│   ├── /articles          # Article listing and detail pages
+│   │   └── /[id]          # Dynamic article detail
 │   ├── /explainers        # Educational content pages
+│   │   └── /[slug]        # Dynamic explainer detail
 │   ├── /contracts         # Defense contracts pages
+│   ├── /admin             # Admin dashboard (stats)
+│   ├── /about             # About page
 │   ├── layout.tsx         # Root layout
 │   └── page.tsx           # Home page
 ├── /components
-│   ├── /ui                # Shadcn/UI primitives
+│   ├── /ui                # Shadcn/UI primitives (49 components)
 │   ├── /home              # Home page sections
-│   ├── /layout            # Header, Footer
+│   ├── /layout            # Header, Footer, Navigation
 │   ├── /articles          # Article components
 │   ├── /explainers        # Explainer components
 │   └── /contracts         # Contract components
@@ -78,60 +107,78 @@ curl http://localhost:3000/api/cron/process-ai -H "Authorization: Bearer $CRON_S
 │   ├── /services          # Data pipeline services
 │   │   ├── rss-scraper.ts       # RSS feed scraping
 │   │   ├── content-extractor.ts # Full article extraction
-│   │   ├── ai-processor.ts      # AbacusAI integration
+│   │   ├── ai-processor.ts      # AI summary generation
 │   │   └── contract-scraper.ts  # DoD contracts scraping
 │   ├── /constants
 │   │   └── rss-feeds.ts   # Feed URLs and keywords
 │   ├── db.ts              # Prisma client singleton
 │   └── utils.ts           # Utility functions (cn helper)
 ├── /scripts
-│   └── seed-rss-feeds.ts  # Database seeding script
+│   ├── seed-rss-feeds.ts  # RSS feeds seeding
+│   └── seed-explainers.ts # Explainers seeding
 ├── /prisma
 │   └── schema.prisma      # Database models
-└── vercel.json            # Cron job configuration
+├── vercel.json            # Cron job configuration
+├── .nvmrc                 # Node.js version (20)
+└── package.json           # Dependencies and scripts
 ```
 
 ### Key Data Models (Prisma)
 
 - **Article** - News articles with AI summaries, tags, sources
-- **Explainer** - Educational guides with difficulty levels
-- **Contract** - Government defense contracts
-- **Tag** - Categories for articles/explainers (many-to-many via junction tables)
+- **Explainer** - Educational guides with difficulty levels, categories
+- **Contract** - Government defense contracts (DoD)
+- **Tag** - Categories for articles/explainers (many-to-many)
 - **NewsletterSubscriber** - Email subscriptions
 - **RssFeed** - Content aggregation sources
 
 ### API Routes
 
 **Frontend APIs:**
-- `GET /api/articles` - Paginated articles with filtering
+- `GET /api/articles` - Paginated articles with filtering/search
+- `GET /api/articles/[id]` - Single article detail
 - `GET /api/contracts` - Paginated contracts with sorting
+- `GET /api/explainers` - Paginated explainers with filtering
 - `POST /api/newsletter/subscribe` - Newsletter subscription
 - `POST /api/contact` - Contact form submission
 
-**Cron Endpoints (automated via Vercel):**
+**Cron Endpoints (authenticated via CRON_SECRET):**
 - `GET /api/cron/scrape-news` - Scrape RSS feeds for new articles
 - `GET /api/cron/scrape-contracts` - Scrape DoD contracts
-- `GET /api/cron/process-ai` - Process articles with AbacusAI
+- `GET /api/cron/process-ai` - Generate AI summaries and tags
 
 ## Data Pipeline
 
-The scraping pipeline runs automatically:
-1. **scrape-news** (every 4 hours) - Fetches RSS feeds, filters by counter-UAS keywords, stores articles
-2. **scrape-contracts** (daily at 6 AM) - Fetches DoD contract announcements
-3. **process-ai** (15 min after scraping) - Generates AI summaries, key points, and auto-tags
+The scraping pipeline runs automatically via Vercel cron:
+1. **scrape-news** (6 AM UTC) - Fetches RSS feeds, filters by counter-UAS keywords
+2. **process-ai** (8 AM UTC) - Generates AI summaries, key points, and auto-tags
+
+Manual triggers available for:
+- **scrape-contracts** - DoD contract announcements (trigger manually as needed)
 
 Keywords for filtering are defined in `/lib/constants/rss-feeds.ts`.
 
-## Environment Variables
+## Development Patterns
 
-Required in `.env`:
-- `DATABASE_URL` - PostgreSQL connection string
-- `ABACUSAI_API_KEY` - AbacusAI integration key
-- `CRON_SECRET` - Secret for authenticating cron requests
-
-## Patterns
-
-- Use the `cn()` utility from `/lib/utils.ts` for conditional Tailwind classes
+- Use `cn()` utility from `/lib/utils.ts` for conditional Tailwind classes
 - Prisma client is a singleton exported from `/lib/db.ts`
-- Shadcn components use Radix UI primitives - check existing `/components/ui/` before adding new ones
+- All pages using Prisma must have `export const dynamic = 'force-dynamic'`
+- Shadcn components use Radix UI primitives - check existing `/components/ui/` first
 - Dark/light theming via `next-themes` with `ThemeProvider` wrapper
+
+## Known Issues & Solutions
+
+### Supabase IPv4 Connection
+Supabase free tier requires Transaction pooler for IPv4 networks (like Vercel):
+- Use `pooler.supabase.com:6543` not `db.supabase.co:5432`
+- Add `?pgbouncer=true` to connection string for Prisma
+
+### Vercel Free Tier Limits
+- Max 2 cron jobs (scrape-contracts runs manually)
+- Node.js 20.x required (not 24.x)
+
+### Static Generation Errors
+Pages using Prisma at build time will fail. Add to each page:
+```typescript
+export const dynamic = 'force-dynamic'
+```
