@@ -1,18 +1,13 @@
-import Parser from 'rss-parser';
-import * as cheerio from 'cheerio';
-import fetch from 'node-fetch';
 import { prisma } from '@/lib/db';
 import { isRelevantContract } from '@/lib/constants/rss-feeds';
 import { Decimal } from '@prisma/client/runtime/library';
 
-const parser = new Parser({
-  timeout: 30000,
-  headers: {
-    'User-Agent': 'DroneWire/1.0 (Counter-UAS Intelligence Hub)',
-  },
-});
+// SAM.gov Contract Awards API
+const SAM_GOV_API_URL = 'https://api.sam.gov/contract-awards/v1/search';
+const SAM_GOV_API_KEY = process.env.SAM_GOV_API_KEY || '';
 
-const DOD_CONTRACTS_RSS = 'https://www.defense.gov/News/Contracts/rss/';
+// DoD department code for filtering
+const DOD_DEPARTMENT_CODE = '9700';
 
 export interface ContractScrapingResult {
   contractsAdded: number;
@@ -146,29 +141,75 @@ function categorizeContract(text: string): string {
   return 'general';
 }
 
-function parseContractFromRss(item: { title?: string; link?: string; pubDate?: string; content?: string; contentSnippet?: string }): ParsedContract | null {
-  if (!item.title) return null;
+// SAM.gov API response types
+interface SamGovContract {
+  contractId?: string;
+  coreData?: {
+    contractNumber?: string;
+    descriptionOfContractRequirement?: string;
+    lastModifiedDate?: string;
+    signedDate?: string;
+  };
+  awardDetails?: {
+    actionObligation?: number;
+    baseAndAllOptionsValue?: number;
+  };
+  awardeeData?: {
+    awardee?: {
+      name?: string;
+      location?: {
+        city?: string;
+        state?: string;
+      };
+    };
+  };
+  contractingData?: {
+    contractingOfficeName?: string;
+    contractingAgencyName?: string;
+    fundingAgencyName?: string;
+  };
+  productOrServiceData?: {
+    productOrServiceDescription?: string;
+    naicsDescription?: string;
+  };
+}
 
-  const content = item.contentSnippet || item.content || item.title;
-  const combinedText = `${item.title} ${content}`;
+function parseContractFromSamGov(item: SamGovContract): ParsedContract | null {
+  const contractNumber = item.coreData?.contractNumber || item.contractId || '';
+  const description = item.coreData?.descriptionOfContractRequirement ||
+                      item.productOrServiceData?.productOrServiceDescription ||
+                      item.productOrServiceData?.naicsDescription || '';
+
+  const company = item.awardeeData?.awardee?.name || 'Unknown Contractor';
+  const agency = item.contractingData?.fundingAgencyName ||
+                 item.contractingData?.contractingAgencyName ||
+                 'Department of Defense';
+
+  const combinedText = `${description} ${company} ${agency}`;
 
   // Check if relevant to counter-UAS/defense
   if (!isRelevantContract(combinedText)) {
     return null;
   }
 
-  const value = parseContractValue(combinedText);
-  const awardDate = item.pubDate ? new Date(item.pubDate) : new Date();
+  const value = item.awardDetails?.baseAndAllOptionsValue ||
+                item.awardDetails?.actionObligation || 0;
+
+  const dateStr = item.coreData?.signedDate || item.coreData?.lastModifiedDate;
+  const awardDate = dateStr ? new Date(dateStr) : new Date();
+
+  const title = description.slice(0, 200) || `Contract ${contractNumber}`;
+  const sourceUrl = `https://sam.gov/opp/${contractNumber}/view`;
 
   return {
-    title: item.title,
-    description: content.slice(0, 2000),
-    company: extractCompany(content),
-    agency: extractAgency(content),
+    title,
+    description: description.slice(0, 2000),
+    company,
+    agency,
     value,
     awardDate,
-    sourceUrl: item.link || '',
-    contractNumber: generateContractNumber(item.title, awardDate),
+    sourceUrl,
+    contractNumber: contractNumber || generateContractNumber(title, awardDate),
     category: categorizeContract(combinedText),
   };
 }
@@ -181,13 +222,49 @@ export async function scrapeContracts(): Promise<ContractScrapingResult> {
     errors: [],
   };
 
-  try {
-    console.log('Scraping DoD contracts RSS feed...');
-    const feed = await parser.parseURL(DOD_CONTRACTS_RSS);
+  if (!SAM_GOV_API_KEY) {
+    result.errors.push('SAM_GOV_API_KEY environment variable is not set');
+    return result;
+  }
 
-    for (const item of feed.items) {
+  try {
+    console.log('Fetching DoD contracts from SAM.gov API...');
+
+    // Get contracts from the last 30 days
+    const toDate = new Date();
+    const fromDate = new Date();
+    fromDate.setDate(fromDate.getDate() - 30);
+
+    const formatDate = (d: Date) =>
+      `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}/${d.getFullYear()}`;
+
+    const params = new URLSearchParams({
+      api_key: SAM_GOV_API_KEY,
+      contractingDepartmentCode: DOD_DEPARTMENT_CODE,
+      modificationNumber: '0', // Base contracts only
+      lastModifiedDate: `[${formatDate(fromDate)},${formatDate(toDate)}]`,
+      limit: '100',
+    });
+
+    const response = await fetch(`${SAM_GOV_API_URL}?${params.toString()}`, {
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`SAM.gov API error (${response.status}): ${errorText}`);
+    }
+
+    const data = await response.json() as { data?: SamGovContract[] };
+    const contracts = data.data || [];
+
+    console.log(`Found ${contracts.length} DoD contracts from SAM.gov`);
+
+    for (const item of contracts) {
       try {
-        const contract = parseContractFromRss(item);
+        const contract = parseContractFromSamGov(item);
 
         if (!contract) {
           result.contractsSkipped++;
@@ -246,7 +323,7 @@ export async function scrapeContracts(): Promise<ContractScrapingResult> {
     }
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-    result.errors.push(`Failed to fetch contracts RSS: ${errorMsg}`);
+    result.errors.push(`Failed to fetch contracts from SAM.gov: ${errorMsg}`);
     console.error('Contract scraping error:', error);
   }
 

@@ -58,6 +58,7 @@ curl http://localhost:3000/api/cron/process-ai -H "Authorization: Bearer $CRON_S
 - `ABACUSAI_API_KEY` - AI processing key
 - `ROUTELLM_API_KEY` - Alternative AI routing key
 - `CRON_SECRET` - Authentication for cron endpoints
+- `SAM_GOV_API_KEY` - SAM.gov API key for contract data
 
 ## Architecture
 

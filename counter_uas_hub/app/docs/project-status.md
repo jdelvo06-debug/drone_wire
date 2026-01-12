@@ -6,10 +6,14 @@
 
 ## 🔴 NEXT SESSION TODO
 
-**Run the contract scraper** - Currently 0 contracts in database:
+**Get SAM.gov API Key** - Required for contract scraping:
+1. Go to https://sam.gov and create/login to account
+2. Navigate to Account Details → Public API Key
+3. Add key to Vercel environment variables as `SAM_GOV_API_KEY`
+4. Run the contract scraper:
 ```bash
 curl https://drone-wire.vercel.app/api/cron/scrape-contracts \
-  -H "Authorization: Bearer dronewire-cron-secret-change-in-production"
+  -H "Authorization: Bearer $CRON_SECRET"
 ```
 
 ---
@@ -42,7 +46,7 @@ curl https://drone-wire.vercel.app/api/cron/scrape-contracts \
 |-----------|--------|----------|
 | RSS Scraping | ✅ Active | Daily 6 AM UTC (Vercel cron) |
 | AI Processing | ✅ Active | Daily 8 AM UTC (Vercel cron) |
-| Contract Scraping | ⚠️ Manual | Trigger via curl (free tier limit) |
+| Contract Scraping (SAM.gov) | ⚠️ Needs API Key | Trigger via curl (free tier limit) |
 
 ### Database
 
@@ -85,6 +89,7 @@ curl https://drone-wire.vercel.app/api/cron/scrape-contracts \
 | ABACUSAI_API_KEY | ✅ Configured |
 | ROUTELLM_API_KEY | ✅ Configured |
 | CRON_SECRET | ✅ Configured |
+| SAM_GOV_API_KEY | ⚠️ Needs setup (for contract scraping) |
 
 ---
 
