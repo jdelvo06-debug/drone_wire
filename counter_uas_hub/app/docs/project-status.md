@@ -1,6 +1,18 @@
 # DroneWire Project Status
 
-**Last Updated:** January 11, 2026
+**Last Updated:** January 12, 2026
+
+---
+
+## 🔴 NEXT SESSION TODO
+
+**Run the contract scraper** - Currently 0 contracts in database:
+```bash
+curl https://drone-wire.vercel.app/api/cron/scrape-contracts \
+  -H "Authorization: Bearer dronewire-cron-secret-change-in-production"
+```
+
+---
 **Live Site:** https://drone-wire.vercel.app
 **Status:** Production (Live)
 
