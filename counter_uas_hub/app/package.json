@@ -14,7 +14,6 @@
     "seed": "tsx --require dotenv/config scripts/seed.ts"
   },
   "devDependencies": {
-    "@next/swc-wasm-nodejs": "13.5.1",
     "@types/cheerio": "^0.22.35",
     "@types/node": "20.6.2",
     "@types/node-fetch": "^2.6.13",
