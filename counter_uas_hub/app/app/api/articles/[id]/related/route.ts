@@ -21,10 +21,10 @@ function cosineSimilarity(a: number[], b: number[]): number {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const articleId = params.id
+    const { id: articleId } = await params
     const limit = parseInt(req.nextUrl.searchParams.get('limit') || '5')
 
     // Get the source article with its embedding
