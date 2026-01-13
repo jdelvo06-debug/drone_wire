@@ -23,8 +23,8 @@
 | About Page | ✅ Working | Project information |
 | Dark/Light Mode | ✅ Working | Theme toggle in header |
 | Mobile Responsive | ✅ Working | Responsive navigation |
-| Newsletter Signup | ✅ Working | Form submission (no email yet) |
-| Contact Form | ✅ Working | Form submission (no email yet) |
+| Newsletter Signup | ✅ Working | Welcome emails via Resend |
+| Contact Form | ✅ Working | Needs ADMIN_EMAIL env var for notifications |
 
 ### Data Pipeline
 
@@ -125,7 +125,7 @@
 - [x] Email integration with Resend (RESEND_API_KEY configured)
 - [x] Newsletter welcome emails (working)
 - [ ] Contact form notifications - **TODO: Set ADMIN_EMAIL in Vercel**
-- [ ] RSS feed output (/feed.xml)
+- [x] RSS feed output (/feed.xml)
 
 ### Future (Priority 4)
 - [ ] Admin dashboard improvements

@@ -12,7 +12,7 @@ function escapeXml(str: string): string {
 }
 
 export async function GET() {
-  const siteUrl = process.env.SITE_URL || 'https://dronewire.com'
+  const siteUrl = process.env.SITE_URL || 'https://drone-wire.vercel.app'
 
   // Fetch latest published articles
   const articles = await prisma.article.findMany({
