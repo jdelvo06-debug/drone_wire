@@ -238,6 +238,25 @@ pending ──► processing ──► published
 | GET | `/api/explainers` | List explainers (filterable) |
 | POST | `/api/newsletter/subscribe` | Subscribe to newsletter |
 | POST | `/api/contact` | Submit contact form |
+| GET | `/api/stats` | Get live database counts (articles, contracts, explainers) |
+| GET | `/feed.xml` | RSS feed output |
+
+### Admin Endpoints (Protected by CRON_SECRET)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/admin/reprocess-images` | Get image stats |
+| POST | `/api/admin/reprocess-images` | Reprocess articles missing images |
+| GET | `/api/admin/seed-explainers` | Get explainer seed status |
+| POST | `/api/admin/seed-explainers` | Seed explainers to database |
+
+### Cron Endpoints (Protected by CRON_SECRET)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/cron/scrape-news` | Scrape RSS feeds (daily 6 AM UTC) |
+| GET | `/api/cron/scrape-contracts` | Scrape SAM.gov contracts (manual) |
+| GET | `/api/cron/process-ai` | AI processing (daily 8 AM UTC) |
 
 ### Query Parameters
 

@@ -2,6 +2,68 @@
 
 All notable changes to DroneWire are documented in this file.
 
+## [1.3.0] - 2026-01-12
+
+### UI/UX Polish (Priority 4)
+
+**Stats Section Improvements:**
+- Created `/api/stats` endpoint for real-time database counts
+- Stats section now fetches live data (articles, contracts, explainers)
+- Removed hardcoded inflated numbers
+
+**Visual Fixes:**
+- Fixed category badges displaying pipe-separated values (now shows primary only)
+- Added proper text truncation to article excerpts (`line-clamp-2`)
+- Fixed explainer titles being cut off in sidebar (removed `line-clamp-1`)
+
+**Content Seeding:**
+- Created `/api/admin/seed-explainers` endpoint with 24 comprehensive explainers
+- Seeded 17 new counter-UAS explainers to production (23 total)
+
+**Files Changed:**
+- `app/api/stats/route.ts` (new)
+- `app/api/admin/seed-explainers/route.ts` (new)
+- `components/home/stats-section.tsx`
+- `components/home/news-section.tsx`
+- `components/home/featured-explainers.tsx`
+
+---
+
+## [1.2.0] - 2026-01-12
+
+### Email Integration (Priority 3)
+
+- Integrated Resend for transactional emails
+- Newsletter welcome emails now working
+- RSS feed available at `/feed.xml`
+- Contact form saves to database (email notifications pending ADMIN_EMAIL)
+
+**Files Changed:**
+- `lib/services/email.ts` (new)
+- `app/api/newsletter/subscribe/route.ts`
+- `app/feed.xml/route.ts` (new)
+
+---
+
+## [1.1.0] - 2026-01-12
+
+### Core UX Enhancements (Priority 2)
+
+- Header search now functional with results dropdown
+- Related articles section using embedding-based similarity
+- Dynamic related explainers based on article category
+- Trending topics show real tag counts from database
+- Enhanced article image extraction from RSS and content
+
+**Files Changed:**
+- `components/layout/header.tsx`
+- `components/articles/related-articles.tsx` (new)
+- `components/articles/related-explainers.tsx` (new)
+- `lib/services/rss-scraper.ts`
+- `lib/services/content-extractor.ts`
+
+---
+
 ## [1.0.0] - 2026-01-11
 
 ### Initial Production Release
@@ -131,19 +193,14 @@ experimental: {
 
 ## Pending Features
 
-### Priority 2: Core UX Enhancements
-- [ ] Full-text search with highlighted results
-- [ ] Related articles on detail pages
-
-### Priority 3: Engagement Features
-- [ ] Email integration (Resend)
-- [ ] Newsletter confirmation emails
-- [ ] RSS feed output (`/feed.xml`)
-
-### Priority 4: Enhancements
+### Priority 4: Future Enhancements
+- [ ] Admin dashboard improvements
 - [ ] AI-powered related articles (embeddings)
 - [ ] Email alerts for breaking news
-- [ ] Enhanced admin analytics
+- [ ] Analytics and metrics
+
+### TODO
+- [ ] Set ADMIN_EMAIL in Vercel for contact form notifications
 
 ---
 
@@ -151,4 +208,7 @@ experimental: {
 
 | Version | Date | Description |
 |---------|------|-------------|
+| 1.3.0 | 2026-01-12 | UI/UX polish, dynamic stats, explainer seeding |
+| 1.2.0 | 2026-01-12 | Email integration (Resend), RSS feed |
+| 1.1.0 | 2026-01-12 | Search, related articles, image extraction |
 | 1.0.0 | 2026-01-11 | Initial production release |
