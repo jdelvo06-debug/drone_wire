@@ -113,10 +113,11 @@
 - [x] Deploy to Vercel
 - [x] Fix production database connection
 
-### In Progress (Priority 2)
-- [ ] Article detail page enhancements
-- [ ] Search functionality improvements
-- [ ] Related articles section
+### Completed (Priority 2)
+- [x] Search functionality improvements (header search now functional)
+- [x] Related articles section (embedding-based similarity)
+- [x] Dynamic related explainers (based on article category)
+- [x] Dynamic trending topics (real tag counts from database)
 
 ### Planned (Priority 3)
 - [ ] Email integration with Resend
