@@ -17,7 +17,7 @@
 | Home Page | ✅ Working | Hero, featured articles, newsletter CTA |
 | Articles List | ✅ Working | 10 articles, pagination, filtering |
 | Article Detail | ✅ Working | AI summaries, key points, tags |
-| Explainers Library | ✅ Working | 24 explainers with categories |
+| Explainers Library | ✅ Working | 23 explainers with categories |
 | Explainer Detail | ✅ Working | Full content, sidebar with features |
 | Contracts Page | ✅ Working | DoD contracts with sorting |
 | About Page | ✅ Working | Project information |
@@ -39,7 +39,7 @@
 | Metric | Count |
 |--------|-------|
 | Articles | 14 |
-| Explainers | 24 |
+| Explainers | 23 |
 | Contracts | 1 |
 | Tags | Multiple |
 | RSS Feeds | Configured |
@@ -127,6 +127,13 @@
 - [ ] Contact form notifications - **TODO: Set ADMIN_EMAIL in Vercel**
 - [x] RSS feed output (/feed.xml)
 
+### Completed (Priority 4 - UI/UX Polish)
+- [x] Dynamic stats section (real database counts via /api/stats)
+- [x] Fixed category badges (removed pipe-separated display)
+- [x] Fixed article excerpt truncation (proper line-clamp)
+- [x] Fixed explainer title truncation in sidebar
+- [x] Seeded 23 comprehensive counter-UAS explainers
+
 ### Future (Priority 4)
 - [ ] Admin dashboard improvements
 - [ ] AI-powered related articles
@@ -167,6 +174,17 @@ curl -X POST https://drone-wire.vercel.app/api/admin/reprocess-images \
   -H "Authorization: Bearer $CRON_SECRET" \
   -H "Content-Type: application/json" \
   -d '{"limit": 20}'
+
+# Get live stats
+curl https://drone-wire.vercel.app/api/stats
+
+# Seed explainers (check status)
+curl https://drone-wire.vercel.app/api/admin/seed-explainers \
+  -H "Authorization: Bearer $CRON_SECRET"
+
+# Seed explainers (trigger)
+curl -X POST https://drone-wire.vercel.app/api/admin/seed-explainers \
+  -H "Authorization: Bearer $CRON_SECRET"
 ```
 
 ### Deployment
