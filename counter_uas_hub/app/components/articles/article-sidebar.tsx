@@ -24,35 +24,27 @@ interface RelatedArticle {
   category: string
 }
 
+interface RelatedExplainer {
+  slug: string
+  title: string
+  difficulty: string
+  readTime: number
+  category: string
+}
+
+interface TrendingTopic {
+  name: string
+  count: number
+}
+
 interface ArticleSidebarProps {
   article: Article
   relatedArticles?: RelatedArticle[]
+  relatedExplainers?: RelatedExplainer[]
+  trendingTopics?: TrendingTopic[]
 }
 
-const relatedExplainers = [
-  {
-    slug: 'iron-dome-air-defense-system',
-    title: 'Iron Dome Air Defense System',
-    difficulty: 'beginner',
-    readTime: 8,
-  },
-  {
-    slug: 'rf-jamming-technology',
-    title: 'RF Jamming Technology',
-    difficulty: 'intermediate',
-    readTime: 12,
-  },
-]
-
-const trendingTopics = [
-  { name: 'Counter-UAS Systems', count: 45 },
-  { name: 'Drone Swarms', count: 32 },
-  { name: 'Electronic Warfare', count: 28 },
-  { name: 'Laser Weapons', count: 24 },
-  { name: 'AI Defense', count: 19 },
-]
-
-export default function ArticleSidebar({ article, relatedArticles = [] }: ArticleSidebarProps) {
+export default function ArticleSidebar({ article, relatedArticles = [], relatedExplainers = [], trendingTopics = [] }: ArticleSidebarProps) {
   const handleShare = async () => {
     if (navigator.share) {
       try {
@@ -116,75 +108,79 @@ export default function ArticleSidebar({ article, relatedArticles = [] }: Articl
       )}
 
       {/* Related Explainers */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center">
-            <BookOpen className="w-5 h-5 mr-2 text-primary" />
-            Related Explainers
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-4">
-          {relatedExplainers.map((explainer) => (
-            <Link key={explainer.slug} href={`/explainers/${explainer.slug}`}>
-              <div className="group p-3 rounded-lg border border-border/50 hover:border-primary/20 hover:bg-muted/30 transition-all cursor-pointer">
-                <h4 className="font-medium text-sm text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-2">
-                  {explainer.title}
-                </h4>
-                <div className="flex items-center justify-between">
-                  <Badge 
-                    variant="outline" 
-                    className={`text-xs ${
-                      explainer.difficulty === 'beginner' 
-                        ? 'border-green-200 text-green-700 dark:border-green-800 dark:text-green-300'
-                        : explainer.difficulty === 'intermediate'
-                        ? 'border-yellow-200 text-yellow-700 dark:border-yellow-800 dark:text-yellow-300'
-                        : 'border-red-200 text-red-700 dark:border-red-800 dark:text-red-300'
-                    }`}
-                  >
-                    {explainer.difficulty}
-                  </Badge>
-                  <span className="text-xs text-muted-foreground">
-                    {explainer.readTime}m read
-                  </span>
+      {relatedExplainers.length > 0 && (
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg flex items-center">
+              <BookOpen className="w-5 h-5 mr-2 text-primary" />
+              Related Explainers
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0 space-y-4">
+            {relatedExplainers.map((explainer) => (
+              <Link key={explainer.slug} href={`/explainers/${explainer.slug}`}>
+                <div className="group p-3 rounded-lg border border-border/50 hover:border-primary/20 hover:bg-muted/30 transition-all cursor-pointer">
+                  <h4 className="font-medium text-sm text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-2">
+                    {explainer.title}
+                  </h4>
+                  <div className="flex items-center justify-between">
+                    <Badge
+                      variant="outline"
+                      className={`text-xs ${
+                        explainer.difficulty === 'beginner'
+                          ? 'border-green-200 text-green-700 dark:border-green-800 dark:text-green-300'
+                          : explainer.difficulty === 'intermediate'
+                          ? 'border-yellow-200 text-yellow-700 dark:border-yellow-800 dark:text-yellow-300'
+                          : 'border-red-200 text-red-700 dark:border-red-800 dark:text-red-300'
+                      }`}
+                    >
+                      {explainer.difficulty}
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">
+                      {explainer.readTime}m read
+                    </span>
+                  </div>
                 </div>
-              </div>
+              </Link>
+            ))}
+            <Link href="/explainers">
+              <Button variant="ghost" size="sm" className="w-full">
+                <BookOpen className="w-4 h-4 mr-2" />
+                Browse Explainers
+              </Button>
             </Link>
-          ))}
-          <Link href="/explainers">
-            <Button variant="ghost" size="sm" className="w-full">
-              <BookOpen className="w-4 h-4 mr-2" />
-              Browse Explainers
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Trending Topics */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center">
-            <Users className="w-5 h-5 mr-2 text-primary" />
-            Trending Topics
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-3">
-          {trendingTopics.map((topic, index) => (
-            <div key={topic.name} className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <span className="text-xs font-bold text-muted-foreground w-4">
-                  #{index + 1}
-                </span>
-                <span className="text-sm font-medium text-foreground">
-                  {topic.name}
-                </span>
+      {trendingTopics.length > 0 && (
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg flex items-center">
+              <Users className="w-5 h-5 mr-2 text-primary" />
+              Trending Topics
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0 space-y-3">
+            {trendingTopics.map((topic, index) => (
+              <div key={topic.name} className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs font-bold text-muted-foreground w-4">
+                    #{index + 1}
+                  </span>
+                  <span className="text-sm font-medium text-foreground">
+                    {topic.name}
+                  </span>
+                </div>
+                <Badge variant="outline" className="text-xs">
+                  {topic.count}
+                </Badge>
               </div>
-              <Badge variant="outline" className="text-xs">
-                {topic.count}
-              </Badge>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+            ))}
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

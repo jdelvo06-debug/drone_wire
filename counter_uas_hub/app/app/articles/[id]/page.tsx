@@ -56,6 +56,57 @@ function cosineSimilarity(a: number[], b: number[]): number {
   return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB))
 }
 
+async function getTrendingTopics(limit = 5) {
+  // Get tags with article counts, ordered by count
+  const tagsWithCounts = await prisma.tag.findMany({
+    select: {
+      name: true,
+      _count: {
+        select: { articles: true },
+      },
+    },
+    orderBy: {
+      articles: { _count: 'desc' },
+    },
+    take: limit,
+  })
+
+  return tagsWithCounts.map((tag) => ({
+    name: tag.name,
+    count: tag._count.articles,
+  }))
+}
+
+async function getRelatedExplainers(category: string, limit = 3) {
+  // Map article categories to explainer categories
+  const categoryMap: Record<string, string[]> = {
+    'counter-uas': ['countermeasures', 'systems'],
+    'drone-warfare': ['threats', 'systems'],
+    'contracts': ['systems', 'countermeasures'],
+    'policy': ['policy'],
+    'general': ['systems', 'countermeasures', 'threats'],
+  }
+
+  const explainerCategories = categoryMap[category] || ['systems', 'countermeasures']
+
+  const explainers = await prisma.explainer.findMany({
+    where: {
+      category: { in: explainerCategories },
+    },
+    orderBy: { views: 'desc' },
+    take: limit,
+    select: {
+      slug: true,
+      title: true,
+      difficulty: true,
+      readTime: true,
+      category: true,
+    },
+  })
+
+  return explainers
+}
+
 async function getRelatedArticles(articleId: string, category: string, limit = 3) {
   // Get source article embedding
   const sourceArticle = await prisma.article.findUnique({
@@ -165,7 +216,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound()
   }
 
-  const relatedArticles = await getRelatedArticles(params.id, article.category)
+  const [relatedArticles, relatedExplainers, trendingTopics] = await Promise.all([
+    getRelatedArticles(params.id, article.category),
+    getRelatedExplainers(article.category),
+    getTrendingTopics(),
+  ])
 
   // Transform to match component interface
   const articleData = {
@@ -199,7 +254,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <ArticleSidebar article={articleData} relatedArticles={relatedArticles} />
+            <ArticleSidebar article={articleData} relatedArticles={relatedArticles} relatedExplainers={relatedExplainers} trendingTopics={trendingTopics} />
           </div>
         </div>
       </div>

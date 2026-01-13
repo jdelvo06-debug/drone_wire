@@ -3,8 +3,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Shield, Menu, X, Search } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
+import { Shield, Menu, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
@@ -20,7 +20,17 @@ const navigation = [
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const pathname = usePathname()
+  const router = useRouter()
+
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      router.push(`/articles?search=${encodeURIComponent(searchQuery.trim())}`)
+      setSearchQuery('')
+      setMobileMenuOpen(false)
+    }
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -63,6 +73,9 @@ export default function Header() {
                   type="search"
                   placeholder="Search..."
                   className="w-64 pl-8"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearch}
                 />
               </div>
             </div>
@@ -93,6 +106,9 @@ export default function Header() {
                       type="search"
                       placeholder="Search..."
                       className="pl-8"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyDown={handleSearch}
                     />
                   </div>
 
