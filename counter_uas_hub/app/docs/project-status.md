@@ -77,6 +77,8 @@
 | ROUTELLM_API_KEY | ✅ Configured |
 | CRON_SECRET | ✅ Configured |
 | SAM_GOV_API_KEY | ✅ Configured |
+| RESEND_API_KEY | ✅ Configured |
+| ADMIN_EMAIL | ⚠️ Not set (defaults to admin@dronewire.com) |
 
 ---
 
@@ -119,10 +121,10 @@
 - [x] Dynamic related explainers (based on article category)
 - [x] Dynamic trending topics (real tag counts from database)
 
-### Planned (Priority 3)
-- [ ] Email integration with Resend
-- [ ] Newsletter confirmation emails
-- [ ] Contact form notifications
+### In Progress (Priority 3)
+- [x] Email integration with Resend (RESEND_API_KEY configured)
+- [x] Newsletter welcome emails (working)
+- [ ] Contact form notifications - **TODO: Set ADMIN_EMAIL in Vercel**
 - [ ] RSS feed output (/feed.xml)
 
 ### Future (Priority 4)
