@@ -3,20 +3,6 @@
 **Last Updated:** January 12, 2026
 
 ---
-
-## 🔴 NEXT SESSION TODO
-
-**Get SAM.gov API Key** - Required for contract scraping:
-1. Go to https://sam.gov and create/login to account
-2. Navigate to Account Details → Public API Key
-3. Add key to Vercel environment variables as `SAM_GOV_API_KEY`
-4. Run the contract scraper:
-```bash
-curl https://drone-wire.vercel.app/api/cron/scrape-contracts \
-  -H "Authorization: Bearer $CRON_SECRET"
-```
-
----
 **Live Site:** https://drone-wire.vercel.app
 **Status:** Production (Live)
 
@@ -46,14 +32,15 @@ curl https://drone-wire.vercel.app/api/cron/scrape-contracts \
 |-----------|--------|----------|
 | RSS Scraping | ✅ Active | Daily 6 AM UTC (Vercel cron) |
 | AI Processing | ✅ Active | Daily 8 AM UTC (Vercel cron) |
-| Contract Scraping (SAM.gov) | ⚠️ Needs API Key | Trigger via curl (free tier limit) |
+| Contract Scraping (SAM.gov) | ✅ Active | Trigger via curl (free tier limit) |
 
 ### Database
 
 | Metric | Count |
 |--------|-------|
-| Articles | 10 |
+| Articles | 14 |
 | Explainers | 24 |
+| Contracts | 1 |
 | Tags | Multiple |
 | RSS Feeds | Configured |
 
@@ -89,7 +76,7 @@ curl https://drone-wire.vercel.app/api/cron/scrape-contracts \
 | ABACUSAI_API_KEY | ✅ Configured |
 | ROUTELLM_API_KEY | ✅ Configured |
 | CRON_SECRET | ✅ Configured |
-| SAM_GOV_API_KEY | ⚠️ Needs setup (for contract scraping) |
+| SAM_GOV_API_KEY | ✅ Configured |
 
 ---
 
@@ -99,7 +86,6 @@ curl https://drone-wire.vercel.app/api/cron/scrape-contracts \
 
 | Issue | Severity | Workaround |
 |-------|----------|------------|
-| No article images | Low | Placeholder shown |
 | No email notifications | Medium | Forms save to DB only |
 | manifest.json 404 | Low | PWA not configured |
 
@@ -107,6 +93,8 @@ curl https://drone-wire.vercel.app/api/cron/scrape-contracts \
 
 | Issue | Resolution Date | Solution |
 |-------|-----------------|----------|
+| Article images missing | 2026-01-12 | Enhanced extraction + reprocessor API |
+| Contract scraper 403 | 2026-01-12 | Switched to SAM.gov Opportunities API |
 | Database connection (IPv4) | 2026-01-11 | Use Transaction pooler |
 | Cron job limit | 2026-01-11 | Reduced to 2 jobs |
 | Module resolution error | 2026-01-11 | Removed outputFileTracingRoot |
@@ -166,6 +154,16 @@ curl https://drone-wire.vercel.app/api/cron/process-ai \
 # Scrape contracts (manual only)
 curl https://drone-wire.vercel.app/api/cron/scrape-contracts \
   -H "Authorization: Bearer $CRON_SECRET"
+
+# Image stats
+curl https://drone-wire.vercel.app/api/admin/reprocess-images \
+  -H "Authorization: Bearer $CRON_SECRET"
+
+# Reprocess missing images
+curl -X POST https://drone-wire.vercel.app/api/admin/reprocess-images \
+  -H "Authorization: Bearer $CRON_SECRET" \
+  -H "Content-Type: application/json" \
+  -d '{"limit": 20}'
 ```
 
 ### Deployment
