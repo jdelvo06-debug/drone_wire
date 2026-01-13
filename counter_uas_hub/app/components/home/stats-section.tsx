@@ -6,27 +6,37 @@ import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Activity, FileText, DollarSign, Target } from 'lucide-react'
 
-const stats = [
+interface StatsData {
+  articles: number
+  contracts: number
+  explainers: number
+}
+
+interface StatsSectionProps {
+  initialStats?: StatsData
+}
+
+const getStats = (data?: StatsData) => [
   {
     label: 'Articles Analyzed',
-    value: 2847,
+    value: data?.articles || 0,
     icon: FileText,
     suffix: '+',
   },
   {
     label: 'Defense Contracts',
-    value: 156,
+    value: data?.contracts || 0,
     icon: DollarSign,
     suffix: '',
   },
   {
     label: 'Systems Explained',
-    value: 89,
+    value: data?.explainers || 0,
     icon: Target,
     suffix: '+',
   },
   {
-    label: 'Weekly Updates',
+    label: 'Daily Updates',
     value: 24,
     icon: Activity,
     suffix: '/7',
@@ -75,7 +85,20 @@ function AnimatedCounter({
   return <span ref={ref}>{count.toLocaleString()}</span>
 }
 
-export default function StatsSection() {
+export default function StatsSection({ initialStats }: StatsSectionProps) {
+  const [statsData, setStatsData] = useState<StatsData | undefined>(initialStats)
+
+  useEffect(() => {
+    if (!initialStats) {
+      fetch('/api/stats')
+        .then(res => res.json())
+        .then(data => setStatsData(data))
+        .catch(() => {})
+    }
+  }, [initialStats])
+
+  const stats = getStats(statsData)
+
   return (
     <section className="py-16 bg-muted/30">
       <div className="container mx-auto px-4">

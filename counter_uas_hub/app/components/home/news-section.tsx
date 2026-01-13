@@ -187,16 +187,16 @@ export default function NewsSection() {
                       <Clock className="w-4 h-4 mr-1" />
                       {formatTimeAgo(article.publishedAt)}
                     </div>
-                    <Badge 
-                      variant="secondary" 
+                    <Badge
+                      variant="secondary"
                       className={
-                        article.category === 'contracts' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                        article.category === 'drone-warfare' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' :
-                        article.category === 'policy' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' :
+                        article.category.split('|')[0] === 'contracts' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                        article.category.split('|')[0] === 'drone-warfare' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' :
+                        article.category.split('|')[0] === 'policy' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' :
                         'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
                       }
                     >
-                      {article.category.replace('-', ' ')}
+                      {article.category.split('|')[0].replace('-', ' ')}
                     </Badge>
                   </div>
 
@@ -208,7 +208,7 @@ export default function NewsSection() {
                   </h3>
 
                   {/* Excerpt */}
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="text-muted-foreground leading-relaxed line-clamp-2">
                     {article.excerpt}
                   </p>
 

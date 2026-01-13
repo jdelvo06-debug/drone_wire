@@ -74,7 +74,7 @@ export default function FeaturedExplainers() {
                   <explainer.icon className="w-4 h-4" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                  <h4 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">
                     {explainer.title}
                   </h4>
                   <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
