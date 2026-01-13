@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { getImageWithFallback } from '@/lib/constants/images'
 import { Calendar, Clock, ExternalLink, User, TrendingUp, Share2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -130,18 +131,16 @@ export default function ArticleContent({ article }: ArticleContentProps) {
       </div>
 
       {/* Hero Image */}
-      {article.imageUrl && (
-        <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
-          <Image
-            src={article.imageUrl}
-            alt={article.title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 1024px) 100vw, 75vw"
-            priority
-          />
-        </div>
-      )}
+      <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
+        <Image
+          src={getImageWithFallback(article.imageUrl)}
+          alt={article.title}
+          fill
+          className="object-cover"
+          sizes="(max-width: 1024px) 100vw, 75vw"
+          priority
+        />
+      </div>
 
       {/* AI Summary */}
       {article.aiSummary && (

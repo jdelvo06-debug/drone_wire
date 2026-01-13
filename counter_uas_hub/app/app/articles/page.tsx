@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
+import { getImageWithFallback } from '@/lib/constants/images'
 
 export const dynamic = 'force-dynamic'
 import { Clock, ExternalLink, Calendar, Tag as TagIcon } from 'lucide-react'
@@ -152,19 +153,13 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
                     {/* Image */}
                     <div className="lg:w-64 lg:flex-shrink-0">
                       <div className="relative aspect-video lg:aspect-square rounded-lg overflow-hidden bg-muted">
-                        {article.imageUrl ? (
-                          <Image
-                            src={article.imageUrl}
-                            alt={article.title}
-                            fill
-                            className="object-cover"
-                            sizes="(max-width: 1024px) 100vw, 256px"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                            No image
-                          </div>
-                        )}
+                        <Image
+                          src={getImageWithFallback(article.imageUrl)}
+                          alt={article.title}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 1024px) 100vw, 256px"
+                        />
                       </div>
                     </div>
 

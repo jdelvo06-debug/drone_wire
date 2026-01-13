@@ -1,11 +1,21 @@
 import Parser from 'rss-parser';
 import { prisma } from '@/lib/db';
 import { isRelevantContent } from '@/lib/constants/rss-feeds';
+import { isImageUrl as checkIsImageUrl } from '@/lib/constants/images';
 
 const parser = new Parser({
   timeout: 30000,
   headers: {
     'User-Agent': 'DroneWire/1.0 (Counter-UAS Intelligence Hub)',
+  },
+  customFields: {
+    item: [
+      ['media:content', 'media:content'],
+      ['media:thumbnail', 'media:thumbnail'],
+      ['media:group', 'media:group'],
+      ['itunes:image', 'itunes:image'],
+      ['content:encoded', 'content:encoded'],
+    ],
   },
 });
 
@@ -24,18 +34,59 @@ interface RssFeedItem {
   contentSnippet?: string;
   creator?: string;
   isoDate?: string;
-  enclosure?: { url?: string };
-  'media:content'?: { $?: { url?: string } };
+  // Standard image fields
+  enclosure?: { url?: string; type?: string };
+  image?: { url?: string };
+  // Media RSS namespace fields
+  'media:content'?: { $?: { url?: string; medium?: string } };
+  'media:thumbnail'?: { $?: { url?: string } };
+  'media:group'?: { 'media:content'?: Array<{ $?: { url?: string } }> };
+  'itunes:image'?: { $?: { href?: string } };
+  // Content fields that may contain images
+  'content:encoded'?: string;
 }
 
 function extractImageUrl(item: RssFeedItem): string | null {
-  // Try various common RSS image fields
-  if (item.enclosure?.url) {
+  // 1. Standard enclosure (most common for images)
+  if (item.enclosure?.url && checkIsImageUrl(item.enclosure.url)) {
     return item.enclosure.url;
   }
+
+  // 2. Media RSS content
   if (item['media:content']?.$?.url) {
     return item['media:content'].$.url;
   }
+
+  // 3. Media thumbnail (common in news feeds)
+  if (item['media:thumbnail']?.$?.url) {
+    return item['media:thumbnail'].$.url;
+  }
+
+  // 4. Media group (multiple media items - take first)
+  const mediaGroup = item['media:group']?.['media:content'];
+  if (Array.isArray(mediaGroup) && mediaGroup[0]?.$?.url) {
+    return mediaGroup[0].$.url;
+  }
+
+  // 5. iTunes image (podcast-style feeds)
+  if (item['itunes:image']?.$?.href) {
+    return item['itunes:image'].$.href;
+  }
+
+  // 6. Direct image element
+  if (item.image?.url) {
+    return item.image.url;
+  }
+
+  // 7. Extract from HTML content (last resort)
+  const htmlContent = item['content:encoded'] || item.content || '';
+  if (htmlContent) {
+    const imgMatch = htmlContent.match(/<img[^>]+src=["']([^"']+)["']/i);
+    if (imgMatch?.[1] && checkIsImageUrl(imgMatch[1])) {
+      return imgMatch[1];
+    }
+  }
+
   return null;
 }
 

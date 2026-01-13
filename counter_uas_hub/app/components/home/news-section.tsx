@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import Link from 'next/link'
 import Image from 'next/image'
+import { getImageWithFallback } from '@/lib/constants/images'
 
 interface Tag {
   id: string
@@ -167,7 +168,7 @@ export default function NewsSection() {
                 <div className="lg:w-64 lg:flex-shrink-0">
                   <div className="relative aspect-video lg:aspect-square rounded-lg overflow-hidden bg-muted">
                     <Image
-                      src={article.imageUrl || '/placeholder-article.jpg'}
+                      src={getImageWithFallback(article.imageUrl)}
                       alt={article.title}
                       fill
                       className="object-cover"
