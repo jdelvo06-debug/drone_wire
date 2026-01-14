@@ -55,7 +55,7 @@ const RSS_FEEDS = [
   },
   {
     name: 'Commercial UAV News',
-    url: 'https://www.commercialuavnews.com/feed/',
+    url: 'https://www.commercialuavnews.com/feed.xml',
     category: 'industry',
     description: 'Commercial UAV industry coverage',
   },
