@@ -49,7 +49,7 @@ export const RSS_FEEDS: RssFeedConfig[] = [
   },
   {
     name: 'Commercial UAV News',
-    url: 'https://www.commercialuavnews.com/feed/',
+    url: 'https://www.commercialuavnews.com/feed.xml',
     category: 'industry',
   },
   // Government Contract Sources
