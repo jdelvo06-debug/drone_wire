@@ -20,11 +20,11 @@ export default function HeroSection() {
   }, [])
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white">
+    <section className="relative overflow-hidden bg-gradient-to-br from-slate-800 via-slate-800/95 to-blue-900/80 text-white">
       {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50" />
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0 bg-grid-white/[0.03] bg-[size:50px_50px]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-800/80" />
       </div>
 
       <div className="relative container mx-auto px-4 py-24 lg:py-32">

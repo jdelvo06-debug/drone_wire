@@ -6,6 +6,62 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 217 91% 60%;
+    --radius: 0.5rem;
+    --chart-1: 217 91% 60%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  .dark {
+    /* Softer dark theme - navy/charcoal instead of pure black */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 96%;
+    --card: 217 33% 17%;
+    --card-foreground: 210 40% 96%;
+    --popover: 217 33% 17%;
+    --popover-foreground: 210 40% 96%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 217 33% 22%;
+    --secondary-foreground: 210 40% 96%;
+    --muted: 217 33% 22%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 217 33% 22%;
+    --accent-foreground: 210 40% 96%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 26%;
+    --input: 217 33% 26%;
+    --ring: 217 91% 60%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+
   * {
     @apply border-border;
   }
@@ -30,41 +86,51 @@
 }
 
 @layer components {
-  /* Custom military/tech themed components */
+  /* Custom military/tech themed components - refined for softer dark theme */
   .military-card {
-    @apply bg-card border border-border/50 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:bg-card/80;
+    @apply bg-card border border-border rounded-lg shadow-md hover:shadow-lg transition-all duration-300;
+    @apply hover:border-primary/30 hover:-translate-y-0.5;
   }
-  
+
   .tech-gradient {
-    @apply bg-gradient-to-r from-blue-600 via-blue-700 to-slate-800;
+    @apply bg-gradient-to-r from-blue-500 via-blue-600 to-slate-700;
   }
-  
+
   .danger-gradient {
-    @apply bg-gradient-to-r from-red-600 via-red-700 to-orange-600;
+    @apply bg-gradient-to-r from-red-500 via-red-600 to-orange-500;
   }
-  
+
   .success-gradient {
-    @apply bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600;
+    @apply bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500;
   }
-  
+
   .hero-text {
     @apply text-4xl lg:text-6xl xl:text-7xl font-bold leading-tight;
-    background: linear-gradient(135deg, #3B82F6, #1E40AF, #1E293B);
+    background: linear-gradient(135deg, #60A5FA, #3B82F6, #1E40AF);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   .article-card {
-    @apply military-card p-6 hover:border-primary/20 cursor-pointer;
+    @apply military-card p-6 cursor-pointer;
   }
-  
+
   .tag-pill {
-    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20;
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-primary/15 text-primary border border-primary/25;
   }
-  
+
   .nav-link {
     @apply text-muted-foreground hover:text-foreground transition-colors duration-200 font-medium;
+  }
+
+  /* Page section backgrounds with subtle gradients */
+  .section-gradient {
+    @apply bg-gradient-to-b from-background via-background to-secondary/30;
+  }
+
+  .section-gradient-alt {
+    @apply bg-gradient-to-b from-secondary/30 via-background to-background;
   }
   
   /* Animation classes */
