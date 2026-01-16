@@ -140,6 +140,26 @@ curl http://localhost:3000/api/cron/process-ai -H "Authorization: Bearer $CRON_S
 - **NewsletterSubscriber** - Email subscriptions
 - **RssFeed** - Content aggregation sources
 
+### C-UAS Systems Database
+
+The Systems section (`/systems`) provides a comprehensive database of counter-UAS technologies:
+
+**Categories:**
+- `integrated` - Complete C-UAS solutions (FS-LIDS, MADIS, Iron Dome, Drone Dome)
+- `sensor` - Detection systems (KURFS, AN/TPQ-50 LSTAR, DroneShield RfPatrol)
+- `effector` - Defeat systems (Coyote, THOR, DroneDefender)
+
+**Status Types:** `operational`, `contracted`, `development`, `prototype`, `retired`
+
+**Current Systems (13):**
+- US: FS-LIDS, M-LIDS, MADIS, L-MADIS, KURFS, AN/TPQ-50 LSTAR, Coyote Block 2+/3, THOR, DroneDefender
+- Israel: Iron Dome, Drone Dome
+- Australia: DroneShield RfPatrol
+
+**Image Sources:** System images are sourced from DVIDS (DoD public domain), manufacturer websites (Raytheon, Rafael, SRC Inc., DroneShield, AFRL), and defense publications.
+
+**Seeding:** `npx tsx scripts/seed-systems.ts`
+
 ### API Routes
 
 **Frontend APIs:**
