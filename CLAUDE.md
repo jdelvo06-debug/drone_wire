@@ -93,6 +93,8 @@ curl http://localhost:3000/api/cron/process-ai -H "Authorization: Bearer $CRON_S
 │   │   └── /[id]          # Dynamic article detail
 │   ├── /explainers        # Educational content pages
 │   │   └── /[slug]        # Dynamic explainer detail
+│   ├── /systems           # Counter-UAS systems database
+│   │   └── /[slug]        # Dynamic system detail
 │   ├── /contracts         # Defense contracts pages
 │   ├── /admin             # Admin dashboard (stats)
 │   ├── /about             # About page
@@ -104,6 +106,7 @@ curl http://localhost:3000/api/cron/process-ai -H "Authorization: Bearer $CRON_S
 │   ├── /layout            # Header, Footer, Navigation
 │   ├── /articles          # Article components
 │   ├── /explainers        # Explainer components
+│   ├── /systems           # Systems components
 │   └── /contracts         # Contract components
 ├── /hooks                 # Custom React hooks
 ├── /lib
@@ -118,7 +121,8 @@ curl http://localhost:3000/api/cron/process-ai -H "Authorization: Bearer $CRON_S
 │   └── utils.ts           # Utility functions (cn helper)
 ├── /scripts
 │   ├── seed-rss-feeds.ts  # RSS feeds seeding
-│   └── seed-explainers.ts # Explainers seeding
+│   ├── seed-explainers.ts # Explainers seeding
+│   └── seed-systems.ts    # Systems database seeding
 ├── /prisma
 │   └── schema.prisma      # Database models
 ├── vercel.json            # Cron job configuration
@@ -130,8 +134,9 @@ curl http://localhost:3000/api/cron/process-ai -H "Authorization: Bearer $CRON_S
 
 - **Article** - News articles with AI summaries, tags, sources
 - **Explainer** - Educational guides with difficulty levels, categories
+- **System** - Counter-UAS systems (C2, sensors, effectors, integrated)
 - **Contract** - Government defense contracts (DoD)
-- **Tag** - Categories for articles/explainers (many-to-many)
+- **Tag** - Categories for articles/explainers/systems (many-to-many)
 - **NewsletterSubscriber** - Email subscriptions
 - **RssFeed** - Content aggregation sources
 
@@ -142,6 +147,8 @@ curl http://localhost:3000/api/cron/process-ai -H "Authorization: Bearer $CRON_S
 - `GET /api/articles/[id]` - Single article detail
 - `GET /api/contracts` - Paginated contracts with sorting
 - `GET /api/explainers` - Paginated explainers with filtering
+- `GET /api/systems` - Paginated systems with category/status filters
+- `POST /api/systems` - Increment system view count
 - `POST /api/newsletter/subscribe` - Newsletter subscription
 - `POST /api/contact` - Contact form submission
 

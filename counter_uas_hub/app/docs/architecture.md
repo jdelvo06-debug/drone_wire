@@ -33,9 +33,9 @@ DroneWire is an AI-curated intelligence platform for counter-UAS (Unmanned Aeria
 │                   ▼                                                       │
 │  ┌─────────────────────────────────────────────────────────────────────┐  │
 │  │                     SUPABASE POSTGRESQL                             │  │
-│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │  │
-│  │  │ Articles │ │Explainers│ │Contracts │ │   Tags   │ │ RssFeeds │  │  │
-│  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘  │  │
+│  │  ┌─────────┐┌─────────┐┌─────────┐┌─────────┐┌─────────┐┌─────────┐ │  │
+│  │  │Articles ││Explainer││ Systems ││Contracts││  Tags  ││RssFeeds │ │  │
+│  │  └─────────┘└─────────┘└─────────┘└─────────┘└─────────┘└─────────┘ │  │
 │  └─────────────────────────────┬───────────────────────────────────────┘  │
 │                                │                                          │
 │                                ▼                                          │
@@ -47,7 +47,7 @@ DroneWire is an AI-curated intelligence platform for counter-UAS (Unmanned Aeria
 │  │  └─────────────────────────────────────────────────────────────┘   │  │
 │  │  ┌─────────────────────────────────────────────────────────────┐   │  │
 │  │  │                    PAGE ROUTES                              │   │  │
-│  │  │   /  /articles  /explainers  /contracts  /about  /admin     │   │  │
+│  │  │   /  /articles  /systems  /explainers  /contracts  /about   │   │  │
 │  │  └─────────────────────────────────────────────────────────────┘   │  │
 │  └─────────────────────────────────────────────────────────────────────┘  │
 │                                │                                          │
@@ -136,16 +136,24 @@ User Request ──► Next.js Server Component ──► Prisma Query ──►
 │                          └───────────┘           └───────────┘         │
 │                                                                         │
 │  ┌─────────────┐         ┌─────────────┐         ┌─────────────┐       │
-│  │  Contract   │         │  RssFeed    │         │ Newsletter  │       │
-│  ├─────────────┤         ├─────────────┤         │ Subscriber  │       │
-│  │ id          │         │ id          │         ├─────────────┤       │
-│  │ title       │         │ name        │         │ id          │       │
-│  │ description │         │ url         │         │ email       │       │
-│  │ awardAmount │         │ category    │         │ status      │       │
-│  │ contractor  │         │ isActive    │         │ createdAt   │       │
-│  │ awardDate   │         │ lastFetched │         └─────────────┘       │
-│  │ sourceUrl   │         └─────────────┘                               │
-│  └─────────────┘                                                        │
+│  │   System    │         │  Contract   │         │  RssFeed    │       │
+│  ├─────────────┤         ├─────────────┤         ├─────────────┤       │
+│  │ id          │         │ id          │         │ id          │       │
+│  │ name        │         │ title       │         │ name        │       │
+│  │ slug        │         │ description │         │ url         │       │
+│  │ category    │         │ awardAmount │         │ category    │       │
+│  │ manufacturer│         │ contractor  │         │ isActive    │       │
+│  │ country     │         │ awardDate   │         │ lastFetched │       │
+│  │ status      │         │ sourceUrl   │         └─────────────┘       │
+│  │ specs[]     │         └─────────────┘                               │
+│  │ combatRecord│                                  ┌─────────────┐       │
+│  └─────────────┘                                  │ Newsletter  │       │
+│        ▲                                          │ Subscriber  │       │
+│        │                                          ├─────────────┤       │
+│  ┌─────┴─────┐                                    │ id          │       │
+│  │ SystemTag │                                    │ email       │       │
+│  │           │                                    │ status      │       │
+│  └───────────┘                                    └─────────────┘       │
 │                                                                         │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
@@ -193,6 +201,9 @@ pending ──► processing ──► published
 │   ├── explainer-grid.tsx
 │   └── explainer-content.tsx
 │
+├── /systems              # System-related components
+│   └── systems-header.tsx  # Search and filter controls
+│
 └── /contracts            # Contract-related components
     ├── contract-table.tsx
     └── contract-filters.tsx
@@ -236,9 +247,11 @@ pending ──► processing ──► published
 | GET | `/api/articles/[id]` | Get single article |
 | GET | `/api/contracts` | List contracts (paginated, sortable) |
 | GET | `/api/explainers` | List explainers (filterable) |
+| GET | `/api/systems` | List systems (category, status, country filters) |
+| POST | `/api/systems` | Increment system view count |
 | POST | `/api/newsletter/subscribe` | Subscribe to newsletter |
 | POST | `/api/contact` | Submit contact form |
-| GET | `/api/stats` | Get live database counts (articles, contracts, explainers) |
+| GET | `/api/stats` | Get live database counts |
 | GET | `/feed.xml` | RSS feed output |
 
 ### Admin Endpoints (Protected by CRON_SECRET)

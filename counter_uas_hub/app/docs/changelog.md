@@ -2,6 +2,54 @@
 
 All notable changes to DroneWire are documented in this file.
 
+## [1.4.0] - 2026-01-15
+
+### Systems Database (New Feature)
+
+Added new "Systems" tab showcasing Counter-UAS systems including C2 systems, sensors, effectors, and integrated solutions.
+
+**Database:**
+- Added `System` model with comprehensive fields (category, manufacturer, country, specifications, combat record, etc.)
+- Added `SystemTag` join table for many-to-many tag relationships
+- Categories: c2 (Command & Control), sensor, effector, integrated
+- Status types: operational, contracted, development, prototype
+
+**API:**
+- `GET /api/systems` - Paginated list with category, status, country, manufacturer, and search filters
+- `POST /api/systems` - Increment view count
+
+**Pages:**
+- `/systems` - Listing page with featured section, category/status filters, search
+- `/systems/[slug]` - Detail page with specifications sidebar, combat record, related systems
+
+**Components:**
+- `components/systems/systems-header.tsx` - Search and filter controls
+
+**Seed Data (13 systems):**
+- US Integrated: FS-LIDS, M-LIDS, MADIS, L-MADIS
+- US Sensors: KURFS, LSTAR
+- US Effectors: Coyote Block 2+, Coyote Block 3, THOR, DroneDefender
+- Allied: Drone Dome (Israel), Iron Dome (Israel), DroneShield RfPatrol (Australia)
+
+**Navigation:**
+- Added "Systems" tab to main navigation (between Articles and Explainers)
+
+**Files Created:**
+- `prisma/schema.prisma` (updated with System, SystemTag models)
+- `app/api/systems/route.ts`
+- `app/systems/page.tsx`
+- `app/systems/[slug]/page.tsx`
+- `components/systems/systems-header.tsx`
+- `scripts/seed-systems.ts`
+
+**Files Modified:**
+- `components/layout/header.tsx` (navigation)
+
+**Known Limitation:**
+- System images currently use placeholder icons by category (photos pending - need verified public domain/DoD images)
+
+---
+
 ## [1.3.0] - 2026-01-12
 
 ### UI/UX Polish (Priority 4)
@@ -193,7 +241,8 @@ experimental: {
 
 ## Pending Features
 
-### Priority 4: Future Enhancements
+### Priority 5: Future Enhancements
+- [ ] System images (need verified public domain/DoD photos)
 - [ ] Admin dashboard improvements
 - [ ] AI-powered related articles (embeddings)
 - [ ] Email alerts for breaking news
@@ -201,6 +250,7 @@ experimental: {
 
 ### TODO
 - [ ] Set ADMIN_EMAIL in Vercel for contact form notifications
+- [ ] Add public domain images to Systems database
 
 ---
 
@@ -208,6 +258,7 @@ experimental: {
 
 | Version | Date | Description |
 |---------|------|-------------|
+| 1.4.0 | 2026-01-15 | Systems database with 13 C-UAS systems |
 | 1.3.0 | 2026-01-12 | UI/UX polish, dynamic stats, explainer seeding |
 | 1.2.0 | 2026-01-12 | Email integration (Resend), RSS feed |
 | 1.1.0 | 2026-01-12 | Search, related articles, image extraction |

@@ -1,6 +1,6 @@
 # DroneWire Project Status
 
-**Last Updated:** January 12, 2026
+**Last Updated:** January 15, 2026
 
 ---
 **Live Site:** https://drone-wire.vercel.app
@@ -17,6 +17,8 @@
 | Home Page | ✅ Working | Hero, featured articles, newsletter CTA |
 | Articles List | ✅ Working | 10 articles, pagination, filtering |
 | Article Detail | ✅ Working | AI summaries, key points, tags |
+| **Systems Database** | ✅ Working | **13 C-UAS systems (photos pending)** |
+| **System Detail** | ✅ Working | **Specs, combat record, related systems** |
 | Explainers Library | ✅ Working | 23 explainers with categories |
 | Explainer Detail | ✅ Working | Full content, sidebar with features |
 | Contracts Page | ✅ Working | DoD contracts with sorting |
@@ -39,6 +41,7 @@
 | Metric | Count |
 |--------|-------|
 | Articles | 14 |
+| **Systems** | **13** |
 | Explainers | 23 |
 | Contracts | 1 |
 | Tags | Multiple |
@@ -66,7 +69,7 @@
 | Region | us-west-2 (AWS) |
 | Connection | Transaction Pooler (IPv4) |
 | Port | 6543 |
-| Tables | 10 |
+| Tables | 12 |
 
 ### Environment Variables (Vercel)
 
@@ -134,7 +137,16 @@
 - [x] Fixed explainer title truncation in sidebar
 - [x] Seeded 23 comprehensive counter-UAS explainers
 
-### Future (Priority 4)
+### Completed (Priority 5 - Systems Feature)
+- [x] Database schema for Systems (System, SystemTag models)
+- [x] API route with filtering (/api/systems)
+- [x] Systems listing page with featured section
+- [x] System detail page with specifications sidebar
+- [x] Navigation tab added
+- [x] Seeded 13 C-UAS systems (US military + allied)
+- [ ] **System images - PENDING (need verified public domain/DoD photos)**
+
+### Future (Priority 6)
 - [ ] Admin dashboard improvements
 - [ ] AI-powered related articles
 - [ ] Email alerts for breaking news
@@ -205,6 +217,42 @@ git push origin main           # Auto-deploys to Vercel
 - **Project:** https://supabase.com/dashboard/project/qbeioesktbpvdlgzrgsm
 - **Database:** Table Editor, SQL Editor
 - **Logs:** Database logs and API logs
+
+---
+
+---
+
+## Where We Left Off (January 15, 2026)
+
+**Last Task Completed:** Systems feature implementation
+
+**Systems v1.4.0 is live** with 13 Counter-UAS systems seeded:
+- US Integrated: FS-LIDS, M-LIDS, MADIS, L-MADIS
+- US Sensors: KURFS, LSTAR
+- US Effectors: Coyote Block 2+, Coyote Block 3, THOR, DroneDefender
+- Allied: Drone Dome (Israel), Iron Dome (Israel), DroneShield RfPatrol (Australia)
+
+**Next Task: Add System Photos**
+
+The systems currently display placeholder icons by category. To add photos:
+
+1. Find verified public domain or DoD-released images for each system
+2. Images should be from defense.gov, DVIDS, or manufacturer press releases with public use permitted
+3. Host images on a reliable CDN (or add to project if small)
+4. Update each system's `imageUrl` field in the database:
+   ```bash
+   npx prisma studio  # Use the GUI to update imageUrl fields
+   ```
+   Or create a migration script in `/scripts/`
+
+**Systems needing photos:**
+- FS-LIDS, M-LIDS, MADIS, L-MADIS (SRC Inc. / USMC)
+- KURFS, LSTAR (SRC Inc.)
+- Coyote Block 2+, Coyote Block 3 (Raytheon)
+- THOR (AFRL)
+- DroneDefender (Battelle)
+- Drone Dome, Iron Dome (Rafael)
+- DroneShield RfPatrol (DroneShield)
 
 ---
 
