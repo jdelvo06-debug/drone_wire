@@ -1323,6 +1323,7 @@ The system specifically addresses the increasing resilience of modern drones to 
     manufacturer: 'General Dynamics Land Systems / Leonardo DRS',
     country: 'United States',
     status: 'operational',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2104/6612523/1000w_q95.jpg',
     primaryCapability: 'Mobile short-range air defense against UAS, rotary-wing, and fixed-wing threats for maneuver forces.',
     specifications: [
       '30mm XM914 Bushmaster chain gun',
@@ -1415,6 +1416,7 @@ NINJA provides Air Force bases with an electronic warfare capability specificall
     manufacturer: 'L3Harris',
     country: 'United States',
     status: 'operational',
+    imageUrl: 'https://www.l3harris.com/sites/default/files/2024-06/ims-gos-eoir-effective-vampire1.jpg',
     primaryCapability: 'Palletized ISR and precision strike capability using APKWS laser-guided rockets against UAS and ground targets.',
     specifications: [
       'WESCAM MX-10D sighting system',
@@ -1642,6 +1644,7 @@ DRAKE extends the Navy proven counter-IED electronic warfare capability to addre
     manufacturer: 'Smart Shooter Ltd.',
     country: 'Israel',
     status: 'operational',
+    imageUrl: 'https://www.smart-shooter.com/wp-content/uploads/2021/01/SMASH-3000-1.png',
     primaryCapability: 'Rifle-mounted fire control system enabling precise engagement of small UAS with standard firearms.',
     specifications: [
       'Rifle-mounted system',
@@ -1948,6 +1951,7 @@ Maven Smart System brings commercial AI capabilities to Air Force operations, en
     manufacturer: 'Raytheon',
     country: 'United States',
     status: 'operational',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2408/8661016/1000w_q95.jpg',
     primaryCapability: 'Close-in kinetic defense using rapid-fire 20mm cannon against UAS and rockets.',
     specifications: [
       '20mm M61A1 Gatling gun',
@@ -1992,6 +1996,7 @@ LPWS brings the proven Phalanx CIWS capability ashore, providing bases with auto
     manufacturer: 'Raytheon / Kord Technologies',
     country: 'United States',
     status: 'development',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2506/9107830/1000w_q95.jpg',
     primaryCapability: '50-kilowatt high-energy laser for mobile counter-UAS and short-range air defense.',
     specifications: [
       '50-kilowatt laser',
@@ -2157,6 +2162,7 @@ CORIAN provides the Navy with counter-UAS capability that integrates with both N
     manufacturer: 'D-Fend Solutions',
     country: 'Israel',
     status: 'operational',
+    imageUrl: 'https://d-fendsolutions.com/wp-content/uploads/EnforceAir-System-Banner-with-EA-PLUS-1.jpg',
     primaryCapability: 'RF-based drone detection with cyber-takeover capability for controlled mitigation.',
     specifications: [
       'Passive RF detection',
@@ -2281,6 +2287,7 @@ AirGuard provides civilian critical infrastructure with drone detection capabili
     manufacturer: 'Airobotics',
     country: 'Israel',
     status: 'operational',
+    imageUrl: 'https://www.airoboticsdrones.com/wp-content/uploads/main_pic.jpg',
     primaryCapability: 'Autonomous drone interception without reliance on GPS denial or RF jamming.',
     specifications: [
       'Autonomous operation',
