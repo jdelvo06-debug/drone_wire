@@ -145,20 +145,24 @@ curl http://localhost:3000/api/cron/process-ai -H "Authorization: Bearer $CRON_S
 The Systems section (`/systems`) provides a comprehensive database of counter-UAS technologies:
 
 **Categories:**
-- `integrated` - Complete C-UAS solutions (FS-LIDS, MADIS, Iron Dome, Drone Dome)
-- `sensor` - Detection systems (KURFS, AN/TPQ-50 LSTAR, DroneShield RfPatrol)
-- `effector` - Defeat systems (Coyote, THOR, DroneDefender)
+- `integrated` - Complete C-UAS solutions (FS-LIDS, MADIS, Iron Dome, M-SHORAD, VAMPIRE)
+- `sensor` - Detection systems (KURFS, AN/TPQ-50 LSTAR, DroneShield RfPatrol, AirGuard)
+- `effector` - Defeat systems (Coyote, THOR, DroneDefender, Iron Beam, APKWS II, Dronebuster)
+- `c2` - Command & Control systems (FAAD C2, IBCS, MEDUSA C2, Reactor, DroneSentry-C2)
 
 **Status Types:** `operational`, `contracted`, `development`, `prototype`, `retired`
 
-**Current Systems (13):**
-- US: FS-LIDS, M-LIDS, MADIS, L-MADIS, KURFS, AN/TPQ-50 LSTAR, Coyote Block 2+/3, THOR, DroneDefender
-- Israel: Iron Dome, Drone Dome
-- Australia: DroneShield RfPatrol
+**Current Systems (53):**
+- **US (35+):** FS-LIDS, M-LIDS, MADIS, L-MADIS, M-SHORAD, DE M-SHORAD, KURFS, AN/TPQ-50 LSTAR, Coyote Block 2+/3, THOR, DroneDefender, VAMPIRE, APKWS II, NINJA, Dronebuster, DRAKE, LPWS, IFPC-HPM, IFPC Increment 2, MRIC, FAAD C2, IBCS, MEDUSA C2, Reactor, TOC-L, Maven Smart System, Leonidas, Roadrunner, Pulsar, HELWS, CORIAN, Bal Chatri, NightFighter S
+- **Israel (6):** Iron Dome, Drone Dome, Iron Beam, SmartShooter, Iron Drone, EnforceAir
+- **Europe (7):** PARADE (France), MANTIS (Germany), Falcon Shield (Italy), JEY-CUAS (EU), BOREADES (France), AirGuard (Germany), ThunderShield (France)
+- **Other (3):** DroneShield RfPatrol (Australia), Crow/ORCUS (UK/Spain), AS3 Surveyor (Poland), Sting (Ukraine)
 
-**Image Sources:** System images are sourced from DVIDS (DoD public domain), manufacturer websites (Raytheon, Rafael, SRC Inc., DroneShield, AFRL), and defense publications.
+**Image Sources:** System images are sourced from DVIDS (DoD public domain), manufacturer websites (Raytheon, Rafael, L3Harris, BAE Systems, Epirus, DroneShield, Smart Shooter, D-Fend Solutions, Airobotics), and defense publications.
 
-**Seeding:** `npx tsx scripts/seed-systems.ts`
+**Seeding & Updates:**
+- `npx tsx scripts/seed-systems.ts` - Seed all systems
+- `npx tsx scripts/update-system-images.ts` - Update images for existing systems
 
 ### API Routes
 
