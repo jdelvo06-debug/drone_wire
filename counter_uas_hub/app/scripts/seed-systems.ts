@@ -2515,6 +2515,1124 @@ ThunderShield represents Europe entry into the high-powered microwave counter-sw
 
 NightFighter S provides Marines with organic counter-UAS capability for expeditionary operations.`,
   },
+  // HIGH-PRIORITY SYSTEMS FROM NOTEBOOKLM RESEARCH
+  {
+    name: 'SkyHunter',
+    slug: 'skyhunter',
+    description: 'U.S. variant of the Israeli Tamir interceptor missile, serving as the primary kinetic effector for the Marine Corps Medium-Range Intercept Capability (MRIC).',
+    category: 'effector',
+    manufacturer: 'Raytheon / Rafael',
+    country: 'United States',
+    status: 'operational',
+    primaryCapability: 'Short-to-medium range ground-based air defense interceptor for cruise missiles, UAS, and low-flying aircraft.',
+    specifications: [
+      'Derived from Iron Dome Tamir missile',
+      'Cost: ~$180,800 per round (FY25)',
+      'Ground-launched interceptor',
+      'Active radar seeker',
+      'Proximity fuse warhead',
+    ],
+    platforms: ['MRIC Launcher', 'Ground-based'],
+    deployedBy: ['US Marine Corps'],
+    inServiceDate: '2024',
+    effectiveRange: '4-70 km',
+    whatItIs: 'SkyHunter is the American variant of the Tamir interceptor used in Israel\'s Iron Dome system. It was selected as the primary kinetic kill mechanism for the U.S. Marine Corps\' Medium-Range Intercept Capability (MRIC) program to defend fixed sites against aerial threats.',
+    howItWorks: 'SkyHunter uses an active radar seeker to home in on targets after launch. The missile is guided toward the threat and detonates its proximity-fused warhead near the target, destroying it with fragmentation. It integrates with the AN/TPS-80 G/ATOR radar for target acquisition.',
+    keyFeatures: [
+      'Proven Iron Dome heritage',
+      'Active radar guidance',
+      'Multi-target engagement capability',
+      'Integration with G/ATOR radar',
+      'Rapid reload capability',
+    ],
+    advantages: [
+      'Combat-proven design from Iron Dome',
+      'High intercept probability',
+      'Effective against diverse aerial threats',
+      'Scalable deployment',
+    ],
+    disadvantages: [
+      'Cost per round (~$180K)',
+      'Requires radar support infrastructure',
+      'Limited magazine depth',
+    ],
+    combatRecord: 'Based on Tamir missile with extensive combat record in Israel intercepting thousands of rockets and drones.',
+    relatedSystems: ['Iron Dome', 'MRIC', 'G/ATOR'],
+    featured: true,
+    content: `## Overview
+
+SkyHunter represents the Americanization of Israel's highly successful Tamir interceptor missile. Selected by the Marine Corps for the Medium-Range Intercept Capability (MRIC) program, it provides a proven kinetic solution for defeating cruise missiles, UAS, and other aerial threats.
+
+## Development History
+
+The missile emerged from the U.S.-Israel co-production agreement for Iron Dome components. Raytheon partnered with Rafael to produce the interceptor domestically, ensuring supply chain security and allowing modifications for U.S. operational requirements.
+
+## Technical Capabilities
+
+SkyHunter employs:
+- **Active Radar Seeker**: Autonomous terminal guidance
+- **Proximity Fuse**: Optimal detonation timing
+- **Agile Airframe**: High-G maneuverability for intercept
+
+## MRIC Integration
+
+The Marine Corps awarded Raytheon a $25 million contract in August 2024 for 80 SkyHunter missiles to support initial platoon-level capability. Plans call for 12 MRIC platoons utilizing this interceptor alongside the G/ATOR radar.
+
+## Cost Considerations
+
+At approximately $180,800 per round (FY25 estimate), SkyHunter addresses the cost-curve challenge better than larger missiles like Patriot or SM-2, while providing effective kinetic defeat capability.`,
+  },
+  {
+    name: 'DroneHunter F700',
+    slug: 'dronehunter-f700',
+    description: 'Autonomous interceptor drone that uses AI-guided nets to capture hostile UAS without kinetic destruction, minimizing collateral damage.',
+    category: 'effector',
+    manufacturer: 'Fortem Technologies',
+    country: 'United States',
+    status: 'operational',
+    primaryCapability: 'Autonomous pursuit and non-lethal capture of hostile drones using net-based interception.',
+    specifications: [
+      'Autonomous AI-guided flight',
+      'Net capture system',
+      'Parachute recovery of captured drones',
+      '85% autonomous capture success rate',
+      'Multi-drone coordination capable',
+    ],
+    platforms: ['Autonomous drone platform'],
+    deployedBy: ['US Military', 'Commercial Security'],
+    inServiceDate: '2020',
+    whatItIs: 'DroneHunter F700 is an autonomous counter-drone interceptor that uses artificial intelligence to pursue and physically capture hostile UAS. Unlike kinetic effectors that destroy targets, it uses a net-based capture system to neutralize threats without creating debris.',
+    howItWorks: 'The system uses AI algorithms to autonomously track and pursue hostile drones. Once in range, it deploys a capture net that entangles the target. The captured drone is then either towed to a safe location or lowered with a parachute, preventing damage to people or property below.',
+    keyFeatures: [
+      'Fully autonomous operation',
+      'AI-guided pursuit and capture',
+      'Non-destructive neutralization',
+      'Forensic evidence preservation',
+      'Safe for populated areas',
+    ],
+    advantages: [
+      'No collateral damage from debris',
+      'Preserves drone for forensic analysis',
+      'Safe for use over populated areas',
+      '85% capture success rate',
+      'Can operate in GPS-denied environments',
+    ],
+    disadvantages: [
+      'Limited to single-target engagement',
+      'Weather dependent operations',
+      'Target size limitations',
+      'Requires launch infrastructure',
+    ],
+    combatRecord: 'Deployed for critical infrastructure protection and high-profile event security.',
+    relatedSystems: ['FAAD C2', 'Lattice'],
+    featured: true,
+    content: `## Overview
+
+DroneHunter F700 represents an innovative approach to counter-UAS operations by capturing rather than destroying hostile drones. This non-kinetic solution is particularly valuable in environments where collateral damage from debris is unacceptable.
+
+## Autonomous Operation
+
+The system employs sophisticated AI algorithms that enable:
+- **Autonomous Detection**: Integration with ground-based sensors
+- **Pursuit Logic**: Optimal intercept trajectory calculation
+- **Capture Execution**: Precision net deployment
+
+## Capture Technology
+
+Unlike jammers or kinetic interceptors, DroneHunter physically captures targets using a specialized net system. Once captured, the target can be:
+1. Towed to a designated safe area
+2. Lowered with an integrated parachute
+3. Retrieved for forensic examination
+
+## Operational Advantages
+
+The 85% autonomous capture success rate makes DroneHunter effective for protecting sensitive facilities where traditional kinetic options pose risks. It is integrated with the FAAD C2 architecture, allowing coordinated employment alongside other C-UAS systems.
+
+## Use Cases
+
+Ideal deployment scenarios include:
+- Airports and aviation facilities
+- Stadiums and large public events
+- Critical infrastructure
+- Urban environments`,
+  },
+  {
+    name: 'Lattice',
+    slug: 'lattice',
+    description: 'AI-powered operating system and mission control platform from Anduril that enables sensor fusion, autonomous operations, and multi-asset command across C-UAS architectures.',
+    category: 'c2',
+    manufacturer: 'Anduril Industries',
+    country: 'United States',
+    status: 'operational',
+    primaryCapability: 'Software platform providing sensor fusion, autonomous mission control, and multi-domain situational awareness for counter-UAS operations.',
+    specifications: [
+      'Real-time sensor fusion engine',
+      'Multi-asset autonomous control',
+      'AI/ML threat classification',
+      'Scalable cloud architecture',
+      'API integration capability',
+    ],
+    platforms: ['Software Platform', 'Cloud/Edge'],
+    deployedBy: ['US Military', 'US Border Patrol', 'Allied Nations'],
+    inServiceDate: '2019',
+    whatItIs: 'Lattice is Anduril\'s proprietary operating system that serves as the "brain" of autonomous defense systems. It provides real-time sensor fusion, AI-driven decision support, and the ability to control multiple autonomous assets from a single interface.',
+    howItWorks: 'Lattice ingests data from diverse sensors (radar, EO/IR, RF) and uses machine learning algorithms to fuse this information into a unified operational picture. Operators can then command autonomous systems like drones and ground sensors through the platform, with AI handling routine tasks and flagging threats for human decision.',
+    keyFeatures: [
+      'Real-time multi-sensor fusion',
+      'Single-operator multi-asset control',
+      'AI-powered threat identification',
+      'Autonomous mission execution',
+      'Modular architecture',
+    ],
+    advantages: [
+      'Reduces operator workload',
+      'Accelerates kill chain timeline',
+      'Scalable to large operations',
+      'Continuous AI improvement',
+    ],
+    disadvantages: [
+      'Proprietary ecosystem',
+      'Integration complexity with legacy systems',
+      'Requires significant training',
+    ],
+    combatRecord: 'Deployed for border security, ISR missions, and base defense operations.',
+    relatedSystems: ['Ghost drone', 'Altius', 'Sentry Tower'],
+    featured: true,
+    content: `## Overview
+
+Lattice represents Anduril's vision for AI-enabled military operations: a software platform that can fuse sensor data, coordinate autonomous systems, and accelerate human decision-making across the kill chain.
+
+## Architecture
+
+The platform operates on three levels:
+1. **Edge Processing**: Local AI at sensor nodes
+2. **Fusion Engine**: Central data integration
+3. **Command Interface**: Operator decision support
+
+## Sensor Fusion
+
+Lattice excels at combining disparate sensor inputs into coherent tracks:
+- Radar returns
+- RF signatures
+- Electro-optical imagery
+- Acoustic detections
+
+## Autonomous Control
+
+A single operator using Lattice can simultaneously control multiple autonomous assets including:
+- Ghost reconnaissance drones
+- Altius strike platforms
+- Sentry surveillance towers
+
+## C-UAS Application
+
+For counter-drone missions, Lattice provides:
+- Automated threat detection and classification
+- Optimal effector selection recommendations
+- Engagement authorization workflows
+- Battle damage assessment
+
+## Ecosystem Considerations
+
+While powerful, Lattice operates as a vertically integrated system. Organizations must weigh its capabilities against the benefits of open architectures like SAPIENT for multi-vendor interoperability.`,
+  },
+  {
+    name: 'DedroneTracker',
+    slug: 'dedronetracker',
+    description: 'AI/ML-driven command and control platform providing single-pane-of-glass airspace security through multi-sensor fusion and automated threat response.',
+    category: 'c2',
+    manufacturer: 'Dedrone (Axon)',
+    country: 'United States',
+    status: 'operational',
+    primaryCapability: 'AI-powered C2 software for complete drone detection, tracking, identification, and mitigation workflow management.',
+    specifications: [
+      'AI/ML threat classification',
+      'Identifies 200+ drone models',
+      'Multi-sensor fusion (RF, radar, optical, acoustic)',
+      'Cloud or on-premise deployment',
+      'API integration for effectors',
+    ],
+    platforms: ['Software Platform', 'Cloud/On-Premise'],
+    deployedBy: ['US Government', 'Commercial', 'International'],
+    inServiceDate: '2014',
+    whatItIs: 'DedroneTracker (also known as DedroneTracker.AI) is a comprehensive airspace security platform that uses artificial intelligence and machine learning to detect, track, identify, and help neutralize drone threats through a unified software interface.',
+    howItWorks: 'The platform ingests data from multiple sensor types including RF analyzers, radars, acoustic sensors, and PTZ cameras. AI algorithms fuse this data to create unified tracks, classify threats against a database of 200+ known drone signatures, and can automatically cue mitigation systems for operator-authorized response.',
+    keyFeatures: [
+      'Single-pane-of-glass interface',
+      'AI-powered threat identification',
+      '200+ drone signature database',
+      'Friend/foe discrimination',
+      'Automated effector cueing',
+    ],
+    advantages: [
+      'Vendor-agnostic sensor integration',
+      'Rapid threat identification',
+      'Flexible deployment options',
+      'Proven commercial track record',
+    ],
+    disadvantages: [
+      'Subscription-based licensing',
+      'Requires quality sensor inputs',
+      'Limited to supported effector integrations',
+    ],
+    combatRecord: 'Deployed at hundreds of sites globally including airports, stadiums, prisons, and government facilities.',
+    relatedSystems: ['DroneDefender', 'FAAD C2'],
+    featured: false,
+    content: `## Overview
+
+DedroneTracker represents one of the leading commercial C-UAS command and control platforms, trusted by hundreds of organizations worldwide for airspace security. Now part of Axon, Dedrone combines extensive drone intelligence with AI-powered operations.
+
+## Platform Capabilities
+
+The system manages the complete DTI-M (Detect, Track, Identify, Mitigate) workflow:
+
+### Detection & Tracking
+- RF sensor integration for drone communication detection
+- Radar integration for flight path tracking
+- Optical sensors for visual confirmation
+- Acoustic sensors for audio signature detection
+
+### Identification
+DedroneTracker's AI engine can identify over 200 different drone models by their unique signatures, enabling rapid friend/foe discrimination.
+
+### Mitigation
+The platform integrates with various effectors and can automatically cue jamming systems, alert security personnel, or initiate other response protocols.
+
+## Deployment Options
+
+- **Cloud-hosted**: Secure SaaS deployment
+- **On-premise**: Air-gapped server installation
+- **Hybrid**: Combined approach for flexibility
+
+## Use Cases
+
+Dedrone protects:
+- Airports and aviation infrastructure
+- Correctional facilities
+- Sports stadiums and entertainment venues
+- Government buildings
+- Critical infrastructure`,
+  },
+  {
+    name: 'ODIN',
+    slug: 'odin',
+    description: 'Optical Dazzling Interdictor, Navy - shipboard directed energy system that blinds drone sensors to defeat ISR threats without kinetic destruction.',
+    category: 'effector',
+    manufacturer: 'US Navy',
+    country: 'United States',
+    status: 'operational',
+    primaryCapability: 'Non-destructive defeat of ISR drones by dazzling optical sensors with directed laser energy.',
+    specifications: [
+      'Low-power laser system',
+      'Optical sensor dazzling',
+      'Shipboard integration',
+      '$261M R&D investment',
+      'Low-rate production (2025)',
+    ],
+    platforms: ['Arleigh Burke-class destroyers', 'Surface combatants'],
+    deployedBy: ['US Navy'],
+    inServiceDate: '2025',
+    whatItIs: 'ODIN (Optical Dazzling Interdictor, Navy), designated AN/SEQ-4, is a shipboard directed energy weapon that uses laser energy to "dazzle" or blind the optical sensors on hostile drones, preventing them from conducting surveillance or targeting.',
+    howItWorks: 'Unlike high-energy lasers that burn through targets, ODIN uses lower power to overwhelm and blind drone cameras and sensors. By saturating optical systems with intense light, it renders ISR drones ineffective without physically destroying them, preserving the option for kinetic engagement if needed.',
+    keyFeatures: [
+      'Non-destructive defeat mechanism',
+      'Counter-ISR specialization',
+      'Unlimited magazine depth',
+      'Low cost per engagement',
+      'Scalable to fleet deployment',
+    ],
+    advantages: [
+      'Defeats ISR mission without kinetic response',
+      'Near-zero cost per shot',
+      'No ammunition logistics',
+      'Proportional response option',
+    ],
+    disadvantages: [
+      'Does not destroy target',
+      'Limited to optical sensor defeat',
+      'Weather dependent',
+      'Requires line of sight',
+    ],
+    combatRecord: 'Developed in response to drone surveillance threats; deployed on Navy destroyers.',
+    relatedSystems: ['HELWS', 'DE M-SHORAD'],
+    featured: true,
+    content: `## Overview
+
+ODIN represents the Navy's approach to the drone ISR problem: rather than expensive kinetic intercepts, use directed energy to blind drone sensors and deny the adversary intelligence. After $261 million in R&D, the system transitioned to low-rate production in 2025.
+
+## Operational Concept
+
+ODIN fills a unique niche in naval C-UAS:
+1. **Detection**: Ship sensors identify approaching UAS
+2. **Classification**: Threat assessed as ISR platform
+3. **Engagement**: ODIN dazzles optical sensors
+4. **Effect**: Drone cannot collect useful intelligence
+
+## Technical Approach
+
+Unlike high-energy lasers designed to destroy targets through thermal damage, ODIN uses lower power levels optimized for sensor disruption:
+- Overwhelms camera CCDs
+- Blinds targeting systems
+- Prevents accurate surveillance
+
+## Tactical Value
+
+ODIN provides commanders with a proportional response option. Instead of launching missiles at every drone contact, ships can deny ISR collection while preserving kinetic options for confirmed threats.
+
+## Fleet Integration
+
+Deployed on Arleigh Burke-class destroyers, ODIN complements existing point defense systems like CIWS and RAM, adding a non-kinetic layer to shipboard defense.
+
+## Cost Effectiveness
+
+With effectively unlimited shots limited only by electrical power, ODIN dramatically improves the cost-exchange ratio compared to missile engagements against low-cost drones.`,
+  },
+  {
+    name: 'Phaser',
+    slug: 'phaser',
+    description: 'High-Power Microwave (HPM) directed energy weapon designed to defeat drone swarms by frying electronics across a wide area with electromagnetic pulses.',
+    category: 'effector',
+    manufacturer: 'Raytheon',
+    country: 'United States',
+    status: 'development',
+    primaryCapability: 'Area-effect defeat of multiple drones simultaneously through high-power microwave energy.',
+    specifications: [
+      'High-Power Microwave emitter',
+      'Wide-area effect cone',
+      'Multi-target simultaneous engagement',
+      'Solid-state electronics',
+      'Trailer or vehicle mounted',
+    ],
+    platforms: ['Trailer-mounted', 'Vehicle-mounted'],
+    deployedBy: ['US Army', 'US Air Force'],
+    whatItIs: 'Phaser is a High-Power Microwave (HPM) weapon system that emits concentrated electromagnetic energy to disable drone electronics. Unlike lasers that engage one target at a time, HPM can affect multiple drones simultaneously within its beam cone.',
+    howItWorks: 'Phaser generates intense bursts of microwave energy directed at incoming threats. These electromagnetic pulses induce currents in drone electronics, causing component failure, navigation disruption, or complete system shutdown. The wide beam allows engagement of drone swarms that would overwhelm point-defense systems.',
+    keyFeatures: [
+      'Simultaneous multi-target defeat',
+      'Wide area of effect',
+      'Deep magazine (unlimited shots)',
+      'Effective against swarms',
+      'Non-kinetic defeat',
+    ],
+    advantages: [
+      'Only viable counter-swarm solution',
+      'Near-zero cost per engagement',
+      'No ammunition constraints',
+      'Rapid engagement cycle',
+    ],
+    disadvantages: [
+      'May affect friendly electronics',
+      'Range limitations',
+      'Power generation requirements',
+      'Less effective against hardened targets',
+    ],
+    relatedSystems: ['Leonidas', 'THOR', 'IFPC-HPM'],
+    featured: true,
+    content: `## Overview
+
+Phaser represents Raytheon's entry into the High-Power Microwave counter-UAS market. As drone swarms emerge as a primary threat, HPM systems like Phaser offer the only practical solution for engaging dozens or hundreds of simultaneous targets.
+
+## The Swarm Problem
+
+Traditional air defense faces a fundamental challenge against swarms:
+- Missiles: Limited magazine, high cost per shot
+- Guns: Rate of fire insufficient for mass attacks
+- Lasers: Engage one target at a time (dwell time)
+
+HPM provides the answer: area-effect defeat of multiple targets simultaneously.
+
+## Technical Principles
+
+Phaser generates focused microwave energy that:
+1. Penetrates drone airframes
+2. Induces current in electronic circuits
+3. Causes component failure or upset
+4. Results in loss of control or destruction
+
+## Integration
+
+Phaser is a supported effector within the Army's Forward Area Air Defense Command and Control (FAAD C2) architecture, allowing coordinated employment with kinetic and EW systems.
+
+## Operational Advantages
+
+The "infinite magazine" concept makes HPM economically viable against mass drone attacks where the cost-exchange ratio would favor the attacker with traditional interceptors.
+
+## Limitations
+
+HPM systems can affect unshielded friendly electronics within the beam cone. Employment requires careful coordination and may restrict friendly drone operations in the engagement area.`,
+  },
+  {
+    name: 'AN/TPS-80 G/ATOR',
+    slug: 'gator',
+    description: 'Ground/Air Task-Oriented Radar - multi-mission AESA radar providing air surveillance, air defense, and counter-fire capabilities for Marine Corps operations.',
+    category: 'sensor',
+    manufacturer: 'Northrop Grumman',
+    country: 'United States',
+    status: 'operational',
+    primaryCapability: 'Multi-mission active electronically scanned array radar for air surveillance, air defense, and counter-UAS target acquisition.',
+    specifications: [
+      'Active Electronically Scanned Array (AESA)',
+      'Multi-mission capability',
+      '360-degree coverage',
+      'Simultaneous air and ground modes',
+      'Expeditionary design',
+    ],
+    platforms: ['Trailer-mounted', 'Expeditionary'],
+    deployedBy: ['US Marine Corps'],
+    inServiceDate: '2018',
+    whatItIs: 'The AN/TPS-80 Ground/Air Task-Oriented Radar (G/ATOR) is the Marine Corps\' premier multi-mission radar system. Using active electronically scanned array technology, it provides air surveillance, air defense fire control, and counter-fire target acquisition from a single expeditionary platform.',
+    howItWorks: 'G/ATOR uses AESA technology to electronically steer radar beams without mechanical movement, enabling rapid multi-function operation. It can simultaneously track aircraft, cruise missiles, UAS, and incoming artillery while providing fire control quality tracks to air defense systems like MRIC.',
+    keyFeatures: [
+      'Multi-mission AESA radar',
+      '360-degree surveillance',
+      'Air defense fire control',
+      'Counter-UAS detection',
+      'Counter-fire capability',
+    ],
+    advantages: [
+      'Replaces multiple legacy radars',
+      'Reduced logistics footprint',
+      'Advanced electronic protection',
+      'High reliability solid-state design',
+    ],
+    disadvantages: [
+      'High acquisition cost',
+      'Power requirements',
+      'Training complexity',
+    ],
+    combatRecord: 'Fielded with Marine Corps units; primary sensor for MRIC program.',
+    relatedSystems: ['MRIC', 'SkyHunter', 'KURFS'],
+    featured: false,
+    content: `## Overview
+
+The AN/TPS-80 G/ATOR represents a generational leap in Marine Corps ground-based radar capability. By consolidating multiple legacy systems into a single multi-mission platform, G/ATOR reduces the logistics burden while dramatically improving operational capability.
+
+## Multi-Mission Capability
+
+G/ATOR performs three critical functions:
+1. **Air Surveillance**: Long-range detection and tracking
+2. **Air Defense**: Fire control quality tracks for interceptors
+3. **Counter-Fire**: Locating enemy artillery and mortars
+
+## AESA Technology
+
+Active Electronically Scanned Array technology enables:
+- Instantaneous beam steering
+- Multiple simultaneous functions
+- Enhanced electronic protection
+- High reliability with no moving parts
+
+## MRIC Integration
+
+G/ATOR serves as the primary sensor for the Medium-Range Intercept Capability (MRIC) program, providing target acquisition and fire control for SkyHunter interceptors.
+
+## Counter-UAS Role
+
+For drone defense, G/ATOR provides:
+- Detection of low-RCS UAS targets
+- Track quality sufficient for intercept
+- Integration with C2 systems
+- Persistent surveillance capability
+
+## Expeditionary Design
+
+Designed for Marine Corps expeditionary operations, G/ATOR is:
+- Rapidly deployable
+- Operable in austere environments
+- Compatible with amphibious operations`,
+  },
+  // ADDITIONAL SYSTEMS FROM NOTEBOOKLM RESEARCH
+  {
+    name: 'ADSI',
+    slug: 'adsi',
+    description: 'Air Defense System Integrator - Air Force command and control system providing theater-level interoperability between joint air defense assets.',
+    category: 'c2',
+    manufacturer: 'US Air Force',
+    country: 'United States',
+    status: 'operational',
+    primaryCapability: 'Theater-level air defense C2 interoperability, bridging Air Force and Army systems for unified air picture management.',
+    specifications: [
+      'Theater-level C2 system',
+      'FAAD C2 interoperability',
+      'Multi-service data correlation',
+      'Joint air picture management',
+    ],
+    platforms: ['Fixed Site', 'Theater C2'],
+    deployedBy: ['US Air Force', 'US Army'],
+    whatItIs: 'ADSI (Air Defense System Integrator) is an Air Force-sponsored command and control system designed to facilitate theater-level interoperability between different air defense systems, serving as a bridge between Air Force and Army C2 architectures.',
+    howItWorks: 'ADSI correlates data from multiple air defense sensors and systems across services, creating a unified air picture. It ensures seamless data sharing between the Air Force and Army systems, specifically designed to interoperate with FAAD C2.',
+    keyFeatures: [
+      'Theater-level integration',
+      'Multi-service interoperability',
+      'Air picture correlation',
+      'FAAD C2 compatible',
+    ],
+    advantages: [
+      'Enables joint operations',
+      'Reduces fratricide risk',
+      'Unified situational awareness',
+    ],
+    disadvantages: [
+      'Complex integration requirements',
+      'Legacy system dependencies',
+    ],
+    relatedSystems: ['FAAD C2', 'IBCS', 'MEDUSA C2'],
+    featured: false,
+    content: `## Overview
+
+ADSI serves as the Air Force's solution for integrating air defense data across the joint force. Selected by the DoD as an interim C2 system for counter-small UAS alongside FAAD C2.
+
+## Role in C-UAS
+
+For counter-drone operations, ADSI:
+- Correlates sensor data from multiple sources
+- Bridges Air Force and Army C2 systems
+- Enables theater-level coordination
+- Supports joint engagement decisions`,
+  },
+  {
+    name: 'AiON',
+    slug: 'aion',
+    description: 'Scalable counter-UAS command and control solution designed for edge and cloud operation with AI-powered decision aids.',
+    category: 'c2',
+    manufacturer: 'Northrop Grumman',
+    country: 'United States',
+    status: 'operational',
+    primaryCapability: 'Scalable C-UAS command and control with AI decision support, operating on tactical edge hardware or cloud environments.',
+    specifications: [
+      'Edge and cloud compatible',
+      'Tablet-based operation',
+      'AI-powered decision aids',
+      'Multi-site remote command',
+      'Low-cost architecture',
+    ],
+    platforms: ['Tablet', 'Edge Hardware', 'Cloud'],
+    deployedBy: ['US Military'],
+    whatItIs: 'AiON is Northrop Grumman\'s scalable counter-UAS command and control solution, engineered to operate on tactical edge hardware like tablets or in cloud environments, enabling operators to command multiple sites remotely with AI-assisted decision-making.',
+    howItWorks: 'AiON provides an intuitive user interface with AI-powered decision aids that reduce operator cognitive burden. It can run on lightweight tactical hardware for forward deployment or scale to cloud infrastructure for enterprise-level management of multiple C-UAS sites.',
+    keyFeatures: [
+      'AI decision support',
+      'Edge/cloud flexibility',
+      'Intuitive interface',
+      'Multi-site management',
+      'Low integration risk',
+    ],
+    advantages: [
+      'Reduces operator workload',
+      'Flexible deployment options',
+      'Low cost and risk',
+      'Rapid technology integration',
+    ],
+    disadvantages: [
+      'Newer system with limited fielding',
+      'Connectivity dependent for cloud mode',
+    ],
+    relatedSystems: ['FAAD C2', 'Lattice', 'DedroneTracker'],
+    featured: false,
+    content: `## Overview
+
+AiON represents Northrop Grumman's modern approach to C-UAS command and control, emphasizing scalability, ease of use, and AI-assisted operations.
+
+## Operational Flexibility
+
+The system's ability to operate on both tactical edge hardware and cloud infrastructure provides flexible deployment options for diverse mission requirements.
+
+## AI Integration
+
+AiON's AI-powered decision aids help operators by prioritizing threats automatically and recommending optimal effector selection.`,
+  },
+  {
+    name: 'Stinger FIM-92',
+    slug: 'stinger-fim-92',
+    description: 'Man-Portable Air-Defense System (MANPADS) surface-to-air missile serving as the primary short-range kinetic interceptor for multiple C-UAS platforms.',
+    category: 'effector',
+    manufacturer: 'Raytheon',
+    country: 'United States',
+    status: 'operational',
+    primaryCapability: 'Short-range air defense against aircraft, helicopters, and UAS using infrared homing guidance.',
+    specifications: [
+      'Infrared homing seeker',
+      'Proximity fuse upgrade for C-UAS',
+      'Man-portable or vehicle-mounted',
+      'Range: 4.8 km',
+      'Altitude: up to 3.8 km',
+    ],
+    platforms: ['Man-portable', 'M-SHORAD', 'MADIS', 'Avenger'],
+    deployedBy: ['US Army', 'US Marine Corps', '30+ allied nations'],
+    inServiceDate: '1981',
+    effectiveRange: '4.8 km',
+    whatItIs: 'The FIM-92 Stinger is the US military\'s primary man-portable air-defense system (MANPADS), a shoulder-fired surface-to-air missile that has been adapted for counter-UAS operations through proximity fuse upgrades.',
+    howItWorks: 'Stinger uses passive infrared homing to track the heat signature of airborne targets. The operator acquires the target visually, the seeker locks on to the heat source, and upon firing the missile autonomously guides to intercept. Proximity fuse upgrades allow detonation near small drones.',
+    keyFeatures: [
+      'Fire-and-forget guidance',
+      'Man-portable design',
+      'Proven combat record',
+      'Proximity fuse for C-UAS',
+      'Multi-platform integration',
+    ],
+    advantages: [
+      'Widely deployed and proven',
+      'Low operator training burden',
+      'Effective against diverse air threats',
+      'Strong logistics support base',
+    ],
+    disadvantages: [
+      'Limited effectiveness against small electric drones',
+      'Cost per missile (~$38K)',
+      'Replacement (NGSRI) in development',
+    ],
+    combatRecord: 'Extensive combat use from Afghanistan to Ukraine; credited with hundreds of aircraft kills since 1980s.',
+    relatedSystems: ['M-SHORAD', 'MADIS', 'Avenger'],
+    featured: false,
+    content: `## Overview
+
+The FIM-92 Stinger has been the backbone of US short-range air defense for over four decades. Originally designed to counter aircraft and helicopters, it has been adapted for the counter-UAS mission through technology upgrades.
+
+## Evolution for C-UAS
+
+Upgrades include proximity fuse capability for detonation near target without direct hit, and improved seeker sensitivity for small thermal signatures.
+
+## Global Presence
+
+Deployed by over 30 nations, Stinger has seen extensive combat from the Soviet-Afghan War to Ukraine.`,
+  },
+  {
+    name: 'XM914 Chain Gun',
+    slug: 'xm914-chain-gun',
+    description: '30mm medium-caliber autocannon mounted on mobile air defense vehicles, utilizing proximity-fused ammunition for counter-UAS engagements.',
+    category: 'effector',
+    manufacturer: 'Northrop Grumman',
+    country: 'United States',
+    status: 'operational',
+    primaryCapability: 'High-volume kinetic defense against Group 1-2 UAS using programmable proximity-fused ammunition.',
+    specifications: [
+      '30mm caliber',
+      '200 rounds/min rate of fire',
+      'XM1198 proximity-fused ammo',
+      'Programmable airburst capability',
+      'Vehicle-mounted',
+    ],
+    platforms: ['Stryker (M-SHORAD)', 'JLTV (MADIS)'],
+    deployedBy: ['US Army', 'US Marine Corps'],
+    inServiceDate: '2021',
+    whatItIs: 'The XM914 is a 30mm chain gun mounted on mobile air defense platforms like M-SHORAD and MADIS, providing kinetic defeat capability against small drones using advanced proximity-fused ammunition.',
+    howItWorks: 'The gun fires XM1198 proximity-fused rounds that are programmed just before firing with the target\'s range. The rounds detonate near the target, releasing shrapnel that destroys the drone without requiring a direct hit.',
+    keyFeatures: [
+      'Programmable ammunition',
+      'Proximity airburst capability',
+      'High rate of fire',
+      'Effective against small UAS',
+      'Deep magazine',
+    ],
+    advantages: [
+      'Lower cost per engagement than missiles',
+      'Large ammunition capacity',
+      'Effective against swarming threats',
+      'Dual-use against ground targets',
+    ],
+    disadvantages: [
+      'Slower rate of fire than Gatling systems',
+      'Limited range vs missiles',
+      'Ammunition logistics',
+    ],
+    relatedSystems: ['M-SHORAD', 'MADIS', 'Stinger FIM-92'],
+    featured: false,
+    content: `## Overview
+
+The XM914 30mm chain gun provides the kinetic backbone of the Army's M-SHORAD and Marine Corps' MADIS systems.
+
+## Proximity-Fused Ammunition
+
+The key to the XM914's C-UAS effectiveness is the XM1198 ammunition that detonates at programmed distance, using shrapnel pattern to destroy drone without direct hit.`,
+  },
+  {
+    name: 'DroneGun Tactical',
+    slug: 'dronegun-tactical',
+    description: 'Handheld rifle-shaped RF jamming device for dismounted counter-UAS operations, triggering drone fail-safe protocols.',
+    category: 'effector',
+    manufacturer: 'DroneShield',
+    country: 'Australia',
+    status: 'operational',
+    primaryCapability: 'Handheld RF and GNSS jamming to disrupt drone control links and navigation, forcing fail-safe responses.',
+    specifications: [
+      'Rifle-shaped form factor',
+      'RF link disruption',
+      'GNSS jamming capability',
+      'Directional antenna',
+      'Battery powered',
+    ],
+    platforms: ['Handheld', 'Dismounted'],
+    deployedBy: ['Military', 'Law Enforcement', 'Security'],
+    whatItIs: 'DroneGun Tactical is a handheld, rifle-shaped radio frequency jamming device designed for dismounted operators to defeat hostile drones by disrupting their control links and GPS navigation.',
+    howItWorks: 'The operator aims the DroneGun at the target drone and activates jamming. The device emits RF interference on common drone control frequencies and GNSS bands, triggering the drone\'s fail-safe protocol.',
+    keyFeatures: [
+      'Intuitive rifle-style operation',
+      'Multi-band jamming',
+      'Triggers fail-safe protocols',
+      'Portable and lightweight',
+      'No explosive ordnance',
+    ],
+    advantages: [
+      'Simple operation',
+      'Non-kinetic defeat',
+      'No collateral damage',
+      'Immediate effect',
+      'Reusable',
+    ],
+    disadvantages: [
+      'Line-of-sight required',
+      'Limited range',
+      'May affect friendly systems',
+      'Less effective against autonomous drones',
+    ],
+    relatedSystems: ['DroneSentry-X', 'Dronebuster', 'DroneDefender'],
+    featured: false,
+    content: `## Overview
+
+DroneGun Tactical represents the "rifle" category of handheld counter-drone jammers, providing dismounted operators with an intuitive point-and-shoot capability against UAS threats.
+
+## Jamming Effect
+
+When activated against a target drone, DroneGun disrupts the RF control link and jams GNSS signals, triggering the drone's programmed fail-safe.`,
+  },
+  {
+    name: 'DroneSentry-X',
+    slug: 'dronesentry-x',
+    description: 'Vehicle-mounted or expeditionary detect-and-defeat system combining 360-degree RF detection with integrated jamming countermeasures.',
+    category: 'integrated',
+    manufacturer: 'DroneShield',
+    country: 'Australia',
+    status: 'operational',
+    primaryCapability: 'Mobile detect-and-defeat C-UAS with integrated RF sensors and jamming effectors for on-the-move protection.',
+    specifications: [
+      '360-degree RF detection',
+      'Integrated jamming system',
+      'Vehicle or tripod mounted',
+      'Ruggedized enclosure',
+      'DroneSentry-C2 compatible',
+    ],
+    platforms: ['Vehicle-mounted', 'Tripod/Fixed'],
+    deployedBy: ['Military', 'Security Forces'],
+    whatItIs: 'DroneSentry-X is DroneShield\'s expeditionary detect-and-defeat solution, combining 360-degree RF detection sensors with integrated jamming countermeasures in a single ruggedized unit.',
+    howItWorks: 'The system continuously scans for drone RF signatures across a 360-degree field. When a threat is detected, it automatically tracks the target and can initiate jamming to disrupt control links.',
+    keyFeatures: [
+      'Integrated detect and defeat',
+      '360-degree coverage',
+      'On-the-move capability',
+      'Ruggedized design',
+      'Tablet-based control',
+    ],
+    advantages: [
+      'All-in-one solution',
+      'Mobile protection',
+      'Rapid deployment',
+      'Autonomous detection',
+    ],
+    disadvantages: [
+      'EW-only defeat mechanism',
+      'Power requirements',
+      'Limited against autonomous drones',
+    ],
+    relatedSystems: ['DroneSentry-C2', 'DroneGun Tactical', 'M-LIDS'],
+    featured: false,
+    content: `## Overview
+
+DroneSentry-X provides expeditionary forces with integrated drone detection and defeat in a single deployable package.
+
+## Deployment Modes
+
+The system supports vehicle-mounted, tripod-mounted, and fixed installation configurations.`,
+  },
+  {
+    name: 'Modi',
+    slug: 'modi',
+    description: 'Modular wearable electronic warfare system for disrupting drone communications and radio-controlled IEDs, primary effector for L-MADIS.',
+    category: 'effector',
+    manufacturer: 'Sierra Nevada Corporation',
+    country: 'United States',
+    status: 'operational',
+    primaryCapability: 'Wearable/vehicle-mounted EW system for disrupting drone control links and defeating radio-controlled IEDs.',
+    specifications: [
+      'Backpack or vehicle mounted',
+      'Dual-use: C-UAS and C-IED',
+      'Multi-band jamming',
+      'Modular architecture',
+      'Battery powered option',
+    ],
+    platforms: ['Backpack', 'Vehicle-mounted', 'L-MADIS (MRZR)'],
+    deployedBy: ['US Marine Corps', 'US Army'],
+    inServiceDate: '2020',
+    whatItIs: 'Modi is Sierra Nevada Corporation\'s modular electronic warfare system designed for both counter-UAS and counter-IED missions. It serves as the primary non-kinetic defeat mechanism for the Marine Corps\' L-MADIS system.',
+    howItWorks: 'Modi generates RF jamming signals across multiple frequency bands to disrupt drone command links and GPS navigation. Its dual-use capability also allows it to defeat radio-controlled improvised explosive devices.',
+    keyFeatures: [
+      'Dual C-UAS/C-IED capability',
+      'Modular configuration',
+      'Wearable option',
+      'Multi-band coverage',
+      'Combat proven',
+    ],
+    advantages: [
+      'Dual-threat utility',
+      'Flexible deployment',
+      'DoD-selected solution',
+      'Dismounted capability',
+    ],
+    disadvantages: [
+      'Battery life limitations for portable use',
+      'Less effective against autonomous drones',
+      'May affect friendly communications',
+    ],
+    combatRecord: 'Deployed with Marine Corps units; selected by DoD as interim dismounted/handheld C-UAS solution.',
+    relatedSystems: ['L-MADIS', 'DroneGun Tactical', 'DRAKE'],
+    featured: false,
+    content: `## Overview
+
+Modi represents the U.S. military's approach to dismounted electronic warfare, providing Marines and soldiers with portable capability to defeat both drone and IED threats.
+
+## L-MADIS Integration
+
+Modi serves as the primary electronic warfare effector for the Marine Corps' Light-MADIS system.`,
+  },
+  {
+    name: 'CORVUS-RAVEN',
+    slug: 'corvus-raven',
+    description: 'Lightweight portable electronic warfare system providing passive drone detection and situational awareness for dismounted soldiers.',
+    category: 'sensor',
+    manufacturer: 'L3Harris',
+    country: 'United States',
+    status: 'operational',
+    primaryCapability: 'Passive RF detection of drone threats at extended range with bearing indication for dismounted operators.',
+    specifications: [
+      'Passive RF detection',
+      'Detection range: up to 4 km',
+      'Threat bearing display',
+      'Lightweight/portable',
+      'Battle management integration',
+    ],
+    platforms: ['Man-portable', 'Dismounted'],
+    deployedBy: ['US Military'],
+    whatItIs: 'CORVUS-RAVEN is L3Harris\'s lightweight, portable electronic warfare system designed to give dismounted soldiers passive detection of drone threats at ranges up to 4 kilometers.',
+    howItWorks: 'The system passively detects RF emissions from drones without emitting signals that could reveal the operator\'s position. When a drone is detected, it displays the bearing to the threat.',
+    keyFeatures: [
+      'Passive detection (no emissions)',
+      'Extended detection range',
+      'Bearing indication',
+      'Lightweight design',
+      'C2 integration',
+    ],
+    advantages: [
+      'Does not reveal operator position',
+      'Long detection range for size',
+      'Simple operation',
+      'Enables early warning',
+    ],
+    disadvantages: [
+      'Detection only (no defeat)',
+      'Dependent on drone RF emissions',
+      'Cannot detect RF-silent drones',
+    ],
+    relatedSystems: ['DroneShield RfPatrol', 'Modi', 'ALPS'],
+    featured: false,
+    content: `## Overview
+
+CORVUS-RAVEN addresses the critical need for dismounted troops to detect drone threats without sophisticated fixed infrastructure.
+
+## Passive Advantage
+
+Unlike active radar or jamming systems, CORVUS-RAVEN emits no detectable signals, maintaining operator concealment.`,
+  },
+  {
+    name: 'DroneOptID',
+    slug: 'droneoptid',
+    description: 'AI-based computer vision software for detecting, classifying, and identifying specific drone models using electro-optical and infrared camera data.',
+    category: 'sensor',
+    manufacturer: 'DroneShield',
+    country: 'Australia',
+    status: 'operational',
+    primaryCapability: 'AI-powered visual drone detection, classification, and identification using EO/IR camera feeds.',
+    specifications: [
+      'AI/ML computer vision',
+      'EO/IR camera integration',
+      'Drone model identification',
+      'Atmospheric compensation',
+      'Multi-spectral fusion',
+    ],
+    platforms: ['Software', 'Integrated with cameras'],
+    deployedBy: ['Military', 'Commercial Security'],
+    whatItIs: 'DroneOptID is DroneShield\'s AI-based computer vision engine that uses artificial intelligence to detect, classify, and identify specific drone models from electro-optical and infrared camera imagery.',
+    howItWorks: 'The software analyzes video feeds from EO/IR cameras using machine learning algorithms trained on drone imagery. It can detect drones in cluttered environments and identify specific models.',
+    keyFeatures: [
+      'AI-powered detection',
+      'Model-level identification',
+      'Environmental compensation',
+      'Multi-spectral capability',
+      'Continuous learning',
+    ],
+    advantages: [
+      'Visual confirmation of threats',
+      'Works in RF-denied environments',
+      'Specific drone identification',
+      'Complements RF detection',
+    ],
+    disadvantages: [
+      'Weather/visibility dependent',
+      'Requires quality camera inputs',
+      'Processing requirements',
+    ],
+    relatedSystems: ['DroneSentry-C2', 'WESCAM MX-15D'],
+    featured: false,
+    content: `## Overview
+
+DroneOptID represents the visual detection layer of modern C-UAS systems, using artificial intelligence to find and identify drones in camera imagery.
+
+## AI Capabilities
+
+The software provides detection, classification, identification, and tracking of drone targets.`,
+  },
+  {
+    name: 'WESCAM MX-15D',
+    slug: 'wescam-mx-15d',
+    description: 'Multi-spectral electro-optical/infrared surveillance and targeting turret providing precision target acquisition for C-UAS systems.',
+    category: 'sensor',
+    manufacturer: 'L3Harris',
+    country: 'United States',
+    status: 'operational',
+    primaryCapability: 'Multi-spectral EO/IR surveillance and precision targeting for airborne and ground-based C-UAS applications.',
+    specifications: [
+      'Multi-spectral EO/IR sensors',
+      '4-axis stabilization',
+      'Laser designator/rangefinder',
+      'Target tracking',
+      'Multiple sensor payloads',
+    ],
+    platforms: ['VAMPIRE system', 'Aircraft', 'Ground vehicles'],
+    deployedBy: ['US Military', 'Allied Nations'],
+    whatItIs: 'The WESCAM MX-15D is a multi-spectral electro-optical/infrared turret system providing advanced surveillance and precision targeting. The MX-10 variant serves as the sensor payload for the VAMPIRE counter-UAS system.',
+    howItWorks: 'The turret combines multiple sensors including daylight cameras, infrared imagers, and laser systems on a highly stabilized 4-axis gimbal. For C-UAS applications, it provides the visual tracking data needed to guide kinetic interceptors like APKWS rockets.',
+    keyFeatures: [
+      'Multi-spectral imaging',
+      'High stabilization',
+      'Laser designation',
+      'Precision tracking',
+      'Platform versatility',
+    ],
+    advantages: [
+      'Proven system with global deployment',
+      'Multiple sensor integration',
+      'Works from moving platforms',
+      'Day/night capability',
+    ],
+    disadvantages: [
+      'Weather dependent',
+      'Line-of-sight limited',
+      'High cost',
+    ],
+    combatRecord: 'Widely deployed; key targeting sensor for VAMPIRE systems currently operational in Ukraine.',
+    relatedSystems: ['VAMPIRE', 'APKWS II', 'DroneOptID'],
+    featured: false,
+    content: `## Overview
+
+The WESCAM MX-Series represents L3Harris's family of multi-spectral surveillance and targeting systems.
+
+## VAMPIRE Integration
+
+The MX-10 variant serves as the targeting sensor for the VAMPIRE system, providing guidance data for APKWS rockets.`,
+  },
+  {
+    name: 'Giraffe 1X',
+    slug: 'giraffe-1x',
+    description: 'Swedish 3D surveillance and air defense radar providing target acquisition data for integrated C-UAS architectures.',
+    category: 'sensor',
+    manufacturer: 'Saab',
+    country: 'Sweden',
+    status: 'operational',
+    primaryCapability: '3D air surveillance and target acquisition radar for short-range air defense and C-UAS applications.',
+    specifications: [
+      '3D AESA radar',
+      'Air surveillance mode',
+      'Target acquisition capability',
+      'Networked operation',
+      'Mobile deployment',
+    ],
+    platforms: ['Vehicle-mounted', 'Trailer'],
+    deployedBy: ['US Army', 'Allied Nations'],
+    whatItIs: 'The Giraffe 1X is Saab\'s 3D surveillance and air defense command and control radar, providing air surveillance and target acquisition data for short-range air defense systems including C-UAS architectures.',
+    howItWorks: 'The radar uses active electronically scanned array (AESA) technology to provide 3D surveillance of the airspace. It is fully supported within the US Army\'s FAAD C2 architecture.',
+    keyFeatures: [
+      '3D AESA technology',
+      'Multi-target tracking',
+      'FAAD C2 integration',
+      'Mobile configuration',
+      'Proven reliability',
+    ],
+    advantages: [
+      'NATO interoperability',
+      'FAAD C2 compatible',
+      'Flexible deployment',
+      'Established logistics',
+    ],
+    disadvantages: [
+      'Foreign system integration considerations',
+      'Power requirements',
+    ],
+    relatedSystems: ['FAAD C2', 'KURFS', 'G/ATOR'],
+    featured: false,
+    content: `## Overview
+
+The Giraffe radar family from Saab represents Sweden's contribution to allied air defense capabilities.
+
+## FAAD C2 Integration
+
+As a supported sensor within FAAD C2, Giraffe 1X provides surveillance tracks and enables cueing of organic effectors.`,
+  },
+  {
+    name: 'ALPS',
+    slug: 'alps',
+    description: 'Army Long-Range Persistent Surveillance - passive sensor system providing early warning detection without emitting signals.',
+    category: 'sensor',
+    manufacturer: 'US Army',
+    country: 'United States',
+    status: 'operational',
+    primaryCapability: 'Passive long-range surveillance and early warning without active emissions, cueing other sensors.',
+    specifications: [
+      'Passive detection',
+      'Long-range surveillance',
+      'Wide area scanning',
+      'No active emissions',
+      'Cue-to-track capability',
+    ],
+    platforms: ['Fixed Site', 'Semi-mobile'],
+    deployedBy: ['US Army'],
+    whatItIs: 'ALPS (Army Long-Range Persistent Surveillance) is a passive sensor system used for early warning detection, capable of scanning wide areas to identify potential threats without emitting signals that would reveal its location.',
+    howItWorks: 'ALPS detects targets through passive means without actively transmitting. When threats are detected, ALPS cues active sensors like radar for precise tracking.',
+    keyFeatures: [
+      'Completely passive operation',
+      'Long-range detection',
+      'Wide area coverage',
+      'Sensor cueing capability',
+      'Low probability of intercept',
+    ],
+    advantages: [
+      'Undetectable by adversary',
+      'Persistent surveillance',
+      'Early warning capability',
+      'Complements active sensors',
+    ],
+    disadvantages: [
+      'Less precise than active radar',
+      'Weather/environment dependent',
+      'Requires active sensor confirmation',
+    ],
+    relatedSystems: ['FAAD C2', 'KURFS', 'CORVUS-RAVEN'],
+    featured: false,
+    content: `## Overview
+
+ALPS provides the US Army with passive surveillance capability, enabling detection of aerial threats without revealing the sensor's presence.
+
+## Passive Advantage
+
+In contested environments, passive sensors offer survivability by not emitting detectable signals.`,
+  },
 ]
 
 async function seedSystems() {

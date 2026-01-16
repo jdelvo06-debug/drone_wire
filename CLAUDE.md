@@ -152,11 +152,12 @@ The Systems section (`/systems`) provides a comprehensive database of counter-UA
 
 **Status Types:** `operational`, `contracted`, `development`, `prototype`, `retired`
 
-**Current Systems (53):**
-- **US (35+):** FS-LIDS, M-LIDS, MADIS, L-MADIS, M-SHORAD, DE M-SHORAD, KURFS, AN/TPQ-50 LSTAR, Coyote Block 2+/3, THOR, DroneDefender, VAMPIRE, APKWS II, NINJA, Dronebuster, DRAKE, LPWS, IFPC-HPM, IFPC Increment 2, MRIC, FAAD C2, IBCS, MEDUSA C2, Reactor, TOC-L, Maven Smart System, Leonidas, Roadrunner, Pulsar, HELWS, CORIAN, Bal Chatri, NightFighter S
+**Current Systems (72):**
+- **US (54+):** FS-LIDS, M-LIDS, MADIS, L-MADIS, M-SHORAD, DE M-SHORAD, KURFS, AN/TPQ-50 LSTAR, AN/TPS-80 G/ATOR, Coyote Block 2+/3, THOR, DroneDefender, VAMPIRE, APKWS II, NINJA, Dronebuster, DRAKE, LPWS, IFPC-HPM, IFPC Increment 2, MRIC, SkyHunter, DroneHunter F700, Phaser, ODIN, Stinger FIM-92, XM914 Chain Gun, Modi, ALPS, FAAD C2, IBCS, MEDUSA C2, ADSI, AiON, Lattice, DedroneTracker, Reactor, TOC-L, Maven Smart System, Leonidas, Roadrunner, Pulsar, HELWS, CORIAN, CORVUS-RAVEN, WESCAM MX-15D, Bal Chatri, NightFighter S
+- **Australia (5):** DroneShield RfPatrol, DroneSentry-C2, DroneGun Tactical, DroneSentry-X, DroneOptID
 - **Israel (6):** Iron Dome, Drone Dome, Iron Beam, SmartShooter, Iron Drone, EnforceAir
-- **Europe (7):** PARADE (France), MANTIS (Germany), Falcon Shield (Italy), JEY-CUAS (EU), BOREADES (France), AirGuard (Germany), ThunderShield (France)
-- **Other (3):** DroneShield RfPatrol (Australia), Crow/ORCUS (UK/Spain), AS3 Surveyor (Poland), Sting (Ukraine)
+- **Europe (8):** PARADE (France), MANTIS (Germany), Falcon Shield (Italy), JEY-CUAS (EU), BOREADES (France), AirGuard (Germany), ThunderShield (France), Giraffe 1X (Sweden)
+- **Other (3):** Crow/ORCUS (UK/Spain), AS3 Surveyor (Poland), Sting (Ukraine)
 
 **Image Sources:** System images are sourced from DVIDS (DoD public domain), manufacturer websites (Raytheon, Rafael, L3Harris, BAE Systems, Epirus, DroneShield, Smart Shooter, D-Fend Solutions, Airobotics), and defense publications.
 

@@ -409,6 +409,197 @@ Patriot systems have engaged targets in multiple conflicts:
 
 The Patriot missile defense system continues to evolve as a cornerstone of allied air defense.`,
   },
+  {
+    title: 'The C-UAS Kill Chain (DTI-M)',
+    slug: 'cuas-kill-chain-dtim',
+    description: 'Understanding the four-phase counter-drone engagement cycle: Detect, Track, Identify, and Mitigate - the fundamental framework for all C-UAS operations.',
+    category: 'concepts',
+    difficulty: 'beginner',
+    readTime: 15,
+    featured: true,
+    imageUrl: 'https://www.cnas.org/wp-content/uploads/2024/01/CUAS-Kill-Chain.jpg',
+    whatItIs: 'The C-UAS Kill Chain is the operational framework that defines how counter-drone systems engage threats through four sequential phases: Detect (find the drone), Track (maintain continuous lock), Identify (determine friend or foe), and Mitigate (neutralize the threat).',
+    howItWorks: 'Multiple sensors work together to detect drone signatures (radar, RF, optical, acoustic), fuse data into unified tracks, classify threats using AI and visual confirmation, then engage with appropriate kinetic or non-kinetic effectors - all within seconds.',
+    keyFeatures: ['Four-phase engagement cycle', 'Multi-sensor fusion', 'Friend/foe identification', 'Kinetic and non-kinetic options'],
+    advantages: ['Systematic threat response', 'Layered detection reduces gaps', 'Appropriate response selection', 'Scalable to different threats'],
+    disadvantages: ['Requires rapid execution (seconds)', 'Each phase can fail independently', 'Autonomous drones challenge traditional methods', 'Human verification slows response'],
+    realWorldUse: 'Every operational C-UAS system implements this framework, from fixed-site protection (FS-LIDS) to mobile systems (M-SHORAD) to handheld devices (DroneGun). The kill chain is executed thousands of times daily at military bases, airports, and critical infrastructure worldwide.',
+    content: `# The C-UAS Kill Chain (DTI-M)
+
+The Counter-UAS Kill Chain is the fundamental operational framework that governs how defensive systems detect and defeat drone threats. Understanding this four-phase cycle—Detect, Track, Identify, Mitigate (DTI-M)—is essential for comprehending how any counter-drone system operates.
+
+## Why the Kill Chain Matters
+
+Success in counter-drone operations requires executing this compressed cycle, often in mere seconds, using a "system of systems" architecture. No single sensor or effector can reliably defeat all drone threats alone. The kill chain framework ensures that multiple technologies work together to overcome the limitations of any individual component.
+
+## Phase 1: Detect
+
+The first phase provides initial alert that a UAS is present within a warning zone. Because modern drones have small radar cross-sections and low thermal signatures, relying on a single sensor type is often insufficient.
+
+### Detection Sensors
+
+**Radar (Active)**
+- Emits radio waves to detect objects
+- Effective at long range and in all weather
+- Struggles with ground clutter (birds, trees)
+- Requires line of sight
+
+**Radio Frequency (RF) Analyzers (Passive)**
+- Listens for drone-to-controller communication links
+- Can triangulate both drone and pilot location
+- Stealthy—doesn't emit detectable signals
+- Ineffective against autonomous drones
+
+**Acoustic Sensors**
+- Detects unique propeller sound signatures
+- Useful for covering radar blind spots
+- Works against RF-silent drones
+- Limited by range and ambient noise
+
+**Electro-Optical/Infrared (EO/IR)**
+- Visual and thermal cameras
+- Essential for target verification
+- Degraded by fog, rain, and darkness
+- Requires line of sight
+
+### Detection Challenges
+
+The primary challenge is detecting "RF-silent" or autonomous drones that navigate via GPS or inertial guidance without transmitting signals—rendering RF sensors ineffective. Additionally, distinguishing small drones from birds remains difficult for radar systems.
+
+## Phase 2: Track
+
+Once detected, the system must maintain continuous lock on the target to determine its flight path, speed, and altitude.
+
+### Sensor Fusion
+
+This is the critical engineering challenge. If five different sensors detect a single drone, the system must fuse this data into a single "track" rather than displaying five separate targets. Poor fusion leads to "mirror tracks" or "ghost tracks" that confuse operators.
+
+### Tracking Technology
+
+**Kalman Filtering**: Advanced algorithms predict drone movement and maintain stable tracks even during erratic maneuvers.
+
+**Temporal Synchronization**: High-speed drones require microsecond-level coordination between sensors to maintain accurate tracks.
+
+**Single Integrated Air Picture (SIAP)**: The goal is creating one unified view of all airborne threats that all defenders can share.
+
+## Phase 3: Identify
+
+This critical phase distinguishes "friend from foe" (IFF) and characterizes the threat level. Misidentification can result in engaging friendly aircraft or allowing hostile drones through defenses.
+
+### Identification Methods
+
+**Remote ID**: A broadcast signal (Wi-Fi or Bluetooth) acting as a digital license plate—though malicious actors often disable it.
+
+**AI Computer Vision**: Optical sensors use machine learning to visually match targets against databases of known drone models (distinguishing a DJI Mavic from a military Shahed-136).
+
+**Behavioral Analysis**: Flight patterns, speed, and trajectory can indicate hostile intent.
+
+### The Identification Challenge
+
+Visual identification is slow and often requires human verification before engagement. In January 2024, an attack on Tower 22 in Jordan killed three U.S. soldiers when defenders failed to engage a hostile drone because it was mistaken for a friendly U.S. drone returning to base.
+
+## Phase 4: Mitigate (Defeat)
+
+The final phase neutralizes the threat through kinetic or non-kinetic means. The choice of effector depends on the threat type, environment, and rules of engagement.
+
+### Non-Kinetic (Soft Kill)
+
+**RF Jamming**
+- Severs the link between pilot and drone
+- Forces fail-safe (land or return home)
+- Most common method
+- Ineffective against autonomous drones
+
+**GNSS Spoofing**
+- Feeds false GPS coordinates
+- Diverts drone from target
+- Can redirect to safe area
+- Sophisticated countermeasure
+
+**Cyber-Takeover**
+- Hacks drone's control protocol
+- Takes over flight operations
+- Preserves drone for forensics
+- Requires protocol knowledge
+
+**High-Power Microwave (HPM)**
+- Electromagnetic pulse fries electronics
+- Can defeat multiple drones simultaneously
+- The solution for drone swarms
+- May affect friendly electronics
+
+### Kinetic (Hard Kill)
+
+**Interceptor Missiles**
+- Physical destruction (Coyote, Stinger)
+- Highest probability of kill
+- Cost-per-engagement concerns
+- Collateral damage risk
+
+**Gun Systems**
+- 30mm cannons with proximity-fused ammunition
+- Creates shrapnel cloud
+- Lower cost than missiles
+- Requires fire control radar
+
+**High-Energy Lasers (HEL)**
+- Burns through airframe
+- Near-zero cost per shot
+- Limited by weather and dwell time
+- One target at a time
+
+**Drone Interceptors**
+- Autonomous hunter drones (DroneHunter F700)
+- Net capture for forensics
+- No debris/collateral damage
+- Single-target engagement
+
+## Evolution: From Find-Fix-Finish to Detect-Decide-Defeat
+
+Traditional air defense relied on the **Find-Fix-Finish** model, designed for high-value, low-volume targets (jets, ballistic missiles) where human operators had time to verify and engage.
+
+The drone threat has forced evolution to **Detect-Decide-Defeat**:
+
+| Traditional (F3) | Modern (D3) |
+|------------------|-------------|
+| Minutes to engage | Seconds to engage |
+| Human decision loop | AI-assisted decisions |
+| Centralized command | Distributed/edge processing |
+| High-value targets | Mass low-cost threats |
+| Individual engagement | Swarm defense |
+
+### Why the Shift?
+
+**Asymmetry of Volume**: Defenders may face hundreds of cheap drones simultaneously. Humans cannot manually process this data volume.
+
+**Speed**: Engagement windows have shrunk from minutes to seconds. Automation is essential for threat classification and prioritization.
+
+**Decentralization**: Unlike centralized F3, the D3 model pushes decision-making to the "edge," allowing sensors and effectors to operate even when communications are jammed.
+
+## The Role of AI and Automation
+
+AI is fundamentally altering the kill chain by removing cognitive burden from human operators.
+
+### SAPIENT Architecture
+
+The Sensing for Asset Protection with Integrated Electronic Networked Technology (SAPIENT) standard allows sensors to make AI-enabled detections locally and send only high-level information to command systems. This reduces bandwidth usage by 60% and dramatically speeds reaction times.
+
+### Automated C2 Systems
+
+Platforms like DedroneTracker.AI and Lattice use machine learning to:
+- Autonomously fuse sensor data
+- Identify specific drone models
+- Recommend optimal mitigation methods
+- Execute engagements at machine speed
+
+### Machine Speed Operations
+
+Against drone swarms, AI logic is required to coordinate defenses. Human operators cannot manually target and engage dozens of high-speed drones simultaneously. The kill chain must execute autonomously with human oversight rather than human control.
+
+## Conclusion
+
+The DTI-M kill chain provides the conceptual foundation for all counter-drone operations. As drone threats evolve—becoming faster, more autonomous, and deployed in swarms—the kill chain must compress further and rely more heavily on AI and automation. Understanding these four phases is essential for anyone working in counter-UAS technology, policy, or operations.`,
+  },
 ]
 
 async function seedExplainers() {
