@@ -54,10 +54,11 @@ model Tag {
   slug     String @unique
   category String @default("general") // technology, company, country, system-type
   color    String @default("#3B82F6") // Hex color for UI
-  
+
   articles ArticleTag[]
   explainers ExplainerTag[]
-  
+  systems SystemTag[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -237,11 +238,79 @@ model ContactSubmission {
   message   String
   type      String   @default("general") // general, press, partnership, tip
   status    String   @default("new") // new, reviewing, responded, closed
-  
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("contact_submissions")
   @@index([status])
   @@index([createdAt])
+}
+
+// Counter-UAS Systems Database
+model System {
+  id              String   @id @default(cuid())
+  name            String
+  slug            String   @unique
+  description     String
+  content         String   // Rich markdown content for detailed information
+  imageUrl        String?
+
+  // Classification
+  category        String   // c2, sensor, effector, integrated
+  subcategory     String?  // More granular classification
+
+  // Manufacturer/Origin
+  manufacturer    String
+  country         String   // Country of origin
+
+  // Technical Details
+  primaryCapability   String   // Brief description of main capability
+  specifications      String[] // Array of key technical specs
+  detectionRange      String?  // For sensors
+  effectiveRange      String?  // For effectors
+  platforms           String[] // Compatible platforms (ground, naval, air, fixed)
+
+  // Status and Metadata
+  status          String   @default("operational") // operational, contracted, development, prototype, retired
+  inServiceDate   String?  // Year or date entered service
+  deployedBy      String[] // Countries/forces using the system
+
+  // Structured content (following Explainer pattern)
+  whatItIs        String?
+  howItWorks      String?
+  keyFeatures     String[]
+  advantages      String[]
+  disadvantages   String[]
+  combatRecord    String?  // Real-world usage/effectiveness
+
+  // Relations
+  relatedSystems  String[]
+  tags            SystemTag[]
+
+  // Tracking
+  views           Int      @default(0)
+  featured        Boolean  @default(false)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("systems")
+  @@index([category])
+  @@index([status])
+  @@index([country])
+  @@index([manufacturer])
+  @@index([featured])
+}
+
+model SystemTag {
+  id        String @id @default(cuid())
+  systemId  String
+  tagId     String
+
+  system    System @relation(fields: [systemId], references: [id], onDelete: Cascade)
+  tag       Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([systemId, tagId])
+  @@map("system_tags")
 }
