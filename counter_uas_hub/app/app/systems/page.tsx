@@ -89,6 +89,8 @@ function getCategoryIcon(category: string) {
 export default async function SystemsPage() {
   const systems = await getSystems()
   const featuredSystems = systems.filter(s => s.featured).slice(0, 3)
+  const featuredIds = new Set(featuredSystems.map(s => s.id))
+  const nonFeaturedSystems = systems.filter(s => !featuredIds.has(s.id))
 
   return (
     <div className="min-h-screen bg-background">
@@ -174,15 +176,15 @@ export default async function SystemsPage() {
           {/* All Systems Grid */}
           <div>
             <h2 className="text-2xl font-bold text-foreground mb-6">All Systems</h2>
-            {systems.length === 0 ? (
+            {nonFeaturedSystems.length === 0 ? (
               <div className="text-center py-12">
                 <Crosshair className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-foreground mb-2">No systems yet</h3>
-                <p className="text-muted-foreground">Systems database is being populated. Check back soon.</p>
+                <h3 className="text-lg font-semibold text-foreground mb-2">No additional systems</h3>
+                <p className="text-muted-foreground">All systems are shown in the featured section above.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {systems.map((system) => (
+                {nonFeaturedSystems.map((system) => (
                   <Link key={system.id} href={`/systems/${system.slug}`}>
                     <Card className="military-card h-full group hover:shadow-lg transition-all duration-300">
                       <div className="relative aspect-video rounded-t-lg overflow-hidden bg-muted">
