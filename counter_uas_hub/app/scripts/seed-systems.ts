@@ -2524,6 +2524,7 @@ NightFighter S provides Marines with organic counter-UAS capability for expediti
     manufacturer: 'Raytheon / Rafael',
     country: 'United States',
     status: 'operational',
+    imageUrl: 'https://prd-sc102-cdn.rtx.com/raytheon/-/media/ray/what-we-do/integrated-air-and-missile-defense/iron-dome-system/2020-02/images/irondome_hero_lg.jpg',
     primaryCapability: 'Short-to-medium range ground-based air defense interceptor for cruise missiles, UAS, and low-flying aircraft.',
     specifications: [
       'Derived from Iron Dome Tamir missile',
@@ -2590,6 +2591,7 @@ At approximately $180,800 per round (FY25 estimate), SkyHunter addresses the cos
     manufacturer: 'Fortem Technologies',
     country: 'United States',
     status: 'operational',
+    imageUrl: 'https://www.fortemtech.com/assets/img/storyteller-dronehunter-firing-netgun.jpg',
     primaryCapability: 'Autonomous pursuit and non-lethal capture of hostile drones using net-based interception.',
     specifications: [
       'Autonomous AI-guided flight',
@@ -2664,6 +2666,7 @@ Ideal deployment scenarios include:
     manufacturer: 'Anduril Industries',
     country: 'United States',
     status: 'operational',
+    imageUrl: 'https://cdn.prod.website-files.com/629eb27a29945010beb6ff98/66f1a06029feda3d5f26a4e4_AndurilIndustries_Lattice_DarkBackground.jpg',
     primaryCapability: 'Software platform providing sensor fusion, autonomous mission control, and multi-domain situational awareness for counter-UAS operations.',
     specifications: [
       'Real-time sensor fusion engine',
@@ -2744,6 +2747,7 @@ While powerful, Lattice operates as a vertically integrated system. Organization
     manufacturer: 'Dedrone (Axon)',
     country: 'United States',
     status: 'operational',
+    imageUrl: 'https://cdn.prod.website-files.com/58fa92311759990d60953cd2/68146819f2fe2c15df240b08_Dedrone-by-Axon-RF-900-Sensor.jpg',
     primaryCapability: 'AI-powered C2 software for complete drone detection, tracking, identification, and mitigation workflow management.',
     specifications: [
       'AI/ML threat classification',
@@ -2821,6 +2825,7 @@ Dedrone protects:
     manufacturer: 'US Navy',
     country: 'United States',
     status: 'operational',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2201/7017559/1000w_q95.jpg',
     primaryCapability: 'Non-destructive defeat of ISR drones by dazzling optical sensors with directed laser energy.',
     specifications: [
       'Low-power laser system',
@@ -2895,6 +2900,7 @@ With effectively unlimited shots limited only by electrical power, ODIN dramatic
     manufacturer: 'Raytheon',
     country: 'United States',
     status: 'development',
+    imageUrl: 'https://prd-sc102-cdn.rtx.com/raytheon/-/media/ray/rmd/what-we-do/counter-uas/effectors/phaser-high-power-microwave-system/2020-02/images/phaser_high_powered_hero_lg_0.jpg',
     primaryCapability: 'Area-effect defeat of multiple drones simultaneously through high-power microwave energy.',
     specifications: [
       'High-Power Microwave emitter',
@@ -2969,6 +2975,7 @@ HPM systems can affect unshielded friendly electronics within the beam cone. Emp
     manufacturer: 'Northrop Grumman',
     country: 'United States',
     status: 'operational',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2310/8053964/1000w_q95.jpg',
     primaryCapability: 'Multi-mission active electronically scanned array radar for air surveillance, air defense, and counter-UAS target acquisition.',
     specifications: [
       'Active Electronically Scanned Array (AESA)',
@@ -3050,6 +3057,7 @@ Designed for Marine Corps expeditionary operations, G/ATOR is:
     manufacturer: 'US Air Force',
     country: 'United States',
     status: 'operational',
+    imageUrl: null,
     primaryCapability: 'Theater-level air defense C2 interoperability, bridging Air Force and Army systems for unified air picture management.',
     specifications: [
       'Theater-level C2 system',
@@ -3098,6 +3106,7 @@ For counter-drone operations, ADSI:
     manufacturer: 'Northrop Grumman',
     country: 'United States',
     status: 'operational',
+    imageUrl: 'https://cdn.northropgrumman.com/-/media/Project/Northrop-Grumman/ngc/what-we-do/mission-solutions/c-uas/AiON-Counter-UAS-hero-001.jpg',
     primaryCapability: 'Scalable C-UAS command and control with AI decision support, operating on tactical edge hardware or cloud environments.',
     specifications: [
       'Edge and cloud compatible',
@@ -3149,6 +3158,7 @@ AiON's AI-powered decision aids help operators by prioritizing threats automatic
     manufacturer: 'Raytheon',
     country: 'United States',
     status: 'operational',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2305/7783422/1000w_q95.jpg',
     primaryCapability: 'Short-range air defense against aircraft, helicopters, and UAS using infrared homing guidance.',
     specifications: [
       'Infrared homing seeker',
@@ -3204,6 +3214,7 @@ Deployed by over 30 nations, Stinger has seen extensive combat from the Soviet-A
     manufacturer: 'Northrop Grumman',
     country: 'United States',
     status: 'operational',
+    imageUrl: 'https://cdn.northropgrumman.com/-/media/wp-content/uploads/Bushmaster-Chain-Gun-1400x788.jpg',
     primaryCapability: 'High-volume kinetic defense against Group 1-2 UAS using programmable proximity-fused ammunition.',
     specifications: [
       '30mm caliber',
@@ -3253,6 +3264,7 @@ The key to the XM914's C-UAS effectiveness is the XM1198 ammunition that detonat
     manufacturer: 'DroneShield',
     country: 'Australia',
     status: 'operational',
+    imageUrl: 'https://images.squarespace-cdn.com/content/v1/660a32624c94dd36e509baf3/3e83ff94-2c1f-47db-bc81-78d700cad3e4/DroneGun+Tactical.png',
     primaryCapability: 'Handheld RF and GNSS jamming to disrupt drone control links and navigation, forcing fail-safe responses.',
     specifications: [
       'Rifle-shaped form factor',
@@ -3303,6 +3315,7 @@ When activated against a target drone, DroneGun disrupts the RF control link and
     manufacturer: 'DroneShield',
     country: 'Australia',
     status: 'operational',
+    imageUrl: 'https://images.squarespace-cdn.com/content/v1/660a32624c94dd36e509baf3/d10e93e6-d040-4e58-87af-61f69de64d9d/DroneSentry_DS-X+Mk2_Bosch_EchoGuard_Hero_LR.jpg',
     primaryCapability: 'Mobile detect-and-defeat C-UAS with integrated RF sensors and jamming effectors for on-the-move protection.',
     specifications: [
       '360-degree RF detection',
@@ -3351,6 +3364,7 @@ The system supports vehicle-mounted, tripod-mounted, and fixed installation conf
     manufacturer: 'Sierra Nevada Corporation',
     country: 'United States',
     status: 'operational',
+    imageUrl: 'https://www.mbda-systems.com/sites/mbda/files/styles/m_article_preview__2xl/public/2024-07/MISTRAL3.jpg',
     primaryCapability: 'Wearable/vehicle-mounted EW system for disrupting drone control links and defeating radio-controlled IEDs.',
     specifications: [
       'Backpack or vehicle mounted',
@@ -3401,6 +3415,7 @@ Modi serves as the primary electronic warfare effector for the Marine Corps' Lig
     manufacturer: 'L3Harris',
     country: 'United States',
     status: 'operational',
+    imageUrl: 'https://www.l3harris.com/sites/default/files/styles/625_x_570/public/2021-07/ims-ew-corvus-product-shot-isp-hero-1250x1140.png',
     primaryCapability: 'Passive RF detection of drone threats at extended range with bearing indication for dismounted operators.',
     specifications: [
       'Passive RF detection',
@@ -3449,6 +3464,7 @@ Unlike active radar or jamming systems, CORVUS-RAVEN emits no detectable signals
     manufacturer: 'DroneShield',
     country: 'Australia',
     status: 'operational',
+    imageUrl: 'https://images.squarespace-cdn.com/content/v1/660a32624c94dd36e509baf3/c21d1f6a-3f1a-4403-b462-99ae910c3d8a/Drone+Sentry.png',
     primaryCapability: 'AI-powered visual drone detection, classification, and identification using EO/IR camera feeds.',
     specifications: [
       'AI/ML computer vision',
@@ -3497,6 +3513,7 @@ The software provides detection, classification, identification, and tracking of
     manufacturer: 'L3Harris',
     country: 'United States',
     status: 'operational',
+    imageUrl: 'https://www.l3harris.com/sites/default/files/styles/625_x_570/public/2020-09/ims-eo-product-wescam-mx-15d-product-shot-1250x1140-left.png',
     primaryCapability: 'Multi-spectral EO/IR surveillance and precision targeting for airborne and ground-based C-UAS applications.',
     specifications: [
       'Multi-spectral EO/IR sensors',
@@ -3546,6 +3563,7 @@ The MX-10 variant serves as the targeting sensor for the VAMPIRE system, providi
     manufacturer: 'Saab',
     country: 'Sweden',
     status: 'operational',
+    imageUrl: 'https://www.saab.com/globalassets/cision/images/20251028-en-5242113-1.jpg',
     primaryCapability: '3D air surveillance and target acquisition radar for short-range air defense and C-UAS applications.',
     specifications: [
       '3D AESA radar',
@@ -3593,6 +3611,7 @@ As a supported sensor within FAAD C2, Giraffe 1X provides surveillance tracks an
     manufacturer: 'US Army',
     country: 'United States',
     status: 'operational',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2311/8164058/1000w_q95.jpg',
     primaryCapability: 'Passive long-range surveillance and early warning without active emissions, cueing other sensors.',
     specifications: [
       'Passive detection',
@@ -3640,7 +3659,7 @@ async function seedSystems() {
   console.log(`Found ${systemsData.length} systems to seed`)
 
   let created = 0
-  let skipped = 0
+  let updated = 0
   let errors = 0
 
   for (const system of systemsData) {
@@ -3649,52 +3668,56 @@ async function seedSystems() {
         where: { slug: system.slug },
       })
 
-      if (existing) {
-        console.log(`  Skipping "${system.name}" - already exists`)
-        skipped++
-        continue
+      const systemData = {
+        name: system.name,
+        slug: system.slug,
+        description: system.description,
+        content: system.content,
+        category: system.category,
+        manufacturer: system.manufacturer,
+        country: system.country,
+        status: system.status,
+        primaryCapability: system.primaryCapability,
+        specifications: system.specifications || [],
+        platforms: system.platforms || [],
+        deployedBy: system.deployedBy || [],
+        inServiceDate: system.inServiceDate,
+        detectionRange: system.detectionRange,
+        effectiveRange: system.effectiveRange,
+        whatItIs: system.whatItIs,
+        howItWorks: system.howItWorks,
+        keyFeatures: system.keyFeatures || [],
+        advantages: system.advantages || [],
+        disadvantages: system.disadvantages || [],
+        combatRecord: system.combatRecord,
+        relatedSystems: system.relatedSystems || [],
+        featured: system.featured || false,
+        imageUrl: system.imageUrl || null,
       }
 
-      await prisma.system.create({
-        data: {
-          name: system.name,
-          slug: system.slug,
-          description: system.description,
-          content: system.content,
-          category: system.category,
-          manufacturer: system.manufacturer,
-          country: system.country,
-          status: system.status,
-          primaryCapability: system.primaryCapability,
-          specifications: system.specifications || [],
-          platforms: system.platforms || [],
-          deployedBy: system.deployedBy || [],
-          inServiceDate: system.inServiceDate,
-          detectionRange: system.detectionRange,
-          effectiveRange: system.effectiveRange,
-          whatItIs: system.whatItIs,
-          howItWorks: system.howItWorks,
-          keyFeatures: system.keyFeatures || [],
-          advantages: system.advantages || [],
-          disadvantages: system.disadvantages || [],
-          combatRecord: system.combatRecord,
-          relatedSystems: system.relatedSystems || [],
-          featured: system.featured || false,
-          imageUrl: system.imageUrl || null,
-        },
-      })
-
-      console.log(`  Created: ${system.name}`)
-      created++
+      if (existing) {
+        await prisma.system.update({
+          where: { slug: system.slug },
+          data: systemData,
+        })
+        console.log(`  Updated: ${system.name}`)
+        updated++
+      } else {
+        await prisma.system.create({
+          data: systemData,
+        })
+        console.log(`  Created: ${system.name}`)
+        created++
+      }
     } catch (error) {
-      console.error(`  Error creating "${system.name}":`, error)
+      console.error(`  Error with "${system.name}":`, error)
       errors++
     }
   }
 
   console.log('\n--- Seeding Complete ---')
   console.log(`Created: ${created}`)
-  console.log(`Skipped: ${skipped}`)
+  console.log(`Updated: ${updated}`)
   console.log(`Errors: ${errors}`)
 
   const total = await prisma.system.count()
