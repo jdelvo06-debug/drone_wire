@@ -193,7 +193,7 @@ MADIS provides the Marine Corps with an organic air defense capability tailored 
     manufacturer: 'Polaris Defense',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2108/6766077/1000w_q95.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2210/7480650/1000w_q95.jpg',
     primaryCapability: 'Lightweight counter-UAS capability for expeditionary forces, providing detection and electronic warfare defeat from a highly mobile platform.',
     specifications: [
       'MRZR vehicle platform',
@@ -286,7 +286,7 @@ KURFS represents the state of the art in counter-UAS radar technology, providing
     manufacturer: 'SRC Inc.',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/1804/4288619/1000w_q95.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/1908/5643452/1000w_q95.jpg',
     primaryCapability: 'Multi-mission radar providing counter-fire target acquisition, air surveillance, and UAS detection capabilities.',
     specifications: [
       'L-band frequency operation',
@@ -420,7 +420,7 @@ Coyote Block 3 represents the evolution of the Coyote interceptor family with en
     manufacturer: 'AFRL / Leidos',
     country: 'United States',
     status: 'development',
-    imageUrl: 'https://www.afrl.af.mil/Portals/90/Images/News/2019/THOR_weapon_system.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2202/7057424/1000w_q95.jpg',
     primaryCapability: 'High-power microwave directed energy defeat of multiple UAS simultaneously, providing counter-swarm capability.',
     specifications: [
       'High-power microwave emitter',
@@ -465,7 +465,7 @@ THOR represents a leap forward in C-UAS capability, offering the potential to de
     manufacturer: 'Battelle',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2010/6389167/1000w_q95.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2106/6702930/1000w_q95.jpg',
     primaryCapability: 'Handheld RF jamming to disrupt drone control links and GPS navigation, forcing UAS to land or return home.',
     specifications: [
       'Handheld operation',
@@ -513,7 +513,7 @@ DroneDefender provides a last line of defense capability that can be issued to i
     manufacturer: 'Rafael Advanced Defense Systems',
     country: 'Israel',
     status: 'operational',
-    imageUrl: 'https://www.rafael.co.il/wp-content/uploads/2019/04/DroneDome-2.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2509/9326581/1000w_q95.jpg',
     primaryCapability: 'End-to-end counter-UAS solution providing detection, tracking, and defeat using soft and hard kill options.',
     specifications: [
       'Multi-sensor detection suite',
@@ -606,7 +606,7 @@ While primarily designed for rocket defense, Iron Dome has demonstrated effectiv
     manufacturer: 'DroneShield',
     country: 'Australia',
     status: 'operational',
-    imageUrl: 'https://images.squarespace-cdn.com/content/v1/660a32624c94dd36e509baf3/6d30b43a-a51c-4aff-aac6-5a70f9d5db2e/RfPatrol+Mk2.png',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2502/8867746/1000w_q95.jpg',
     primaryCapability: 'Passive RF detection and identification of drone control signals, providing wearable early warning capability.',
     specifications: [
       'Wearable form factor',
@@ -775,7 +775,7 @@ The Army plans to field IBCS to two battalions per year from 2025 through 2031, 
     manufacturer: 'CS Group / Thales',
     country: 'France',
     status: 'operational',
-    imageUrl: 'https://www.thalesgroup.com/sites/default/files/gemalto/drones-c-uas-parade-thales.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2509/9326581/1000w_q95.jpg',
     primaryCapability: 'Modular, deployable counter-UAS providing detection, identification, and neutralization with 360-degree coverage in all weather conditions.',
     specifications: [
       'Modular C2 architecture',
@@ -835,7 +835,7 @@ The system modular design and proven effectiveness position it well for export t
     manufacturer: 'Leonardo UK',
     country: 'United Kingdom',
     status: 'operational',
-    imageUrl: 'https://www.leonardo.com/documents/20142/88555022/ORCUS.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2506/9092756/1000w_q95.jpg',
     primaryCapability: 'Modular counter-UAS providing integrated detection, tracking, identification, and electronic defeat for protection of UK military bases.',
     specifications: [
       'Weight: ~3 tonnes',
@@ -890,7 +890,7 @@ Weighing approximately 3 tonnes, ORCUS can be transported by Chinook helicopter 
     manufacturer: 'Indra',
     country: 'Spain',
     status: 'operational',
-    imageUrl: 'https://www.indracompany.com/sites/default/files/2020-10/crow.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2502/8867746/1000w_q95.jpg',
     primaryCapability: 'Integrated detection and neutralization of UAS threats using multi-sensor fusion and adaptive countermeasures.',
     specifications: [
       'Active and passive radar',
@@ -945,7 +945,7 @@ Indra continues to develop the Crow family, with the ARACNE system providing enh
     manufacturer: 'Rheinmetall',
     country: 'Germany',
     status: 'operational',
-    imageUrl: 'https://www.rheinmetall.com/media/2023/Bilder/Air-Defence/MANTIS_Nah-und-Nahestbereichsschutz.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2202/7057424/1000w_q95.jpg',
     primaryCapability: 'Automatic detection and kinetic defeat of low-flying air threats including UAS using rapid-fire 35mm guns.',
     specifications: [
       'Six 35mm automatic guns',
@@ -1002,7 +1002,7 @@ In February 2023, Germany donated two MANTIS systems to Slovakia to strengthen N
     manufacturer: 'Leonardo',
     country: 'Italy',
     status: 'operational',
-    imageUrl: 'https://www.leonardo.com/documents/20142/88555022/Falcon_Shield.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2509/9326581/1000w_q95.jpg',
     primaryCapability: 'Comprehensive drone detection and tracking using specialized radar and multi-spectral sensors with electronic defeat capability.',
     specifications: [
       'Specialized C-UAS radar',
@@ -1054,7 +1054,7 @@ As part of the broader Leonardo defense portfolio, Falcon Shield can integrate w
     manufacturer: 'Epirus',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://cdn.prod.website-files.com/65f690ef436851050089eb60/660be8d83d4969e1e507a923_4SrJIOvn6MvuzweazwyTLXD4ANYv-Cu5xcKlskXvLY0.webp',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2509/9326581/1000w_q95.jpg',
     primaryCapability: 'Directed energy defeat of multiple UAS simultaneously using high-power microwave emissions to disable electronics.',
     specifications: [
       'Solid-state HPM technology',
@@ -1116,7 +1116,7 @@ Procured under the Indirect Fire Protection Capability-High Power Microwave (IFP
     manufacturer: 'Anduril Industries',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://cdn.prod.website-files.com/629eb27a29945010beb6ff98/64f1a1a2c0ddb1c8c6c1e8d8_Roadrunner-M-Hero.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2506/9092756/1000w_q95.jpg',
     primaryCapability: 'Autonomous aerial interception of UAS, cruise missiles, and low-flying aircraft using AI-guided kinetic engagement.',
     specifications: [
       'Vertical takeoff and landing',
@@ -1177,7 +1177,7 @@ The $642 million Marine Corps contract in 2025 signals broad service adoption of
     manufacturer: 'Anduril Industries',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://cdn.prod.website-files.com/629eb27a29945010beb6ff98/66fe0d0c4b3e8c4f5cae8c7e_Pulsar-Hero.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2509/9326581/1000w_q95.jpg',
     primaryCapability: 'Networked electronic warfare providing coordinated jamming against drone control links and navigation systems.',
     specifications: [
       'AI-powered signal processing',
@@ -1233,7 +1233,7 @@ Available in ground, vehicle, and aircraft configurations, Pulsar can be deploye
     manufacturer: 'Raytheon (RTX)',
     country: 'United States',
     status: 'development',
-    imageUrl: 'https://prd-sc102-cdn.rtx.com/raytheon/-/media/ray/what-we-do/integrated-air-and-missile-defense/lasers/helws-firing-test.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2003/6150720/1000w_q95.jpg',
     primaryCapability: 'Precision directed energy defeat of UAS using high-energy laser, providing low cost-per-shot engagement.',
     specifications: [
       'High-energy laser emitter',
@@ -1290,7 +1290,7 @@ HELWS complements high-power microwave systems like Leonidas - lasers provide pr
     manufacturer: 'Leonardo (consortium lead)',
     country: 'Italy',
     status: 'development',
-    imageUrl: 'https://www.leonardo.com/documents/20142/88555022/JEY-CUAS.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2509/9326581/1000w_q95.jpg',
     primaryCapability: 'Next-generation modular counter-UAS architecture addressing micro to tactical drones with reduced reaction time.',
     specifications: [
       'Modular plug-and-play architecture',
@@ -1399,7 +1399,7 @@ The system represents the Army return to mobile air defense after decades of foc
     manufacturer: 'Air Force Research Laboratory',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://www.afrl.af.mil/Portals/90/Images/News/2020/NINJA_counter_UAS.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/1707/3566022/1000w_q95.jpg',
     primaryCapability: 'Non-kinetic UAS defeat by disrupting RF communications between drone and operator.',
     specifications: [
       'Directed energy effector',
@@ -1442,7 +1442,7 @@ NINJA provides Air Force bases with an electronic warfare capability specificall
     manufacturer: 'L3Harris',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://www.l3harris.com/sites/default/files/2024-06/ims-gos-eoir-effective-vampire1.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2506/9092756/1000w_q95.jpg',
     primaryCapability: 'Palletized ISR and precision strike capability using APKWS laser-guided rockets against UAS and ground targets.',
     specifications: [
       'WESCAM MX-10D sighting system',
@@ -1493,7 +1493,7 @@ The system has seen extensive combat use in Ukraine, proving effective against b
     manufacturer: 'BAE Systems',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://www.baesystems.com/en-us/our-company/about-us/bae-systems-inc/-/media/bae-systems-inc/images/product-images/apkws/apkws-ii-rocket.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2504/8998477/1000w_q95.jpg',
     primaryCapability: 'Low-cost precision strike against UAS and ground targets using laser-guided 70mm rockets.',
     specifications: [
       '70mm Hydra rocket base',
@@ -1544,7 +1544,7 @@ The system has emerged as an effective counter-UAS weapon due to its low cost an
     manufacturer: 'SYNCRO (Integration)',
     country: 'United States',
     status: 'development',
-    imageUrl: 'https://media.defense.gov/2020/Aug/26/2002483894/-1/-1/0/200826-F-AB123-001.JPG',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2204/7143773/1000w_q95.jpg',
     primaryCapability: 'Multi-domain command and control integration for unmanned systems and counter-UAS operations.',
     specifications: [
       'System-of-systems architecture',
@@ -1586,7 +1586,7 @@ MEDUSA C2 represents the next generation of C-UAS command and control, designed 
     manufacturer: 'Flex Force',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2303/7414428/1000w_q95.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2204/7143773/1000w_q95.jpg',
     primaryCapability: 'Handheld electronic warfare device for dismounted counter-UAS operations.',
     specifications: [
       'Handheld form factor',
@@ -1633,7 +1633,7 @@ Dronebuster provides dismounted troops with organic counter-UAS capability, addr
     manufacturer: 'Northrop Grumman',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://cdn.northropgrumman.com/-/media/Project/Northrop-Grumman/ngc/what-we-do/land/electronic-warfare/JCREW-counter-IED.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/1510/2246276/1000w_q95.jpg',
     primaryCapability: 'RF jamming for counter-UAS derived from proven counter-IED electronic warfare technology.',
     specifications: [
       'RF jamming capability',
@@ -1674,7 +1674,7 @@ DRAKE extends the Navy proven counter-IED electronic warfare capability to addre
     manufacturer: 'Smart Shooter Ltd.',
     country: 'Israel',
     status: 'operational',
-    imageUrl: 'https://www.smart-shooter.com/wp-content/uploads/2021/01/SMASH-3000-1.png',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2309/8010601/1000w_q95.jpg',
     primaryCapability: 'Rifle-mounted fire control system enabling precise engagement of small UAS with standard firearms.',
     specifications: [
       'Rifle-mounted system',
@@ -1719,7 +1719,7 @@ SmartShooter provides the ultimate in distributed counter-UAS capability, enabli
     manufacturer: 'Rafael Advanced Defense Systems / Elbit Systems',
     country: 'Israel',
     status: 'operational',
-    imageUrl: 'https://www.rafael.co.il/wp-content/uploads/2019/04/Iron-Beam-1.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/1412/1680542/1000w_q95.jpg',
     primaryCapability: 'High-energy laser intercept of UAS, rockets, and mortars at very low cost per engagement.',
     specifications: [
       '100-kilowatt laser',
@@ -1819,7 +1819,7 @@ MRIC provides the Marine Corps with organic medium-range air defense, filling a 
     manufacturer: 'Epirus Inc.',
     country: 'United States',
     status: 'development',
-    imageUrl: 'https://cdn.prod.website-files.com/65f690ef436851050089eb60/660be8d83d4969e1e507a923_4SrJIOvn6MvuzweazwyTLXD4ANYv-Cu5xcKlskXvLY0.webp',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2509/9326581/1000w_q95.jpg',
     primaryCapability: 'High-power microwave defeat of drone swarms for base and area protection.',
     specifications: [
       'High-power microwave emitter',
@@ -1862,7 +1862,7 @@ IFPC-HPM represents the Army solution to the drone swarm threat, leveraging dire
     manufacturer: 'Camgian',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://camgian.com/wp-content/uploads/2023/01/reactor-c2-system.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2202/7057424/1000w_q95.jpg',
     primaryCapability: 'AI-enabled command and control platform for counter-UAS operations with multi-sensor fusion.',
     specifications: [
       'AI decision aids',
@@ -1905,7 +1905,7 @@ Reactor provides Air Force units with flexible, AI-enabled command and control t
     manufacturer: 'Department of the Air Force PEO C3BM',
     country: 'United States',
     status: 'development',
-    imageUrl: 'https://media.defense.gov/2023/Feb/01/2003150832/-1/-1/0/230201-F-XX000-001.JPG',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2202/7057424/1000w_q95.jpg',
     primaryCapability: 'Mobile, agile command and control for tactical air operations.',
     specifications: [
       'Mobile deployment',
@@ -1946,7 +1946,7 @@ TOC-L enables Air Force units to establish command and control quickly in auster
     manufacturer: 'Palantir',
     country: 'United States',
     status: 'development',
-    imageUrl: 'https://www.palantir.com/assets/xrfr7uokpv1b/2KVPHp7vVZJFQjqWYa2Vt5/e5d9d7f5e8e5e8e5e8e5e8e5e8e5e8e5/maven-smart-system.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2502/8867746/1000w_q95.jpg',
     primaryCapability: 'AI-driven data fusion and unified operating picture for air operations.',
     specifications: [
       'AI-driven analytics',
@@ -2076,7 +2076,7 @@ DE M-SHORAD represents the Army vision for mobile directed energy air defense, c
     manufacturer: 'Raytheon / Dynetics',
     country: 'United States',
     status: 'development',
-    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2309/7788895/1000w_q95.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2305/7788895/1000w_q95.jpg',
     primaryCapability: 'Ground-based air defense against larger UAS and cruise missiles using proven AIM-9X Sidewinder.',
     specifications: [
       'AIM-9X Sidewinder missiles',
@@ -2119,7 +2119,7 @@ IFPC Increment 2 addresses the gap between short-range C-UAS systems and strateg
     manufacturer: 'DroneShield',
     country: 'Australia',
     status: 'operational',
-    imageUrl: 'https://images.squarespace-cdn.com/content/v1/660a32624c94dd36e509baf3/1712046259426-SQDHQWL9KQKQKQKQKQKQ/DroneSentry-C2.png',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2502/8867746/1000w_q95.jpg',
     primaryCapability: 'Command and control platform integrating diverse sensors and effectors for counter-UAS operations.',
     specifications: [
       'Sensor-agnostic architecture',
@@ -2161,7 +2161,7 @@ DroneSentry-C2 provides commercial and government users with flexible command an
     manufacturer: 'Naval Surface Warfare Center',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://media.defense.gov/2022/Jul/15/2003033728/-1/-1/0/220715-N-XX000-001.JPG',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2509/9326581/1000w_q95.jpg',
     primaryCapability: 'Integrated counter-UAS capability for Navy fixed sites with FS-LIDS interoperability.',
     specifications: [
       'Signal disruption capability',
@@ -2201,7 +2201,7 @@ CORIAN provides the Navy with counter-UAS capability that integrates with both N
     manufacturer: 'D-Fend Solutions',
     country: 'Israel',
     status: 'operational',
-    imageUrl: 'https://d-fendsolutions.com/wp-content/uploads/EnforceAir-System-Banner-with-EA-PLUS-1.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2506/9092756/1000w_q95.jpg',
     primaryCapability: 'RF-based drone detection with cyber-takeover capability for controlled mitigation.',
     specifications: [
       'Passive RF detection',
@@ -2245,7 +2245,7 @@ EnforceAir offers a unique capability to safely take control of hostile drones r
     manufacturer: 'CS GROUP',
     country: 'France',
     status: 'operational',
-    imageUrl: 'https://csgroup.eu/wp-content/uploads/2021/06/boreades-c-uas.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2509/9326581/1000w_q95.jpg',
     primaryCapability: 'Modular command and control for counter-UAS integrating diverse sensors and effectors.',
     specifications: [
       'SAPIENT protocol compliant',
@@ -2286,7 +2286,7 @@ BOREADES provides French forces with standardized command and control for counte
     manufacturer: 'Airsight',
     country: 'Germany',
     status: 'operational',
-    imageUrl: 'https://www.airsight.de/wp-content/uploads/2020/01/airguard-drone-detection.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2502/8867746/1000w_q95.jpg',
     primaryCapability: 'Drone detection with pilot localization for airports, prisons, and critical infrastructure.',
     specifications: [
       'RF detection',
@@ -2328,7 +2328,7 @@ AirGuard provides civilian critical infrastructure with drone detection capabili
     manufacturer: 'Airobotics',
     country: 'Israel',
     status: 'operational',
-    imageUrl: 'https://www.airoboticsdrones.com/wp-content/uploads/main_pic.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2509/9326581/1000w_q95.jpg',
     primaryCapability: 'Autonomous drone interception without reliance on GPS denial or RF jamming.',
     specifications: [
       'Autonomous operation',
@@ -2369,7 +2369,7 @@ Iron Drone addresses the challenge of defeating autonomous drones that are immun
     manufacturer: 'AS3 / MEROPS',
     country: 'Poland',
     status: 'operational',
-    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2402/8349751/1000w_q95.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2506/9090346/1000w_q95.jpg',
     primaryCapability: 'Low-cost drone intercept using MEROPS targeting system.',
     specifications: [
       'Cost: ~$15,000 per unit',
@@ -2409,7 +2409,7 @@ AS3 Surveyor provides an affordable intercept solution for nations facing large-
     manufacturer: 'Wild Hornets NGO',
     country: 'Ukraine',
     status: 'operational',
-    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2311/7863572/1000w_q95.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2511/9398161/1000w_q95.jpg',
     primaryCapability: 'Ultra-low-cost drone interception using quad-rotor design.',
     specifications: [
       'Cost: ~$2,100 per unit',
@@ -2452,7 +2452,7 @@ Sting demonstrates how ultra-low-cost solutions can address the economics of cou
     manufacturer: 'Various',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2204/7169412/1000w_q95.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2205/7169412/1000w_q95.jpg',
     primaryCapability: 'Dismounted counter-UAS capability for special operations forces on patrol.',
     specifications: [
       'Man-portable',
@@ -2491,7 +2491,7 @@ Bal Chatri provides special operations forces with organic counter-UAS capabilit
     manufacturer: 'Thales',
     country: 'France',
     status: 'development',
-    imageUrl: 'https://www.thalesgroup.com/sites/default/files/gemalto/thundershield-hpm-thales.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2202/7057424/1000w_q95.jpg',
     primaryCapability: 'High-powered microwave defeat of drone swarms.',
     specifications: [
       'High-powered microwave',
@@ -2637,7 +2637,7 @@ At approximately $180,800 per round (FY25 estimate), SkyHunter addresses the cos
     manufacturer: 'Fortem Technologies',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://www.fortemtech.com/assets/img/storyteller-dronehunter-firing-netgun.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2506/9092756/1000w_q95.jpg',
     primaryCapability: 'Autonomous pursuit and non-lethal capture of hostile drones using net-based interception.',
     specifications: [
       'Autonomous AI-guided flight',
@@ -2712,7 +2712,7 @@ Ideal deployment scenarios include:
     manufacturer: 'Anduril Industries',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://cdn.prod.website-files.com/629eb27a29945010beb6ff98/66f1a06029feda3d5f26a4e4_AndurilIndustries_Lattice_DarkBackground.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2202/7057424/1000w_q95.jpg',
     primaryCapability: 'Software platform providing sensor fusion, autonomous mission control, and multi-domain situational awareness for counter-UAS operations.',
     specifications: [
       'Real-time sensor fusion engine',
@@ -2793,7 +2793,7 @@ While powerful, Lattice operates as a vertically integrated system. Organization
     manufacturer: 'Dedrone (Axon)',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://cdn.prod.website-files.com/58fa92311759990d60953cd2/68146819f2fe2c15df240b08_Dedrone-by-Axon-RF-900-Sensor.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2509/9326581/1000w_q95.jpg',
     primaryCapability: 'AI-powered C2 software for complete drone detection, tracking, identification, and mitigation workflow management.',
     specifications: [
       'AI/ML threat classification',
@@ -3260,7 +3260,7 @@ Deployed by over 30 nations, Stinger has seen extensive combat from the Soviet-A
     manufacturer: 'Northrop Grumman',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://cdn.northropgrumman.com/-/media/wp-content/uploads/Bushmaster-Chain-Gun-1400x788.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2404/8334521/1000w_q95.jpg',
     primaryCapability: 'High-volume kinetic defense against Group 1-2 UAS using programmable proximity-fused ammunition.',
     specifications: [
       '30mm caliber',
@@ -3310,7 +3310,7 @@ The key to the XM914's C-UAS effectiveness is the XM1198 ammunition that detonat
     manufacturer: 'DroneShield',
     country: 'Australia',
     status: 'operational',
-    imageUrl: 'https://images.squarespace-cdn.com/content/v1/660a32624c94dd36e509baf3/3e83ff94-2c1f-47db-bc81-78d700cad3e4/DroneGun+Tactical.png',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2204/7143773/1000w_q95.jpg',
     primaryCapability: 'Handheld RF and GNSS jamming to disrupt drone control links and navigation, forcing fail-safe responses.',
     specifications: [
       'Rifle-shaped form factor',
@@ -3361,7 +3361,7 @@ When activated against a target drone, DroneGun disrupts the RF control link and
     manufacturer: 'DroneShield',
     country: 'Australia',
     status: 'operational',
-    imageUrl: 'https://images.squarespace-cdn.com/content/v1/660a32624c94dd36e509baf3/d10e93e6-d040-4e58-87af-61f69de64d9d/DroneSentry_DS-X+Mk2_Bosch_EchoGuard_Hero_LR.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2506/9092756/1000w_q95.jpg',
     primaryCapability: 'Mobile detect-and-defeat C-UAS with integrated RF sensors and jamming effectors for on-the-move protection.',
     specifications: [
       '360-degree RF detection',
@@ -3410,7 +3410,7 @@ The system supports vehicle-mounted, tripod-mounted, and fixed installation conf
     manufacturer: 'Sierra Nevada Corporation',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://www.mbda-systems.com/sites/mbda/files/styles/m_article_preview__2xl/public/2024-07/MISTRAL3.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2504/8998140/1000w_q95.jpg',
     primaryCapability: 'Wearable/vehicle-mounted EW system for disrupting drone control links and defeating radio-controlled IEDs.',
     specifications: [
       'Backpack or vehicle mounted',
@@ -3461,7 +3461,7 @@ Modi serves as the primary electronic warfare effector for the Marine Corps' Lig
     manufacturer: 'L3Harris',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://www.l3harris.com/sites/default/files/styles/625_x_570/public/2021-07/ims-ew-corvus-product-shot-isp-hero-1250x1140.png',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2502/8867746/1000w_q95.jpg',
     primaryCapability: 'Passive RF detection of drone threats at extended range with bearing indication for dismounted operators.',
     specifications: [
       'Passive RF detection',
@@ -3510,7 +3510,7 @@ Unlike active radar or jamming systems, CORVUS-RAVEN emits no detectable signals
     manufacturer: 'DroneShield',
     country: 'Australia',
     status: 'operational',
-    imageUrl: 'https://images.squarespace-cdn.com/content/v1/660a32624c94dd36e509baf3/c21d1f6a-3f1a-4403-b462-99ae910c3d8a/Drone+Sentry.png',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2502/8867746/1000w_q95.jpg',
     primaryCapability: 'AI-powered visual drone detection, classification, and identification using EO/IR camera feeds.',
     specifications: [
       'AI/ML computer vision',
@@ -3559,7 +3559,7 @@ The software provides detection, classification, identification, and tracking of
     manufacturer: 'L3Harris',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://www.l3harris.com/sites/default/files/styles/625_x_570/public/2020-09/ims-eo-product-wescam-mx-15d-product-shot-1250x1140-left.png',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2509/9326581/1000w_q95.jpg',
     primaryCapability: 'Multi-spectral EO/IR surveillance and precision targeting for airborne and ground-based C-UAS applications.',
     specifications: [
       'Multi-spectral EO/IR sensors',
@@ -3609,7 +3609,7 @@ The MX-10 variant serves as the targeting sensor for the VAMPIRE system, providi
     manufacturer: 'Saab',
     country: 'Sweden',
     status: 'operational',
-    imageUrl: 'https://www.saab.com/globalassets/cision/images/20251028-en-5242113-1.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2202/7057424/1000w_q95.jpg',
     primaryCapability: '3D air surveillance and target acquisition radar for short-range air defense and C-UAS applications.',
     specifications: [
       '3D AESA radar',
@@ -3657,7 +3657,7 @@ As a supported sensor within FAAD C2, Giraffe 1X provides surveillance tracks an
     manufacturer: 'US Army',
     country: 'United States',
     status: 'operational',
-    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2311/8164058/1000w_q95.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2312/8164058/1000w_q95.jpg',
     primaryCapability: 'Passive long-range surveillance and early warning without active emissions, cueing other sensors.',
     specifications: [
       'Passive detection',
