@@ -2,6 +2,36 @@
 
 All notable changes to DroneWire are documented in this file.
 
+## [1.5.0] - 2026-01-16
+
+### C-UAS Systems Database Expansion
+
+Major expansion of the Systems database from 13 to 72 systems with comprehensive imagery.
+
+**Systems Added (59 new):**
+- **US Systems:** M-SHORAD, DE M-SHORAD, AN/TPS-80 G/ATOR, VAMPIRE, APKWS II, NINJA, Dronebuster, DRAKE, LPWS, IFPC-HPM, IFPC Increment 2, MRIC, SkyHunter, DroneHunter F700, Phaser, ODIN, Stinger FIM-92, XM914 Chain Gun, Modi, ALPS, MEDUSA C2, ADSI, AiON, Lattice, DedroneTracker, Reactor, TOC-L, Maven Smart System, Leonidas, Roadrunner, Pulsar, HELWS, CORIAN, CORVUS-RAVEN, WESCAM MX-15D, Bal Chatri, NightFighter S
+- **Australian Systems:** DroneSentry-C2, DroneGun Tactical, DroneSentry-X, DroneOptID
+- **Israeli Systems:** Iron Beam, SmartShooter, Iron Drone, EnforceAir
+- **European Systems:** PARADE (France), MANTIS (Germany), Falcon Shield (Italy), JEY-CUAS (EU), BOREADES (France), AirGuard (Germany), ThunderShield (France), Giraffe 1X (Sweden)
+- **Other:** Crow/ORCUS (UK/Spain), AS3 Surveyor (Poland), Sting (Ukraine)
+
+**Image Infrastructure:**
+- All 72 systems now have working images from DVIDS CloudFront CDN
+- Replaced blocked manufacturer URLs (Rafael, Lockheed Martin, Northrop Grumman, RTX, etc.) with DVIDS public domain images
+- Standardized URL pattern: `https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/YYMM/IMAGE_ID/1000w_q95.jpg`
+- Updated seed scripts to use upsert for reliable updates
+
+**Explainer Image Fixes:**
+- Fixed 3 broken explainer images (C-UAS Kill Chain, LAWS, THAAD)
+- Updated seed-explainers.ts to use upsert instead of skip-if-exists
+
+**Files Modified:**
+- `scripts/seed-systems.ts` - 72 systems with DVIDS images
+- `scripts/seed-explainers.ts` - Fixed images, upsert logic
+- `app/api/admin/seed-explainers/route.ts` - Fixed THAAD image
+
+---
+
 ## [1.4.0] - 2026-01-15
 
 ### Systems Database (New Feature)
@@ -241,8 +271,8 @@ experimental: {
 
 ## Pending Features
 
-### Priority 5: Future Enhancements
-- [ ] System images (need verified public domain/DoD photos)
+### Priority 6: Future Enhancements
+- [x] System images - COMPLETED (72 systems with DVIDS images)
 - [ ] Admin dashboard improvements
 - [ ] AI-powered related articles (embeddings)
 - [ ] Email alerts for breaking news
@@ -250,7 +280,6 @@ experimental: {
 
 ### TODO
 - [ ] Set ADMIN_EMAIL in Vercel for contact form notifications
-- [ ] Add public domain images to Systems database
 
 ---
 
@@ -258,6 +287,7 @@ experimental: {
 
 | Version | Date | Description |
 |---------|------|-------------|
+| 1.5.0 | 2026-01-16 | 72 C-UAS systems with DVIDS images, explainer fixes |
 | 1.4.0 | 2026-01-15 | Systems database with 13 C-UAS systems |
 | 1.3.0 | 2026-01-12 | UI/UX polish, dynamic stats, explainer seeding |
 | 1.2.0 | 2026-01-12 | Email integration (Resend), RSS feed |

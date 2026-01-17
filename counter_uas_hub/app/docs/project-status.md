@@ -1,10 +1,11 @@
 # DroneWire Project Status
 
-**Last Updated:** January 15, 2026
+**Last Updated:** January 16, 2026
 
 ---
 **Live Site:** https://drone-wire.vercel.app
 **Status:** Production (Live)
+**Version:** 1.5.0
 
 ---
 
@@ -15,13 +16,13 @@
 | Feature | Status | Notes |
 |---------|--------|-------|
 | Home Page | ✅ Working | Hero, featured articles, newsletter CTA |
-| Articles List | ✅ Working | 10 articles, pagination, filtering |
+| Articles List | ✅ Working | 43 articles, pagination, filtering |
 | Article Detail | ✅ Working | AI summaries, key points, tags |
-| **Systems Database** | ✅ Working | **13 C-UAS systems (photos pending)** |
+| **Systems Database** | ✅ Working | **72 C-UAS systems with DVIDS images** |
 | **System Detail** | ✅ Working | **Specs, combat record, related systems** |
-| Explainers Library | ✅ Working | 23 explainers with categories |
+| Explainers Library | ✅ Working | 24 explainers with categories |
 | Explainer Detail | ✅ Working | Full content, sidebar with features |
-| Contracts Page | ✅ Working | DoD contracts with sorting |
+| Contracts Page | ✅ Working | 56 DoD contracts with sorting |
 | About Page | ✅ Working | Project information |
 | Dark/Light Mode | ✅ Working | Theme toggle in header |
 | Mobile Responsive | ✅ Working | Responsive navigation |
@@ -40,10 +41,10 @@
 
 | Metric | Count |
 |--------|-------|
-| Articles | 14 |
-| **Systems** | **13** |
-| Explainers | 23 |
-| Contracts | 1 |
+| Articles | 43 |
+| **Systems** | **72** |
+| Explainers | 24 |
+| Contracts | 56 |
 | Tags | Multiple |
 | RSS Feeds | Configured |
 
@@ -143,8 +144,14 @@
 - [x] Systems listing page with featured section
 - [x] System detail page with specifications sidebar
 - [x] Navigation tab added
-- [x] Seeded 13 C-UAS systems (US military + allied)
-- [ ] **System images - PENDING (need verified public domain/DoD photos)**
+- [x] Seeded 72 C-UAS systems (US, Israel, Europe, Australia, others)
+- [x] **System images - COMPLETED (all 72 systems with DVIDS images)**
+
+### Completed (Priority 5.5 - Image Infrastructure)
+- [x] All system images from DVIDS CloudFront CDN
+- [x] Replaced blocked manufacturer URLs (Rafael, Lockheed, Northrop, RTX)
+- [x] Fixed explainer images (C-UAS Kill Chain, LAWS, THAAD)
+- [x] Updated seed scripts to use upsert for reliable updates
 
 ### Future (Priority 6)
 - [ ] Admin dashboard improvements
@@ -222,37 +229,34 @@ git push origin main           # Auto-deploys to Vercel
 
 ---
 
-## Where We Left Off (January 15, 2026)
+## Where We Left Off (January 16, 2026)
 
-**Last Task Completed:** Systems feature implementation
+**Last Task Completed:** Image infrastructure for all systems and explainers
 
-**Systems v1.4.0 is live** with 13 Counter-UAS systems seeded:
-- US Integrated: FS-LIDS, M-LIDS, MADIS, L-MADIS
-- US Sensors: KURFS, LSTAR
-- US Effectors: Coyote Block 2+, Coyote Block 3, THOR, DroneDefender
-- Allied: Drone Dome (Israel), Iron Dome (Israel), DroneShield RfPatrol (Australia)
+**Systems v1.5.0 is live** with 72 Counter-UAS systems, all with working DVIDS images:
+- **US (48):** FS-LIDS, M-LIDS, MADIS, L-MADIS, M-SHORAD, DE M-SHORAD, KURFS, LSTAR, G/ATOR, Coyote, THOR, DroneDefender, VAMPIRE, APKWS II, NINJA, Dronebuster, DRAKE, LPWS, IFPC-HPM, IFPC Inc 2, and more
+- **Israel (6):** Iron Dome, Drone Dome, Iron Beam, SmartShooter, Iron Drone, EnforceAir
+- **Europe (8):** PARADE, MANTIS, Falcon Shield, JEY-CUAS, BOREADES, AirGuard, ThunderShield, Giraffe 1X
+- **Australia (5):** DroneShield RfPatrol, DroneSentry-C2, DroneGun Tactical, DroneSentry-X, DroneOptID
+- **Other (5):** Crow/ORCUS, AS3 Surveyor, Sting
 
-**Next Task: Add System Photos**
+**Image Solution:**
+All images now use DVIDS (Defense Visual Information Distribution Service) CloudFront CDN:
+- URL pattern: `https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/YYMM/IMAGE_ID/1000w_q95.jpg`
+- YYMM = year+month code (e.g., 2312 for December 2023)
+- Reliable, public domain DoD imagery
 
-The systems currently display placeholder icons by category. To add photos:
+**To add/update systems:**
+```bash
+# Edit scripts/seed-systems.ts with new system data
+npx tsx scripts/seed-systems.ts  # Uses upsert - safe to re-run
+```
 
-1. Find verified public domain or DoD-released images for each system
-2. Images should be from defense.gov, DVIDS, or manufacturer press releases with public use permitted
-3. Host images on a reliable CDN (or add to project if small)
-4. Update each system's `imageUrl` field in the database:
-   ```bash
-   npx prisma studio  # Use the GUI to update imageUrl fields
-   ```
-   Or create a migration script in `/scripts/`
-
-**Systems needing photos:**
-- FS-LIDS, M-LIDS, MADIS, L-MADIS (SRC Inc. / USMC)
-- KURFS, LSTAR (SRC Inc.)
-- Coyote Block 2+, Coyote Block 3 (Raytheon)
-- THOR (AFRL)
-- DroneDefender (Battelle)
-- Drone Dome, Iron Dome (Rafael)
-- DroneShield RfPatrol (DroneShield)
+**To add/update explainers:**
+```bash
+# Edit scripts/seed-explainers.ts with new explainer data
+npx tsx scripts/seed-explainers.ts  # Uses upsert - safe to re-run
+```
 
 ---
 
