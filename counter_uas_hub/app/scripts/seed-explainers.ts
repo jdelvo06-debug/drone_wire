@@ -252,7 +252,7 @@ The proliferation of drone swarm technology represents a fundamental shift in mi
     difficulty: 'intermediate',
     readTime: 10,
     featured: false,
-    imageUrl: 'https://www.lockheedmartin.com/content/dam/lockheed-martin/rms/photo/directed-energy/DE-Hero-Morphius.png',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2506/9107830/1000w_q95.jpg',
     whatItIs: 'Laser Weapon Systems (LAWS) are directed-energy weapons that use focused light beams to disable or destroy targets, offering precise, cost-effective counter-UAS capabilities.',
     howItWorks: 'High-energy lasers generate intense focused light beams that heat target materials to the point of structural failure, causing drones to crash or malfunction.',
     keyFeatures: ['Directed Energy', 'Precision Targeting', 'Low Cost Per Shot', 'Silent Operation'],
@@ -417,7 +417,7 @@ The Patriot missile defense system continues to evolve as a cornerstone of allie
     difficulty: 'beginner',
     readTime: 15,
     featured: true,
-    imageUrl: 'https://www.cnas.org/wp-content/uploads/2024/01/CUAS-Kill-Chain.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2308/7984704/1000w_q95.jpg',
     whatItIs: 'The C-UAS Kill Chain is the operational framework that defines how counter-drone systems engage threats through four sequential phases: Detect (find the drone), Track (maintain continuous lock), Identify (determine friend or foe), and Mitigate (neutralize the threat).',
     howItWorks: 'Multiple sensors work together to detect drone signatures (radar, RF, optical, acoustic), fuse data into unified tracks, classify threats using AI and visual confirmation, then engage with appropriate kinetic or non-kinetic effectors - all within seconds.',
     keyFeatures: ['Four-phase engagement cycle', 'Multi-sensor fusion', 'Friend/foe identification', 'Kinetic and non-kinetic options'],
@@ -606,19 +606,12 @@ async function seedExplainers() {
   console.log('Starting explainer seeding...')
 
   for (const explainer of explainersData) {
-    const existing = await prisma.explainer.findUnique({
+    await prisma.explainer.upsert({
       where: { slug: explainer.slug },
+      update: explainer,
+      create: explainer,
     })
-
-    if (existing) {
-      console.log(`Explainer "${explainer.title}" already exists, skipping...`)
-      continue
-    }
-
-    await prisma.explainer.create({
-      data: explainer,
-    })
-    console.log(`Created explainer: ${explainer.title}`)
+    console.log(`Upserted explainer: ${explainer.title}`)
   }
 
   console.log('Explainer seeding complete!')

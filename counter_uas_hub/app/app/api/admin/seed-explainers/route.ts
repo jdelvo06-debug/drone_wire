@@ -115,7 +115,7 @@ const explainersData = [
     difficulty: 'advanced',
     readTime: 14,
     featured: false,
-    imageUrl: 'https://www.lockheedmartin.com/content/dam/lockheed-martin/mfc/pc/thaad/mfc-thaad-702702-702702.jpg',
+    imageUrl: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/1710/3901563/1000w_q95.jpg',
     whatItIs: 'THAAD is a transportable, ground-based missile defense system designed to shoot down short, medium, and intermediate-range ballistic missiles.',
     howItWorks: 'Uses hit-to-kill technology with no explosive warhead, relying on kinetic energy to destroy targets.',
     keyFeatures: ['Hit-to-Kill', 'High Altitude', 'Mobile Platform', 'X-Band Radar'],
