@@ -205,8 +205,8 @@ pending ──► processing ──► published
 │   └── systems-header.tsx  # Search and filter controls
 │
 └── /contracts            # Contract-related components
-    ├── contract-table.tsx
-    └── contract-filters.tsx
+    ├── contracts-header.tsx   # Stats cards, search, filters (fetches aggregates)
+    └── contracts-table.tsx    # Sortable table with expandable details
 ```
 
 ### State Management

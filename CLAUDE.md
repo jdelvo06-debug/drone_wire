@@ -170,7 +170,7 @@ The Systems section (`/systems`) provides a comprehensive database of counter-UA
 **Frontend APIs:**
 - `GET /api/articles` - Paginated articles with filtering/search
 - `GET /api/articles/[id]` - Single article detail
-- `GET /api/contracts` - Paginated contracts with sorting
+- `GET /api/contracts` - Paginated contracts with sorting, includes aggregates (totalValue, averageValue, maxValue), byAgency (top 10), and byMonth (last 12 months) for dashboard stats
 - `GET /api/explainers` - Paginated explainers with filtering
 - `GET /api/systems` - Paginated systems with category/status filters
 - `POST /api/systems` - Increment system view count

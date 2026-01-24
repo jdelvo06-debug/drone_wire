@@ -2,6 +2,46 @@
 
 All notable changes to DroneWire are documented in this file.
 
+## [1.6.0] - 2026-01-24
+
+### Contracts Page Improvements
+
+Major UI refresh for the contracts tracker with real data integration and improved visual hierarchy.
+
+**Stats Cards (Real Data):**
+- Total Contract Value - fetched from API aggregates
+- Total Contracts - from pagination total count
+- Average Value - calculated from all contracts
+- Largest Contract - maximum contract value
+- Added loading spinners while data fetches
+- Shows "TBD" for contracts with $0 value
+
+**Table Visual Hierarchy:**
+- Simplified to 6 columns (merged Agency into Contractor cell)
+- Alternating row backgrounds for easier scanning
+- Relative time display under dates ("3 days ago", "2 weeks ago")
+- Larger, bolder value display
+- Status badges with colored indicator dots (emerald/blue/red)
+- Category badges with subtle colored backgrounds and borders
+
+**Enhanced Expanded Details:**
+- Two-column grid layout (description + quick info sidebar)
+- Icons for each info item (Calendar, Clock, DollarSign, MapPin)
+- Clean "View on SAM.gov" external link
+- Better spacing and visual separation
+
+**API Enhancements:**
+- Added `byAgency` aggregation (top 10 agencies by contract value)
+- Added `byMonth` aggregation (monthly contract values, last 12 months)
+- Supports future chart/dashboard features
+
+**Files Modified:**
+- `app/api/contracts/route.ts` - Added aggregation queries
+- `components/contracts/contracts-header.tsx` - Real data fetching, loading states
+- `components/contracts/contracts-table.tsx` - Complete visual refresh
+
+---
+
 ## [1.5.0] - 2026-01-16
 
 ### C-UAS Systems Database Expansion
@@ -287,6 +327,7 @@ experimental: {
 
 | Version | Date | Description |
 |---------|------|-------------|
+| 1.6.0 | 2026-01-24 | Contracts page UI refresh, real data, visual hierarchy |
 | 1.5.0 | 2026-01-16 | 72 C-UAS systems with DVIDS images, explainer fixes |
 | 1.4.0 | 2026-01-15 | Systems database with 13 C-UAS systems |
 | 1.3.0 | 2026-01-12 | UI/UX polish, dynamic stats, explainer seeding |
