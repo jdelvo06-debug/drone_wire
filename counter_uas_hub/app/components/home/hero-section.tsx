@@ -49,8 +49,8 @@ export default function HeroSection() {
 
           {/* Subtitle */}
           <p className="text-xl md:text-2xl text-blue-100 mb-12 max-w-3xl mx-auto leading-relaxed">
-            AI-curated intelligence on drone warfare and counter-unmanned systems. 
-            Stay ahead of the rapidly evolving threats and countermeasures shaping modern defense.
+            News, contracts, and technical explainers on counter-drone systems.
+            AI filters the noise. You get what matters.
           </p>
 
           {/* CTA Buttons */}

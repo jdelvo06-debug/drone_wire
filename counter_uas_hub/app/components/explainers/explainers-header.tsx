@@ -32,7 +32,7 @@ export default function ExplainersHeader() {
           <h1 className="text-4xl font-bold text-foreground">Explainers Library</h1>
         </div>
         <p className="text-xl text-muted-foreground">
-          Comprehensive guides to counter-UAS systems, drone warfare tactics, and defense technologies
+          Learn how counter-drone tech works—from radar basics to directed energy weapons to policy frameworks.
         </p>
       </div>
 

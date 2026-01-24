@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'C-UAS Systems Database',
-  description: 'Comprehensive database of Counter-UAS systems, sensors, effectors, and integrated defense solutions',
+  description: 'Browse counter-drone systems: sensors, effectors, C2, and integrated solutions. Specs, manufacturers, and deployment status.',
 }
 
 async function getSystems() {

@@ -61,7 +61,7 @@ export default function SystemsHeader({ onSearch, onCategoryChange, onStatusChan
           <h1 className="text-4xl font-bold text-foreground">C-UAS Systems Database</h1>
         </div>
         <p className="text-xl text-muted-foreground">
-          Comprehensive database of Counter-UAS systems, sensors, effectors, and integrated defense solutions
+          Browse C-UAS tech by category: sensors, effectors, C2, and integrated systems. Filter by status and country.
         </p>
       </div>
 

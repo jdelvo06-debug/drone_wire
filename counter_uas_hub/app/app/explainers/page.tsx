@@ -11,7 +11,7 @@ import ExplainersHeader from '@/components/explainers/explainers-header'
 
 export const metadata: Metadata = {
   title: 'Explainers Library',
-  description: 'Comprehensive guides to counter-UAS systems, drone warfare tactics, and defense technologies',
+  description: 'Guides to counter-drone tech: how systems work, threat types, and defense policy basics.',
 }
 
 async function getExplainers() {

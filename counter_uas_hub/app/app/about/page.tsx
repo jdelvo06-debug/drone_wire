@@ -6,7 +6,7 @@ import ContactForm from '@/components/about/contact-form'
 
 export const metadata: Metadata = {
   title: 'About Us',
-  description: 'Learn about Counter-UAS Knowledge Hub\'s mission to provide AI-curated intelligence on drone warfare and counter-unmanned systems',
+  description: 'DroneWire aggregates news, contracts, and technical info on counter-drone systems. Learn what we do and why.',
 }
 
 export default function AboutPage() {
@@ -22,8 +22,8 @@ export default function AboutPage() {
             <h1 className="text-5xl font-bold text-foreground">About Us</h1>
           </div>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Counter-UAS Knowledge Hub is dedicated to providing comprehensive, AI-curated intelligence 
-            on drone warfare and counter-unmanned systems to defense professionals and policymakers worldwide.
+            DroneWire aggregates news, contract data, and technical explainers on drone warfare and
+            counter-UAS systems. We use AI to filter and summarize—so you don't have to read 50 articles a day.
           </p>
         </div>
       </section>
@@ -42,8 +42,8 @@ export default function AboutPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Leverage advanced AI to analyze, summarize, and contextualize complex defense information 
-                  from hundreds of sources worldwide.
+                  We scrape RSS feeds and DoD announcements, then use AI to summarize articles and
+                  tag them by topic. You get the signal, not the noise.
                 </p>
               </CardContent>
             </Card>
@@ -57,8 +57,8 @@ export default function AboutPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Specialize in counter-UAS technology, drone warfare tactics, and emerging threats 
-                  that shape modern defense strategy.
+                  Counter-drone tech only. Sensors, effectors, C2 systems, plus the contracts and policy
+                  that fund them.
                 </p>
               </CardContent>
             </Card>
@@ -72,8 +72,8 @@ export default function AboutPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Connect defense professionals, researchers, and policymakers with timely, 
-                  actionable intelligence and comprehensive analysis.
+                  Built for people who need to track this space—defense analysts, program managers,
+                  researchers, and journalists.
                 </p>
               </CardContent>
             </Card>
@@ -129,9 +129,8 @@ export default function AboutPage() {
               <Card className="bg-muted/30 border-0">
                 <CardContent className="p-8">
                   <blockquote className="text-lg italic text-muted-foreground mb-4">
-                    "In the rapidly evolving landscape of unmanned systems and counter-drone technology, 
-                    staying informed isn't just an advantage—it's a necessity. Our mission is to transform 
-                    information overload into actionable intelligence."
+                    "There's too much drone news to track manually. We built this to solve our own problem—now
+                    we're sharing it."
                   </blockquote>
                   <cite className="text-sm font-semibold text-foreground">— Editorial Team</cite>
                 </CardContent>
