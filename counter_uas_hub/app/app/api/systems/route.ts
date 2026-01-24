@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { logger } from '@/lib/logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -103,7 +104,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Systems API error:', error);
+    logger.error('Systems API error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch systems' },
       { status: 500 }
@@ -132,7 +133,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('View increment error:', error);
+    logger.error('View increment error:', error);
     return NextResponse.json(
       { error: 'Failed to update views' },
       { status: 500 }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { logger } from '@/lib/logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,7 +43,7 @@ export async function GET(
 
     return NextResponse.json({ article: transformedArticle });
   } catch (error) {
-    console.error('Article fetch error:', error);
+    logger.error('Article fetch error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch article' },
       { status: 500 }

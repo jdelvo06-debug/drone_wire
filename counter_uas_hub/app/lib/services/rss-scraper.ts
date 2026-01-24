@@ -1,5 +1,6 @@
 import Parser from 'rss-parser';
 import { prisma } from '@/lib/db';
+import { logger } from '@/lib/logger';
 import { isRelevantContent } from '@/lib/constants/rss-feeds';
 import { isImageUrl as checkIsImageUrl } from '@/lib/constants/images';
 
@@ -128,13 +129,13 @@ export async function scrapeRssFeeds(): Promise<ScrapingResult> {
   });
 
   if (feeds.length === 0) {
-    console.log('No active RSS feeds found');
+    logger.info('No active RSS feeds found');
     return result;
   }
 
   for (const feed of feeds) {
     try {
-      console.log(`Scraping feed: ${feed.name} (${feed.url})`);
+      logger.debug(`Scraping feed: ${feed.name} (${feed.url})`);
       const parsed = await parser.parseURL(feed.url);
       result.feedsProcessed++;
 
@@ -184,7 +185,7 @@ export async function scrapeRssFeeds(): Promise<ScrapingResult> {
         });
 
         result.articlesAdded++;
-        console.log(`Added article: ${item.title.slice(0, 50)}...`);
+        logger.debug(`Added article: ${item.title.slice(0, 50)}...`);
       }
 
       // Update feed success status
@@ -198,7 +199,7 @@ export async function scrapeRssFeeds(): Promise<ScrapingResult> {
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.error(`Error scraping ${feed.name}: ${errorMessage}`);
+      logger.error(`Error scraping ${feed.name}: ${errorMessage}`);
       result.errors.push({ feed: feed.name, error: errorMessage });
 
       // Update feed error status
@@ -216,7 +217,7 @@ export async function scrapeRssFeeds(): Promise<ScrapingResult> {
           where: { id: feed.id },
           data: { isActive: false },
         });
-        console.log(`Disabled feed ${feed.name} due to repeated errors`);
+        logger.warn(`Disabled feed ${feed.name} due to repeated errors`);
       }
     }
 

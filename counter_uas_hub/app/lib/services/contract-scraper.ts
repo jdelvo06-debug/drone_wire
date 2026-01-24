@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db';
+import { logger } from '@/lib/logger';
 import { Decimal } from '@prisma/client/runtime/library';
 
 // SAM.gov Opportunities API (Contract Awards API is suspended)
@@ -227,7 +228,7 @@ export async function scrapeContracts(): Promise<ContractScrapingResult> {
   }
 
   try {
-    console.log('Fetching DoD contract opportunities from SAM.gov API...');
+    logger.debug('Fetching DoD contract opportunities from SAM.gov API...');
 
     // Get opportunities from the last 6 months (API has 1-year max range)
     const toDate = new Date();
@@ -275,16 +276,16 @@ export async function scrapeContracts(): Promise<ContractScrapingResult> {
               allContracts.push(opp);
             }
           }
-          console.log(`Found ${opportunities.length} opportunities for "${term}"`);
+          logger.debug(`Found ${opportunities.length} opportunities for "${term}"`);
         }
       } catch (err) {
-        console.error(`Error searching for "${term}":`, err);
+        logger.error(`Error searching for "${term}":`, err);
       }
     }
 
     const contracts = allContracts;
 
-    console.log(`Found ${contracts.length} DoD contracts from SAM.gov`);
+    logger.debug(`Found ${contracts.length} DoD contracts from SAM.gov`);
 
     for (const item of contracts) {
       try {
@@ -339,7 +340,7 @@ export async function scrapeContracts(): Promise<ContractScrapingResult> {
         });
 
         result.contractsAdded++;
-        console.log(`Added contract: ${contract.title.slice(0, 50)}... ($${contract.value.toLocaleString()})`);
+        logger.debug(`Added contract: ${contract.title.slice(0, 50)}... ($${contract.value.toLocaleString()})`);
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : 'Unknown error';
         result.errors.push(`Error processing contract: ${errorMsg}`);
@@ -348,7 +349,7 @@ export async function scrapeContracts(): Promise<ContractScrapingResult> {
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : 'Unknown error';
     result.errors.push(`Failed to fetch contracts from SAM.gov: ${errorMsg}`);
-    console.error('Contract scraping error:', error);
+    logger.error('Contract scraping error:', error);
   }
 
   return result;

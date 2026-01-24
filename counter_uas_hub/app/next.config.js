@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
-    ignoreDuringBuilds: true,
+    // Only ignore specific directories if needed, not all builds
+    dirs: ['app', 'components', 'lib', 'hooks'],
   },
   typescript: {
     ignoreBuildErrors: false,

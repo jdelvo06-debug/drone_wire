@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
 import { scrapeRssFeeds } from '@/lib/services/rss-scraper';
 
 export const dynamic = 'force-dynamic';
@@ -14,7 +15,7 @@ function validateCronSecret(req: NextRequest): boolean {
   const cronSecret = process.env.CRON_SECRET;
 
   if (!cronSecret) {
-    console.warn('CRON_SECRET not configured');
+    logger.warn('CRON_SECRET not configured');
     return false;
   }
 
@@ -31,15 +32,15 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    console.log('Starting RSS feed scraping...');
+    logger.info('Starting RSS feed scraping...');
     const startTime = Date.now();
 
     const result = await scrapeRssFeeds();
 
     const duration = (Date.now() - startTime) / 1000;
 
-    console.log(`Scraping completed in ${duration.toFixed(1)}s`);
-    console.log(`Results: ${result.articlesAdded} added, ${result.articlesSkipped} skipped, ${result.errors.length} errors`);
+    logger.info(`Scraping completed in ${duration.toFixed(1)}s`);
+    logger.info(`Results: ${result.articlesAdded} added, ${result.articlesSkipped} skipped, ${result.errors.length} errors`);
 
     return NextResponse.json({
       success: true,
@@ -50,7 +51,7 @@ export async function GET(req: NextRequest) {
       errors: result.errors,
     });
   } catch (error) {
-    console.error('Scraping cron error:', error);
+    logger.error('Scraping cron error:', error);
     return NextResponse.json(
       {
         success: false,

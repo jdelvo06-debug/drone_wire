@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { logger } from '@/lib/logger';
 
 let resend: Resend | null = null;
 
@@ -34,7 +35,7 @@ export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
   const client = getResendClient();
 
   if (!client) {
-    console.warn('RESEND_API_KEY not configured, skipping email send');
+    logger.warn('RESEND_API_KEY not configured, skipping email send');
     return { success: false, error: 'Email not configured' };
   }
 
@@ -48,13 +49,13 @@ export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
     });
 
     if (error) {
-      console.error('Failed to send email:', error);
+      logger.error('Failed to send email:', error);
       return { success: false, error: error.message };
     }
 
     return { success: true, data };
   } catch (error) {
-    console.error('Email send error:', error);
+    logger.error('Email send error:', error);
     return { success: false, error: 'Failed to send email' };
   }
 }

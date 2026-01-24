@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db';
+import { logger } from '@/lib/logger';
 import { extractContentFromUrl } from './content-extractor';
 
 export interface ReprocessingResult {
@@ -48,7 +49,7 @@ export async function reprocessArticlesForImages(
     take: limit,
   });
 
-  console.log(`Processing ${articles.length} articles for image extraction...`);
+  logger.debug(`Processing ${articles.length} articles for image extraction...`);
 
   for (const article of articles) {
     result.processed++;
@@ -58,7 +59,7 @@ export async function reprocessArticlesForImages(
     }
 
     try {
-      console.log(`Extracting image for: ${article.title.slice(0, 50)}...`);
+      logger.debug(`Extracting image for: ${article.title.slice(0, 50)}...`);
       const extracted = await extractContentFromUrl(article.sourceUrl);
 
       if (extracted?.imageUrl) {
@@ -67,15 +68,15 @@ export async function reprocessArticlesForImages(
           data: { imageUrl: extracted.imageUrl },
         });
         result.updated++;
-        console.log(`  Updated with image: ${extracted.imageUrl.slice(0, 60)}...`);
+        logger.debug(`  Updated with image: ${extracted.imageUrl.slice(0, 60)}...`);
       } else {
-        console.log(`  No image found`);
+        logger.debug(`  No image found`);
       }
     } catch (error) {
       result.failed++;
       const errorMsg = error instanceof Error ? error.message : 'Unknown error';
       result.errors.push(`${article.id}: ${errorMsg}`);
-      console.error(`  Error: ${errorMsg}`);
+      logger.error(`  Error: ${errorMsg}`);
     }
 
     // Rate limiting - wait 1.5 seconds between requests

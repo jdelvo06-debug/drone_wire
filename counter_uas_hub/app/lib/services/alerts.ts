@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db'
+import { logger } from '@/lib/logger'
 import { sendEmail } from './email'
 
 export interface AlertArticle {
@@ -236,15 +237,15 @@ export async function processAlerts(): Promise<AlertStats> {
   stats.articlesFound = articles.length
 
   if (articles.length === 0) {
-    console.log('No articles found for alerts')
+    logger.info('No articles found for alerts')
     return stats
   }
 
-  console.log(`Found ${articles.length} articles for alerts`)
+  logger.info(`Found ${articles.length} articles for alerts`)
 
   // Send alerts for each article
   for (const article of articles) {
-    console.log(`Sending alerts for: ${article.title.slice(0, 50)}...`)
+    logger.info(`Sending alerts for: ${article.title.slice(0, 50)}...`)
     const result = await sendArticleAlert(article)
     stats.emailsSent += result.sent
     stats.errors.push(...result.errors)

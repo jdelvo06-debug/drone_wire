@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { logger } from '@/lib/logger'
 import { sendContactNotification } from '@/lib/services/email'
 
 export const dynamic = "force-dynamic"
@@ -65,7 +66,7 @@ export async function POST(req: NextRequest) {
       subject,
       message,
       type,
-    }).catch(console.error)
+    }).catch(logger.error)
 
     return NextResponse.json({
       message: 'Message sent successfully!',
@@ -73,7 +74,7 @@ export async function POST(req: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Contact submission error:', error)
+    logger.error('Contact submission error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -99,7 +100,7 @@ export async function GET() {
     })
 
   } catch (error) {
-    console.error('Contact submissions fetch error:', error)
+    logger.error('Contact submissions fetch error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

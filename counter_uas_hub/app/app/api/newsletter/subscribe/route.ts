@@ -1,6 +1,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { logger } from '@/lib/logger'
 import { sendWelcomeEmail } from '@/lib/services/email'
 
 export const dynamic = "force-dynamic"
@@ -66,7 +67,7 @@ export async function POST(req: NextRequest) {
         })
 
         // Send welcome email (fire and forget)
-        sendWelcomeEmail(email, firstName).catch(console.error)
+        sendWelcomeEmail(email, firstName).catch(logger.error)
 
         return NextResponse.json({
           message: 'Successfully resubscribed!',
@@ -90,7 +91,7 @@ export async function POST(req: NextRequest) {
     })
 
     // Send welcome email (fire and forget)
-    sendWelcomeEmail(email, firstName).catch(console.error)
+    sendWelcomeEmail(email, firstName).catch(logger.error)
 
     return NextResponse.json({
       message: 'Successfully subscribed!',
@@ -101,7 +102,7 @@ export async function POST(req: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Newsletter subscription error:', error)
+    logger.error('Newsletter subscription error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

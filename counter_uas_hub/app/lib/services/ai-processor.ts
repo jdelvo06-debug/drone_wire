@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import { prisma } from '@/lib/db';
+import { logger } from '@/lib/logger';
 import { extractContentFromUrl, estimateReadTime } from './content-extractor';
 import slugify from 'slugify';
 
@@ -35,7 +36,7 @@ async function generateEmbedding(text: string): Promise<number[] | null> {
     });
     return response.data[0]?.embedding || null;
   } catch (error) {
-    console.error('Embedding generation error:', error);
+    logger.error('Embedding generation error:', error);
     return null;
   }
 }
@@ -71,7 +72,7 @@ async function callAI(prompt: string): Promise<AIProcessingResult | null> {
 
     return JSON.parse(content) as AIProcessingResult;
   } catch (error) {
-    console.error('AI processing error:', error);
+    logger.error('AI processing error:', error);
     return null;
   }
 }
@@ -82,7 +83,7 @@ export async function processArticleWithAI(articleId: string): Promise<boolean> 
   });
 
   if (!article) {
-    console.error(`Article not found: ${articleId}`);
+    logger.error(`Article not found: ${articleId}`);
     return false;
   }
 
@@ -91,7 +92,7 @@ export async function processArticleWithAI(articleId: string): Promise<boolean> 
   let imageUrl = article.imageUrl;
 
   if ((!content || content.length < 500) && article.sourceUrl) {
-    console.log(`Extracting content from ${article.sourceUrl}`);
+    logger.debug(`Extracting content from ${article.sourceUrl}`);
     const extracted = await extractContentFromUrl(article.sourceUrl);
 
     if (extracted) {
@@ -105,7 +106,7 @@ export async function processArticleWithAI(articleId: string): Promise<boolean> 
   const textForAnalysis = `${article.title}\n\n${article.excerpt || ''}\n\n${content || ''}`;
 
   if (textForAnalysis.length < 100) {
-    console.log(`Not enough content to process: ${article.id}`);
+    logger.debug(`Not enough content to process: ${article.id}`);
     return false;
   }
 
@@ -137,7 +138,7 @@ Confidence score (0-1) reflects how well this article fits the counter-UAS/drone
   const result = await callAI(prompt);
 
   if (!result) {
-    console.error(`AI processing failed for article: ${articleId}`);
+    logger.error(`AI processing failed for article: ${articleId}`);
     return false;
   }
 
@@ -166,7 +167,7 @@ Confidence score (0-1) reflects how well this article fits the counter-UAS/drone
     await createAndLinkTag(articleId, tagName);
   }
 
-  console.log(`Successfully processed article: ${article.title.slice(0, 50)}...`);
+  logger.debug(`Successfully processed article: ${article.title.slice(0, 50)}...`);
   return true;
 }
 
@@ -204,7 +205,7 @@ async function createAndLinkTag(articleId: string, tagName: string): Promise<voi
     });
   } catch (error) {
     // Ignore duplicate errors
-    console.log(`Tag linking skipped for ${tagName}: already exists`);
+    logger.debug(`Tag linking skipped for ${tagName}: already exists`);
   }
 }
 
@@ -247,7 +248,7 @@ export async function processPendingArticles(limit: number = 10): Promise<Proces
     take: limit,
   });
 
-  console.log(`Processing ${articles.length} articles...`);
+  logger.debug(`Processing ${articles.length} articles...`);
 
   for (const article of articles) {
     try {

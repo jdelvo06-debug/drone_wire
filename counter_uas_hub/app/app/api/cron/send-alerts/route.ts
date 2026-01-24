@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { processAlerts } from '@/lib/services/alerts'
 
 export const dynamic = 'force-dynamic'
@@ -14,7 +15,7 @@ function validateCronSecret(req: NextRequest): boolean {
   const cronSecret = process.env.CRON_SECRET
 
   if (!cronSecret) {
-    console.warn('CRON_SECRET not configured')
+    logger.warn('CRON_SECRET not configured')
     return false
   }
 
@@ -30,12 +31,12 @@ export async function GET(req: NextRequest) {
     )
   }
 
-  console.log('Starting alert processing...')
+  logger.info('Starting alert processing...')
 
   try {
     const stats = await processAlerts()
 
-    console.log('Alert processing complete:', stats)
+    logger.info('Alert processing complete:', stats)
 
     return NextResponse.json({
       success: true,
@@ -45,7 +46,7 @@ export async function GET(req: NextRequest) {
         : 'No alerts to send',
     })
   } catch (error) {
-    console.error('Alert processing error:', error)
+    logger.error('Alert processing error:', error)
     return NextResponse.json(
       {
         success: false,

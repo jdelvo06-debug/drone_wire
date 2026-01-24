@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
 import { scrapeContracts } from '@/lib/services/contract-scraper';
 
 export const dynamic = 'force-dynamic';
@@ -14,7 +15,7 @@ function validateCronSecret(req: NextRequest): boolean {
   const cronSecret = process.env.CRON_SECRET;
 
   if (!cronSecret) {
-    console.warn('CRON_SECRET not configured');
+    logger.warn('CRON_SECRET not configured');
     return false;
   }
 
@@ -31,15 +32,15 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    console.log('Starting contract scraping...');
+    logger.info('Starting contract scraping...');
     const startTime = Date.now();
 
     const result = await scrapeContracts();
 
     const duration = (Date.now() - startTime) / 1000;
 
-    console.log(`Contract scraping completed in ${duration.toFixed(1)}s`);
-    console.log(`Results: ${result.contractsAdded} added, ${result.contractsUpdated} updated, ${result.contractsSkipped} skipped`);
+    logger.info(`Contract scraping completed in ${duration.toFixed(1)}s`);
+    logger.info(`Results: ${result.contractsAdded} added, ${result.contractsUpdated} updated, ${result.contractsSkipped} skipped`);
 
     return NextResponse.json({
       success: true,
@@ -50,7 +51,7 @@ export async function GET(req: NextRequest) {
       errors: result.errors,
     });
   } catch (error) {
-    console.error('Contract scraping cron error:', error);
+    logger.error('Contract scraping cron error:', error);
     return NextResponse.json(
       {
         success: false,

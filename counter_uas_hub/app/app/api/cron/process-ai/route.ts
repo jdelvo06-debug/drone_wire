@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
 import { processPendingArticles } from '@/lib/services/ai-processor';
 
 export const dynamic = 'force-dynamic';
@@ -14,7 +15,7 @@ function validateCronSecret(req: NextRequest): boolean {
   const cronSecret = process.env.CRON_SECRET;
 
   if (!cronSecret) {
-    console.warn('CRON_SECRET not configured');
+    logger.warn('CRON_SECRET not configured');
     return false;
   }
 
@@ -31,7 +32,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    console.log('Starting AI processing...');
+    logger.info('Starting AI processing...');
     const startTime = Date.now();
 
     // Process up to 10 articles per cron run to stay within time limits
@@ -39,8 +40,8 @@ export async function GET(req: NextRequest) {
 
     const duration = (Date.now() - startTime) / 1000;
 
-    console.log(`AI processing completed in ${duration.toFixed(1)}s`);
-    console.log(`Results: ${result.processed} processed, ${result.failed} failed`);
+    logger.info(`AI processing completed in ${duration.toFixed(1)}s`);
+    logger.info(`Results: ${result.processed} processed, ${result.failed} failed`);
 
     return NextResponse.json({
       success: true,
@@ -50,7 +51,7 @@ export async function GET(req: NextRequest) {
       errors: result.errors,
     });
   } catch (error) {
-    console.error('AI processing cron error:', error);
+    logger.error('AI processing cron error:', error);
     return NextResponse.json(
       {
         success: false,

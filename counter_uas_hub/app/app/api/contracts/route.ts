@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { logger } from '@/lib/logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -110,7 +111,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Contracts API error:', error);
+    logger.error('Contracts API error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch contracts' },
       { status: 500 }
@@ -143,7 +144,7 @@ export async function OPTIONS() {
       companies: companies.map((c) => c.company),
     });
   } catch (error) {
-    console.error('Contracts filters API error:', error);
+    logger.error('Contracts filters API error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch filters' },
       { status: 500 }

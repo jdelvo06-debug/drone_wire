@@ -1,5 +1,6 @@
 import * as cheerio from 'cheerio';
-import fetch from 'node-fetch';
+import { logger } from '@/lib/logger';
+// Using native fetch (Node.js 20+)
 
 interface ContentSelectors {
   article: string;
@@ -180,16 +181,22 @@ export interface ExtractedContent {
 
 export async function extractContentFromUrl(url: string): Promise<ExtractedContent | null> {
   try {
+    // Use AbortController for timeout with native fetch
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
     const response = await fetch(url, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (compatible; DroneWire/1.0; +https://dronewire.com)',
         Accept: 'text/html,application/xhtml+xml',
       },
-      timeout: 15000,
+      signal: controller.signal,
     });
 
+    clearTimeout(timeoutId);
+
     if (!response.ok) {
-      console.error(`Failed to fetch ${url}: ${response.status}`);
+      logger.error(`Failed to fetch ${url}: ${response.status}`);
       return null;
     }
 
@@ -318,7 +325,7 @@ export async function extractContentFromUrl(url: string): Promise<ExtractedConte
       wordCount,
     };
   } catch (error) {
-    console.error(`Error extracting content from ${url}:`, error);
+    logger.error(`Error extracting content from ${url}:`, error);
     return null;
   }
 }

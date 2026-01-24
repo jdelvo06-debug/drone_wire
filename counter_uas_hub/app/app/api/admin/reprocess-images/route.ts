@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
 import {
   reprocessArticlesForImages,
   getImageStats,
@@ -28,7 +29,7 @@ export async function GET(req: NextRequest) {
     const stats = await getImageStats();
     return NextResponse.json({ success: true, stats });
   } catch (error) {
-    console.error('Error getting image stats:', error);
+    logger.error('Error getting image stats:', error);
     return NextResponse.json(
       { success: false, error: String(error) },
       { status: 500 }
@@ -47,7 +48,7 @@ export async function POST(req: NextRequest) {
     const limit = Math.min(body.limit || 50, 100); // Max 100 per request
     const onlyMissing = body.onlyMissing !== false;
 
-    console.log(
+    logger.info(
       `Starting image reprocessing (limit: ${limit}, onlyMissing: ${onlyMissing})`
     );
     const result = await reprocessArticlesForImages(limit, onlyMissing);
@@ -57,7 +58,7 @@ export async function POST(req: NextRequest) {
       result,
     });
   } catch (error) {
-    console.error('Image reprocessing error:', error);
+    logger.error('Image reprocessing error:', error);
     return NextResponse.json(
       { success: false, error: String(error) },
       { status: 500 }
