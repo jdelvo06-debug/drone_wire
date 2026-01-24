@@ -4,10 +4,29 @@ import { sendContactNotification } from '@/lib/services/email'
 
 export const dynamic = "force-dynamic"
 
+// RFC 5322 compliant email regex (simplified but robust)
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/
+
 export async function POST(req: NextRequest) {
+  let body: Record<string, unknown>
   try {
-    const body = await req.json()
-    const { name, email, company, subject, type = 'general', message } = body
+    body = await req.json()
+  } catch {
+    return NextResponse.json(
+      { error: 'Invalid JSON body' },
+      { status: 400 }
+    )
+  }
+
+  try {
+    const { name, email, company, subject, type = 'general', message } = body as {
+      name?: string
+      email?: string
+      company?: string
+      subject?: string
+      type?: string
+      message?: string
+    }
 
     // Validate required fields
     if (!name || !email || !subject || !message) {
@@ -17,9 +36,8 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
+    // Validate email format
+    if (!EMAIL_REGEX.test(email)) {
       return NextResponse.json(
         { error: 'Invalid email format' },
         { status: 400 }

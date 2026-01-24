@@ -50,10 +50,16 @@ export async function GET(req: NextRequest) {
     if (minValue || maxValue) {
       where.value = {};
       if (minValue) {
-        (where.value as Record<string, number>).gte = parseFloat(minValue);
+        const parsedMin = parseFloat(minValue);
+        if (!isNaN(parsedMin)) {
+          (where.value as Record<string, number>).gte = parsedMin;
+        }
       }
       if (maxValue) {
-        (where.value as Record<string, number>).lte = parseFloat(maxValue);
+        const parsedMax = parseFloat(maxValue);
+        if (!isNaN(parsedMax)) {
+          (where.value as Record<string, number>).lte = parsedMax;
+        }
       }
     }
 

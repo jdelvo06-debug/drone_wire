@@ -74,10 +74,11 @@ export async function GET() {
       count: t._count.articleId,
     }))
 
-    // Articles over time (last 7 days)
+    // Articles over time (last 7 days) - limit to prevent memory issues
     const articlesLast7Days = await prisma.article.findMany({
       where: { createdAt: { gte: sevenDaysAgo } },
       select: { createdAt: true },
+      take: 10000,
     })
 
     // Group by day
@@ -100,10 +101,11 @@ export async function GET() {
       articles: count,
     }))
 
-    // Confidence score distribution
+    // Confidence score distribution - limit to prevent memory issues
     const articlesWithConfidence = await prisma.article.findMany({
       where: { confidence: { not: null } },
       select: { confidence: true },
+      take: 10000,
     })
 
     const confidenceDistribution = {
@@ -125,10 +127,11 @@ export async function GET() {
       },
     })
 
-    // Subscriber growth (last 30 days)
+    // Subscriber growth (last 30 days) - limit to prevent memory issues
     const subscribersLast30Days = await prisma.newsletterSubscriber.findMany({
       where: { subscriptionDate: { gte: thirtyDaysAgo } },
       select: { subscriptionDate: true },
+      take: 10000,
     })
 
     // Group subscribers by week

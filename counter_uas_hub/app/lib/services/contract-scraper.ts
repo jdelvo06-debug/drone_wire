@@ -252,11 +252,17 @@ export async function scrapeContracts(): Promise<ContractScrapingResult> {
           limit: '100',
         });
 
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
         const response = await fetch(`${SAM_GOV_API_URL}?${params.toString()}`, {
           headers: {
             'Accept': 'application/json',
           },
+          signal: controller.signal,
         });
+
+        clearTimeout(timeoutId);
 
         if (response.ok) {
           const data = await response.json() as { opportunitiesData?: SamGovOpportunity[] };

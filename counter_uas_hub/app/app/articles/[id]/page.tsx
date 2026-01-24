@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/db'
@@ -12,7 +13,8 @@ interface ArticlePageProps {
   }
 }
 
-async function getArticle(id: string) {
+// Cache the article fetch to prevent duplicate queries between generateMetadata and page render
+const getArticle = cache(async (id: string) => {
   const article = await prisma.article.findUnique({
     where: { id },
     include: {
@@ -33,7 +35,7 @@ async function getArticle(id: string) {
     ...article,
     tags: article.tags.map((at) => at.tag.name),
   }
-}
+})
 
 // Cosine similarity between two vectors
 function cosineSimilarity(a: number[], b: number[]): number {
