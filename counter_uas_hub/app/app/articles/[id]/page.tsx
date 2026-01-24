@@ -26,11 +26,8 @@ async function getArticle(id: string) {
 
   if (!article) return null
 
-  // Increment view count (fire and forget)
-  prisma.article.update({
-    where: { id },
-    data: { views: { increment: 1 } },
-  }).catch(() => {})
+  // View tracking is now handled client-side in ArticleContent component
+  // to avoid race conditions and duplicate counting
 
   return {
     ...article,

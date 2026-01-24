@@ -1,7 +1,7 @@
 
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getImageWithFallback } from '@/lib/constants/images'
@@ -38,6 +38,21 @@ interface ArticleContentProps {
 
 export default function ArticleContent({ article }: ArticleContentProps) {
   const [isSharing, setIsSharing] = useState(false)
+  const viewTracked = useRef(false)
+
+  // Track view once on mount
+  useEffect(() => {
+    if (viewTracked.current) return
+    viewTracked.current = true
+
+    fetch('/api/articles', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ articleId: article.id }),
+    }).catch(() => {
+      // Silently fail - view tracking is not critical
+    })
+  }, [article.id])
 
   const handleShare = async () => {
     setIsSharing(true)

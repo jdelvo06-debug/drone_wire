@@ -4,12 +4,26 @@ import { processAlerts } from '@/lib/services/alerts'
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60 // Allow up to 60 seconds for sending alerts
 
-export async function GET(req: NextRequest) {
-  // Verify cron secret
+function validateCronSecret(req: NextRequest): boolean {
+  // Allow requests from Vercel Cron
+  const isVercelCron = req.headers.get('x-vercel-cron') === '1'
+  if (isVercelCron) return true
+
+  // Otherwise require the CRON_SECRET
   const authHeader = req.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET
 
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronSecret) {
+    console.warn('CRON_SECRET not configured')
+    return false
+  }
+
+  return authHeader === `Bearer ${cronSecret}`
+}
+
+export async function GET(req: NextRequest) {
+  // Validate authorization
+  if (!validateCronSecret(req)) {
     return NextResponse.json(
       { error: 'Unauthorized' },
       { status: 401 }

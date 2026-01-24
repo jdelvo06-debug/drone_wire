@@ -11,6 +11,18 @@ function getResendClient() {
 
 const FROM_EMAIL = process.env.FROM_EMAIL || 'DroneWire <noreply@dronewire.com>';
 
+/**
+ * Escape HTML special characters to prevent XSS attacks
+ */
+function escapeHtml(unsafe: string): string {
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 export interface SendEmailOptions {
   to: string | string[];
   subject: string;
@@ -111,6 +123,17 @@ export function getContactNotificationHtml(data: {
   message: string;
   type: string;
 }) {
+  // Escape all user-provided data to prevent XSS
+  const safeName = escapeHtml(data.name);
+  const safeEmail = escapeHtml(data.email);
+  const safeCompany = data.company ? escapeHtml(data.company) : '';
+  const safeSubject = escapeHtml(data.subject);
+  const safeMessage = escapeHtml(data.message).replace(/\n/g, '<br>');
+  const safeType = escapeHtml(data.type);
+
+  // URL-encode email and subject for mailto link
+  const encodedSubject = encodeURIComponent(`Re: ${data.subject}`);
+
   return `
 <!DOCTYPE html>
 <html>
@@ -130,38 +153,38 @@ export function getContactNotificationHtml(data: {
       <table style="width: 100%; border-collapse: collapse;">
         <tr>
           <td style="padding: 12px 0; border-bottom: 1px solid #e4e4e7; color: #71717a; width: 120px;">Name:</td>
-          <td style="padding: 12px 0; border-bottom: 1px solid #e4e4e7; color: #18181b; font-weight: 500;">${data.name}</td>
+          <td style="padding: 12px 0; border-bottom: 1px solid #e4e4e7; color: #18181b; font-weight: 500;">${safeName}</td>
         </tr>
         <tr>
           <td style="padding: 12px 0; border-bottom: 1px solid #e4e4e7; color: #71717a;">Email:</td>
-          <td style="padding: 12px 0; border-bottom: 1px solid #e4e4e7; color: #18181b;"><a href="mailto:${data.email}" style="color: #3b82f6;">${data.email}</a></td>
+          <td style="padding: 12px 0; border-bottom: 1px solid #e4e4e7; color: #18181b;"><a href="mailto:${safeEmail}" style="color: #3b82f6;">${safeEmail}</a></td>
         </tr>
-        ${data.company ? `
+        ${safeCompany ? `
         <tr>
           <td style="padding: 12px 0; border-bottom: 1px solid #e4e4e7; color: #71717a;">Company:</td>
-          <td style="padding: 12px 0; border-bottom: 1px solid #e4e4e7; color: #18181b;">${data.company}</td>
+          <td style="padding: 12px 0; border-bottom: 1px solid #e4e4e7; color: #18181b;">${safeCompany}</td>
         </tr>
         ` : ''}
         <tr>
           <td style="padding: 12px 0; border-bottom: 1px solid #e4e4e7; color: #71717a;">Type:</td>
-          <td style="padding: 12px 0; border-bottom: 1px solid #e4e4e7; color: #18181b;">${data.type}</td>
+          <td style="padding: 12px 0; border-bottom: 1px solid #e4e4e7; color: #18181b;">${safeType}</td>
         </tr>
         <tr>
           <td style="padding: 12px 0; border-bottom: 1px solid #e4e4e7; color: #71717a;">Subject:</td>
-          <td style="padding: 12px 0; border-bottom: 1px solid #e4e4e7; color: #18181b; font-weight: 500;">${data.subject}</td>
+          <td style="padding: 12px 0; border-bottom: 1px solid #e4e4e7; color: #18181b; font-weight: 500;">${safeSubject}</td>
         </tr>
       </table>
 
       <div style="margin-top: 24px;">
         <p style="color: #71717a; margin: 0 0 8px; font-size: 14px;">Message:</p>
         <div style="background-color: #f4f4f5; padding: 16px; border-radius: 6px; color: #3f3f46; line-height: 1.6;">
-          ${data.message.replace(/\n/g, '<br>')}
+          ${safeMessage}
         </div>
       </div>
 
       <div style="margin-top: 24px; text-align: center;">
-        <a href="mailto:${data.email}?subject=Re: ${data.subject}" style="display: inline-block; background-color: #3b82f6; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600;">
-          Reply to ${data.name}
+        <a href="mailto:${safeEmail}?subject=${encodedSubject}" style="display: inline-block; background-color: #3b82f6; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600;">
+          Reply to ${safeName}
         </a>
       </div>
     </div>

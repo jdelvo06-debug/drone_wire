@@ -27,7 +27,7 @@ export async function GET(
 ) {
   try {
     const { id: articleId } = await params
-    const limit = parseInt(req.nextUrl.searchParams.get('limit') || '5')
+    const limit = Math.min(20, Math.max(1, parseInt(req.nextUrl.searchParams.get('limit') || '5', 10)))
 
     // Get the source article with its embedding
     const sourceArticle = await prisma.article.findUnique({

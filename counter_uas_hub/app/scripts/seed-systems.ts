@@ -3103,7 +3103,7 @@ Designed for Marine Corps expeditionary operations, G/ATOR is:
     manufacturer: 'US Air Force',
     country: 'United States',
     status: 'operational',
-    imageUrl: null,
+    imageUrl: undefined,
     primaryCapability: 'Theater-level air defense C2 interoperability, bridging Air Force and Army systems for unified air picture management.',
     specifications: [
       'Theater-level C2 system',
