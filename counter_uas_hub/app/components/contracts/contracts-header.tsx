@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent } from '@/components/ui/card'
-import { AgencyBarChart, TrendLineChart } from './contracts-charts'
 
 interface Aggregates {
   totalValue: number
@@ -14,24 +13,11 @@ interface Aggregates {
   maxValue: number
 }
 
-interface AgencyData {
-  agency: string
-  count: number
-  totalValue: number
-}
-
-interface MonthData {
-  month: string
-  totalValue: number
-}
-
 interface ContractsData {
   pagination: {
     total: number
   }
   aggregates: Aggregates
-  byAgency: AgencyData[]
-  byMonth: MonthData[]
 }
 
 function formatCurrency(value: number): string {
@@ -163,14 +149,6 @@ export default function ContractsHeader() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Charts Section */}
-      {!loading && !error && data && (data.byAgency.length > 0 || data.byMonth.length > 0) && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {data.byAgency.length > 0 && <AgencyBarChart data={data.byAgency} />}
-          {data.byMonth.length > 0 && <TrendLineChart data={data.byMonth} />}
-        </div>
-      )}
 
       {/* Error State */}
       {error && (

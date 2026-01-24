@@ -1,11 +1,12 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
-import { ChevronUp, ChevronDown, Calendar, Building, DollarSign, Info, Loader2 } from 'lucide-react'
+import { ChevronUp, ChevronDown, Calendar, Building2, DollarSign, Info, Loader2, ExternalLink, Clock, MapPin, Tag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Separator } from '@/components/ui/separator'
 
 interface Contract {
   id: string
@@ -21,6 +22,8 @@ interface Contract {
   duration: number | null
   description: string | null
   sourceUrl: string | null
+  location?: string | null
+  office?: string | null
 }
 
 interface ContractsResponse {
@@ -99,10 +102,17 @@ export default function ContractsTable() {
       setSortField(field)
       setSortDirection('desc')
     }
-    setCurrentPage(1) // Reset to first page on sort change
+    setCurrentPage(1)
   }
 
   const formatCurrency = (value: number) => {
+    if (value === 0) return 'TBD'
+    if (value >= 1_000_000_000) {
+      return `$${(value / 1_000_000_000).toFixed(2)}B`
+    }
+    if (value >= 1_000_000) {
+      return `$${(value / 1_000_000).toFixed(1)}M`
+    }
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -120,35 +130,48 @@ export default function ContractsTable() {
     })
   }
 
-  const getStatusColor = (status: string) => {
+  const getRelativeTime = (dateString: string) => {
+    const date = new Date(dateString)
+    const now = new Date()
+    const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
+
+    if (diffDays === 0) return 'Today'
+    if (diffDays === 1) return 'Yesterday'
+    if (diffDays < 7) return `${diffDays} days ago`
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`
+    if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`
+    return `${Math.floor(diffDays / 365)} years ago`
+  }
+
+  const getStatusConfig = (status: string) => {
     switch (status) {
       case 'active':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+        return { bg: 'bg-emerald-500/15', text: 'text-emerald-700 dark:text-emerald-400', dot: 'bg-emerald-500' }
       case 'completed':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+        return { bg: 'bg-blue-500/15', text: 'text-blue-700 dark:text-blue-400', dot: 'bg-blue-500' }
       case 'terminated':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+        return { bg: 'bg-red-500/15', text: 'text-red-700 dark:text-red-400', dot: 'bg-red-500' }
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
+        return { bg: 'bg-gray-500/15', text: 'text-gray-700 dark:text-gray-400', dot: 'bg-gray-500' }
     }
   }
 
-  const getCategoryColor = (category: string) => {
+  const getCategoryConfig = (category: string) => {
     switch (category) {
       case 'counter-uas':
-        return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
+        return { bg: 'bg-violet-500/15', text: 'text-violet-700 dark:text-violet-400', border: 'border-violet-500/30' }
       case 'surveillance':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+        return { bg: 'bg-sky-500/15', text: 'text-sky-700 dark:text-sky-400', border: 'border-sky-500/30' }
       case 'research':
-        return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'
+        return { bg: 'bg-amber-500/15', text: 'text-amber-700 dark:text-amber-400', border: 'border-amber-500/30' }
       case 'training':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+        return { bg: 'bg-teal-500/15', text: 'text-teal-700 dark:text-teal-400', border: 'border-teal-500/30' }
       case 'electronic-warfare':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+        return { bg: 'bg-rose-500/15', text: 'text-rose-700 dark:text-rose-400', border: 'border-rose-500/30' }
       case 'sensors':
-        return 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200'
+        return { bg: 'bg-cyan-500/15', text: 'text-cyan-700 dark:text-cyan-400', border: 'border-cyan-500/30' }
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
+        return { bg: 'bg-slate-500/15', text: 'text-slate-700 dark:text-slate-400', border: 'border-slate-500/30' }
     }
   }
 
@@ -156,15 +179,15 @@ export default function ContractsTable() {
     <Button
       variant="ghost"
       size="sm"
-      className="h-auto p-0 font-semibold hover:bg-transparent"
+      className="h-auto p-0 font-semibold hover:bg-transparent text-muted-foreground hover:text-foreground transition-colors"
       onClick={() => handleSort(field)}
     >
-      <span className="flex items-center space-x-1">
+      <span className="flex items-center gap-1">
         <span>{children}</span>
         {sortField === field && (
           sortDirection === 'asc' ?
-            <ChevronUp className="w-4 h-4" /> :
-            <ChevronDown className="w-4 h-4" />
+            <ChevronUp className="w-3.5 h-3.5" /> :
+            <ChevronDown className="w-3.5 h-3.5" />
         )}
       </span>
     </Button>
@@ -172,18 +195,20 @@ export default function ContractsTable() {
 
   if (isLoading) {
     return (
-      <div className="mt-12 flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        <span className="ml-2 text-muted-foreground">Loading contracts...</span>
+      <div className="mt-12 flex items-center justify-center py-16">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          <span className="text-sm text-muted-foreground">Loading contracts...</span>
+        </div>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="mt-12 text-center py-12">
-        <p className="text-destructive">{error}</p>
-        <Button variant="outline" className="mt-4" onClick={fetchContracts}>
+      <div className="mt-12 text-center py-16">
+        <p className="text-destructive mb-4">{error}</p>
+        <Button variant="outline" onClick={fetchContracts}>
           Try Again
         </Button>
       </div>
@@ -192,130 +217,194 @@ export default function ContractsTable() {
 
   if (contracts.length === 0) {
     return (
-      <div className="mt-12 text-center py-12">
+      <div className="mt-12 text-center py-16">
         <p className="text-muted-foreground">No contracts found. Check back later for updates.</p>
       </div>
     )
   }
 
   return (
-    <div className="mt-12">
-      <Card>
+    <div className="mt-8">
+      <Card className="overflow-hidden border-border/50">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow className="border-b">
-                  <TableHead className="w-32">
-                    <SortButton field="awardDate">Date</SortButton>
+                <TableRow className="border-b border-border/50 bg-muted/30">
+                  <TableHead className="w-36 py-4">
+                    <SortButton field="awardDate">Award Date</SortButton>
                   </TableHead>
-                  <TableHead>
-                    <SortButton field="company">Company</SortButton>
+                  <TableHead className="py-4">
+                    <SortButton field="title">Contract</SortButton>
                   </TableHead>
-                  <TableHead>
-                    <SortButton field="title">Contract Title</SortButton>
+                  <TableHead className="py-4">
+                    <SortButton field="company">Contractor</SortButton>
                   </TableHead>
-                  <TableHead className="text-right w-32">
+                  <TableHead className="text-right w-36 py-4">
                     <SortButton field="value">Value</SortButton>
                   </TableHead>
-                  <TableHead className="w-24">
-                    <SortButton field="agency">Agency</SortButton>
-                  </TableHead>
-                  <TableHead className="w-32">Category</TableHead>
-                  <TableHead className="w-24">Status</TableHead>
-                  <TableHead className="w-20">Details</TableHead>
+                  <TableHead className="w-28 py-4">Status</TableHead>
+                  <TableHead className="w-16 py-4"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {contracts.map((contract) => (
-                  <React.Fragment key={contract.id}>
-                    <TableRow className="border-b hover:bg-muted/50">
-                      <TableCell>
-                        <div className="flex items-center space-x-2">
-                          <Calendar className="w-4 h-4 text-muted-foreground" />
-                          <span className="font-medium">{formatDate(contract.awardDate)}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center space-x-2">
-                          <Building className="w-4 h-4 text-muted-foreground" />
-                          <span className="font-medium">{contract.company}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium text-foreground mb-1">{contract.title}</div>
-                          {contract.contractNumber && (
-                            <div className="text-xs text-muted-foreground">
-                              {contract.contractNumber}
-                            </div>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end space-x-2">
-                          <DollarSign className="w-4 h-4 text-muted-foreground" />
-                          <span className="font-bold text-foreground">
-                            {formatCurrency(contract.value)}
-                          </span>
-                        </div>
-                        {contract.duration && (
-                          <div className="text-xs text-muted-foreground text-right mt-1">
-                            {contract.duration} months
+                {contracts.map((contract, index) => {
+                  const statusConfig = getStatusConfig(contract.status)
+                  const categoryConfig = getCategoryConfig(contract.category)
+                  const isExpanded = expandedContracts.has(contract.id)
+
+                  return (
+                    <React.Fragment key={contract.id}>
+                      <TableRow
+                        className={`border-b border-border/30 transition-colors hover:bg-muted/40 ${index % 2 === 0 ? 'bg-background' : 'bg-muted/10'}`}
+                      >
+                        <TableCell className="py-4">
+                          <div className="flex flex-col gap-0.5">
+                            <span className="font-medium text-foreground">{formatDate(contract.awardDate)}</span>
+                            <span className="text-xs text-muted-foreground">{getRelativeTime(contract.awardDate)}</span>
                           </div>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <span className="text-sm font-medium">{contract.agency}</span>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getCategoryColor(contract.category)}>
-                          {contract.category.replace('-', ' ')}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getStatusColor(contract.status)}>
-                          {contract.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => toggleExpanded(contract.id)}
-                          className="hover:bg-muted/50"
-                          title={expandedContracts.has(contract.id) ? "Hide details" : "Show details"}
-                        >
-                          {expandedContracts.has(contract.id) ?
-                            <ChevronUp className="w-4 h-4" /> :
-                            <Info className="w-4 h-4" />
-                          }
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                    {expandedContracts.has(contract.id) && contract.description && (
-                      <TableRow key={`${contract.id}-details`} className="border-b bg-muted/20">
-                        <TableCell colSpan={8} className="py-4">
-                          <div className="pl-6 pr-4">
-                            <div className="text-sm text-foreground leading-relaxed">
-                              {contract.description}
-                            </div>
-                            {contract.sourceUrl && (
-                              <a
-                                href={contract.sourceUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-xs text-primary hover:underline mt-2 inline-block"
+                        </TableCell>
+                        <TableCell className="py-4">
+                          <div className="flex flex-col gap-1.5 max-w-md">
+                            <span className="font-semibold text-foreground leading-tight line-clamp-2">
+                              {contract.title}
+                            </span>
+                            <div className="flex items-center gap-2">
+                              <Badge
+                                variant="outline"
+                                className={`${categoryConfig.bg} ${categoryConfig.text} ${categoryConfig.border} text-xs font-medium px-2 py-0.5`}
                               >
-                                View source →
-                              </a>
+                                {contract.category.replace('-', ' ')}
+                              </Badge>
+                              {contract.contractNumber && (
+                                <span className="text-xs text-muted-foreground font-mono">
+                                  {contract.contractNumber}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="py-4">
+                          <div className="flex flex-col gap-0.5">
+                            <div className="flex items-center gap-2">
+                              <Building2 className="w-4 h-4 text-muted-foreground/70" />
+                              <span className="font-medium text-foreground">{contract.company}</span>
+                            </div>
+                            <span className="text-xs text-muted-foreground pl-6">{contract.agency}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right py-4">
+                          <div className="flex flex-col items-end gap-0.5">
+                            <span className={`font-bold text-lg ${contract.value > 0 ? 'text-foreground' : 'text-muted-foreground'}`}>
+                              {formatCurrency(contract.value)}
+                            </span>
+                            {contract.duration && (
+                              <span className="text-xs text-muted-foreground">
+                                {contract.duration} mo. term
+                              </span>
                             )}
                           </div>
                         </TableCell>
+                        <TableCell className="py-4">
+                          <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full ${statusConfig.bg}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${statusConfig.dot}`}></span>
+                            <span className={`text-xs font-medium capitalize ${statusConfig.text}`}>
+                              {contract.status}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="py-4">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => toggleExpanded(contract.id)}
+                            className={`h-8 w-8 p-0 rounded-full transition-colors ${isExpanded ? 'bg-primary/10 text-primary' : 'hover:bg-muted'}`}
+                          >
+                            {isExpanded ? <ChevronUp className="w-4 h-4" /> : <Info className="w-4 h-4" />}
+                          </Button>
+                        </TableCell>
                       </TableRow>
-                    )}
-                  </React.Fragment>
-                ))}
+
+                      {/* Expanded Details Row */}
+                      {isExpanded && (
+                        <TableRow className="bg-muted/20 border-b border-border/30">
+                          <TableCell colSpan={6} className="p-0">
+                            <div className="px-6 py-5">
+                              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                {/* Description */}
+                                <div className="lg:col-span-2">
+                                  <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+                                    <Tag className="w-4 h-4 text-muted-foreground" />
+                                    Contract Details
+                                  </h4>
+                                  {contract.description ? (
+                                    <p className="text-sm text-muted-foreground leading-relaxed">
+                                      {contract.description}
+                                    </p>
+                                  ) : (
+                                    <p className="text-sm text-muted-foreground italic">
+                                      No additional details available.
+                                    </p>
+                                  )}
+                                </div>
+
+                                {/* Quick Info */}
+                                <div className="space-y-3">
+                                  <h4 className="text-sm font-semibold text-foreground mb-2">Quick Info</h4>
+
+                                  <div className="space-y-2.5">
+                                    <div className="flex items-center gap-2 text-sm">
+                                      <Calendar className="w-4 h-4 text-muted-foreground" />
+                                      <span className="text-muted-foreground">Awarded:</span>
+                                      <span className="font-medium text-foreground">{formatDate(contract.awardDate)}</span>
+                                    </div>
+
+                                    {contract.duration && (
+                                      <div className="flex items-center gap-2 text-sm">
+                                        <Clock className="w-4 h-4 text-muted-foreground" />
+                                        <span className="text-muted-foreground">Duration:</span>
+                                        <span className="font-medium text-foreground">{contract.duration} months</span>
+                                      </div>
+                                    )}
+
+                                    <div className="flex items-center gap-2 text-sm">
+                                      <DollarSign className="w-4 h-4 text-muted-foreground" />
+                                      <span className="text-muted-foreground">Value:</span>
+                                      <span className="font-medium text-foreground">{formatCurrency(contract.value)}</span>
+                                    </div>
+
+                                    {contract.location && (
+                                      <div className="flex items-center gap-2 text-sm">
+                                        <MapPin className="w-4 h-4 text-muted-foreground" />
+                                        <span className="text-muted-foreground">Location:</span>
+                                        <span className="font-medium text-foreground">{contract.location}</span>
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  {contract.sourceUrl && (
+                                    <>
+                                      <Separator className="my-3" />
+                                      <a
+                                        href={contract.sourceUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 font-medium transition-colors"
+                                      >
+                                        <ExternalLink className="w-3.5 h-3.5" />
+                                        View on SAM.gov
+                                      </a>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </React.Fragment>
+                  )
+                })}
               </TableBody>
             </Table>
           </div>
@@ -323,27 +412,31 @@ export default function ContractsTable() {
       </Card>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between mt-6">
+      <div className="flex items-center justify-between mt-6 px-1">
         <p className="text-sm text-muted-foreground">
-          Showing {contracts.length} of {totalContracts} contracts
+          Showing <span className="font-medium text-foreground">{contracts.length}</span> of{' '}
+          <span className="font-medium text-foreground">{totalContracts}</span> contracts
         </p>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-3">
           <Button
             variant="outline"
             size="sm"
             disabled={currentPage <= 1}
             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            className="h-9"
           >
             Previous
           </Button>
-          <span className="text-sm text-muted-foreground">
-            Page {currentPage} of {totalPages}
+          <span className="text-sm text-muted-foreground min-w-[100px] text-center">
+            Page <span className="font-medium text-foreground">{currentPage}</span> of{' '}
+            <span className="font-medium text-foreground">{totalPages}</span>
           </span>
           <Button
             variant="outline"
             size="sm"
             disabled={currentPage >= totalPages}
             onClick={() => setCurrentPage(prev => prev + 1)}
+            className="h-9"
           >
             Next
           </Button>
