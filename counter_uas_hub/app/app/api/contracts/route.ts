@@ -72,7 +72,7 @@ export async function GET(req: NextRequest) {
       orderBy.awardDate = 'desc';
     }
 
-    // Fetch contracts
+    // Fetch contracts and aggregates
     const [contracts, total, aggregates] = await Promise.all([
       prisma.contract.findMany({
         where,
@@ -88,6 +88,49 @@ export async function GET(req: NextRequest) {
         _max: { value: true },
       }),
     ]);
+
+    // Fetch aggregation data for charts (by agency and by month)
+    const [byAgencyRaw, byMonthRaw] = await Promise.all([
+      // Group by agency
+      prisma.contract.groupBy({
+        by: ['agency'],
+        where,
+        _count: { id: true },
+        _sum: { value: true },
+        orderBy: { _sum: { value: 'desc' } },
+        take: 10, // Top 10 agencies
+      }),
+      // Group by month - get all contracts and aggregate in JS
+      prisma.contract.findMany({
+        where,
+        select: {
+          awardDate: true,
+          value: true,
+        },
+        orderBy: { awardDate: 'asc' },
+      }),
+    ]);
+
+    // Transform by agency data
+    const byAgency = byAgencyRaw.map((item) => ({
+      agency: item.agency,
+      count: item._count.id,
+      totalValue: item._sum.value?.toNumber() || 0,
+    }));
+
+    // Aggregate by month
+    const monthlyMap = new Map<string, number>();
+    for (const contract of byMonthRaw) {
+      const monthKey = `${contract.awardDate.getFullYear()}-${String(contract.awardDate.getMonth() + 1).padStart(2, '0')}`;
+      const currentValue = monthlyMap.get(monthKey) || 0;
+      monthlyMap.set(monthKey, currentValue + contract.value.toNumber());
+    }
+
+    // Convert to sorted array (last 12 months or all available)
+    const byMonth = Array.from(monthlyMap.entries())
+      .map(([month, totalValue]) => ({ month, totalValue }))
+      .sort((a, b) => a.month.localeCompare(b.month))
+      .slice(-12); // Last 12 months
 
     // Transform decimal values to numbers for JSON
     const transformedContracts = contracts.map((contract) => ({
@@ -109,6 +152,8 @@ export async function GET(req: NextRequest) {
         averageValue: aggregates._avg.value?.toNumber() || 0,
         maxValue: aggregates._max.value?.toNumber() || 0,
       },
+      byAgency,
+      byMonth,
     });
   } catch (error) {
     logger.error('Contracts API error:', error);
