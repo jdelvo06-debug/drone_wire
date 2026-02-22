@@ -44,7 +44,7 @@ curl http://localhost:3000/api/cron/process-ai -H "Authorization: Bearer $CRON_S
 - **Node.js Version:** 20.x (specified in `.nvmrc` and `package.json` engines)
 - **Build Command:** `prisma generate && next build`
 - **Cron Jobs:** 2 jobs configured (free tier limit)
-  - `/api/cron/scrape-news` - Daily at 6 AM UTC
+  - `/api/cron/scrape-news` - Daily at 6 AM UTC (RSS feeds + Exa AI search)
   - `/api/cron/process-ai` - Daily at 8 AM UTC
 
 ### Database (Supabase)
@@ -58,6 +58,7 @@ curl http://localhost:3000/api/cron/process-ai -H "Authorization: Bearer $CRON_S
 - `OPENAI_API_KEY` - OpenAI API key for AI processing and embeddings
 - `CRON_SECRET` - Authentication for cron endpoints
 - `SAM_GOV_API_KEY` - SAM.gov API key for contract data
+- `EXA_API_KEY` - Exa AI API key for semantic web search (optional, enhances content discovery)
 - `RESEND_API_KEY` - Resend API key for transactional emails
 - `ADMIN_EMAIL` - Admin email for contact form notifications (optional)
 
@@ -111,6 +112,7 @@ curl http://localhost:3000/api/cron/process-ai -H "Authorization: Bearer $CRON_S
 ├── /lib
 │   ├── /services          # Data pipeline services
 │   │   ├── rss-scraper.ts       # RSS feed scraping
+│   │   ├── exa-searcher.ts      # Exa AI semantic web search
 │   │   ├── content-extractor.ts # Full article extraction
 │   │   ├── ai-processor.ts      # AI summary generation
 │   │   └── contract-scraper.ts  # DoD contracts scraping
@@ -184,7 +186,7 @@ The Systems section (`/systems`) provides a comprehensive database of counter-UA
 ## Data Pipeline
 
 The scraping pipeline runs automatically via Vercel cron:
-1. **scrape-news** (6 AM UTC) - Fetches RSS feeds, filters by counter-UAS keywords
+1. **scrape-news** (6 AM UTC) - Fetches RSS feeds (keyword-filtered) + Exa AI semantic search (if `EXA_API_KEY` set)
 2. **process-ai** (8 AM UTC) - Generates AI summaries, key points, and auto-tags
 
 Manual triggers available for:

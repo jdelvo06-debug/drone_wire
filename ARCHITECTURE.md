@@ -18,8 +18,9 @@ DroneWire is an AI-curated intelligence hub focused on drone warfare, counter-UA
 |   External Sources  |     |    DroneWire App    |     |      End Users      |
 |---------------------|     |---------------------|     |---------------------|
 | - RSS Feeds (10+)   |---->|  Next.js 14 (App    |---->| - Web Interface     |
-| - SAM.gov API       |     |  Router + Server    |     | - Newsletter        |
-| - Manual Seeding    |     |  Components)        |     | - Breaking Alerts   |
+| - Exa AI Search     |     |  Router + Server    |     | - Newsletter        |
+| - SAM.gov API       |     |  Components)        |     | - Breaking Alerts   |
+| - Manual Seeding    |     |                     |     |                     |
 +---------------------+     +---------------------+     +---------------------+
                                      |
                                      v
@@ -84,6 +85,7 @@ DroneWire is an AI-curated intelligence hub focused on drone warfare, counter-UA
     ├── /lib/
     │   ├── /services/              # Business logic
     │   │   ├── rss-scraper.ts      # RSS feed processing
+    │   │   ├── exa-searcher.ts     # Exa AI semantic web search
     │   │   ├── ai-processor.ts     # AI summary generation
     │   │   ├── contract-scraper.ts # SAM.gov integration
     │   │   ├── content-extractor.ts # Full article extraction
@@ -112,6 +114,7 @@ DroneWire is an AI-curated intelligence hub focused on drone warfare, counter-UA
 
 #### 1. Data Ingestion Layer
 - **RSS Scraper** (`/lib/services/rss-scraper.ts`) - Fetches articles from 10+ defense news sources
+- **Exa Searcher** (`/lib/services/exa-searcher.ts`) - Semantic web search for content RSS feeds miss (niche blogs, think tanks, international outlets)
 - **Contract Scraper** (`/lib/services/contract-scraper.ts`) - Queries SAM.gov API for drone/UAS contracts
 - **Content Extractor** (`/lib/services/content-extractor.ts`) - Extracts full article text from source URLs
 
@@ -328,6 +331,7 @@ DroneWire is an AI-curated intelligence hub focused on drone warfare, counter-UA
 | **OpenAI** | AI processing (GPT-4o) + embeddings | Pay-per-use, 2s delay between calls |
 | **SAM.gov API** | Federal contract opportunities | 1000 requests/day, API key required |
 | **Resend** | Transactional email | Free tier: 3000 emails/month |
+| **Exa AI** | Semantic web search for content discovery | 6 queries/day, 15 results each, ~$0.03/day |
 | **RSS Feeds** | News sources | 10+ feeds, 1s delay between fetches |
 
 ### RSS Feed Sources
@@ -354,6 +358,7 @@ DATABASE_URL="postgresql://user:pass@host:6543/db?pgbouncer=true"
 OPENAI_API_KEY="..."                # OpenAI API key (gpt-4o + embeddings)
 
 # External APIs
+EXA_API_KEY="..."                   # Exa AI semantic search (optional)
 SAM_GOV_API_KEY="..."               # Federal contracts API
 CRON_SECRET="..."                   # Cron job authentication
 
