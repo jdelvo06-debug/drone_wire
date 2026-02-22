@@ -4,10 +4,9 @@ import { logger } from '@/lib/logger';
 import { extractContentFromUrl, estimateReadTime } from './content-extractor';
 import slugify from 'slugify';
 
-// RouteLLM API (OpenAI-compatible)
+// OpenAI API
 const openai = new OpenAI({
-  apiKey: process.env.ROUTELLM_API_KEY,
-  baseURL: 'https://routellm.abacus.ai/v1',
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 interface AIProcessingResult {
@@ -20,17 +19,8 @@ interface AIProcessingResult {
 }
 
 async function generateEmbedding(text: string): Promise<number[] | null> {
-  // Only generate embeddings if using a provider that supports them
-  // RouteLLM doesn't support embeddings, so skip for now
-  // To enable: set OPENAI_API_KEY and update this function to use OpenAI directly
-  if (!process.env.OPENAI_API_KEY) {
-    return null;
-  }
-
   try {
-    const OpenAI = (await import('openai')).default;
-    const openaiDirect = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-    const response = await openaiDirect.embeddings.create({
+    const response = await openai.embeddings.create({
       model: 'text-embedding-3-small',
       input: text.slice(0, 8000),
     });

@@ -4,8 +4,7 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 const openai = new OpenAI({
-  apiKey: process.env.ROUTELLM_API_KEY,
-  baseURL: 'https://routellm.abacus.ai/v1',
+  apiKey: process.env.OPENAI_API_KEY,
 })
 
 async function generateEmbedding(text: string): Promise<number[] | null> {

@@ -52,7 +52,7 @@ Create a `.env` file in `/counter_uas_hub/app/`:
 
 ```env
 DATABASE_URL="postgresql://..."
-ABACUSAI_API_KEY="..."
+OPENAI_API_KEY="..."
 CRON_SECRET="..."
 SAM_GOV_API_KEY="..."
 RESEND_API_KEY="..."

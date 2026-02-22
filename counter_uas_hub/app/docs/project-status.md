@@ -77,8 +77,7 @@
 | Variable | Status |
 |----------|--------|
 | DATABASE_URL | ✅ Configured (pooler URL) |
-| ABACUSAI_API_KEY | ✅ Configured |
-| ROUTELLM_API_KEY | ✅ Configured |
+| OPENAI_API_KEY | ✅ Configured |
 | CRON_SECRET | ✅ Configured |
 | SAM_GOV_API_KEY | ✅ Configured |
 | RESEND_API_KEY | ✅ Configured |

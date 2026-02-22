@@ -55,8 +55,7 @@ curl http://localhost:3000/api/cron/process-ai -H "Authorization: Bearer $CRON_S
 
 ### Environment Variables (Vercel)
 - `DATABASE_URL` - Supabase pooler connection string
-- `ABACUSAI_API_KEY` - AI processing key
-- `ROUTELLM_API_KEY` - Alternative AI routing key
+- `OPENAI_API_KEY` - OpenAI API key for AI processing and embeddings
 - `CRON_SECRET` - Authentication for cron endpoints
 - `SAM_GOV_API_KEY` - SAM.gov API key for contract data
 - `RESEND_API_KEY` - Resend API key for transactional emails
@@ -72,7 +71,7 @@ curl http://localhost:3000/api/cron/process-ai -H "Authorization: Bearer $CRON_S
 - **UI Components:** Shadcn/UI (49 components in `/components/ui/`)
 - **State Management:** Zustand + Jotai + TanStack Query
 - **Forms:** React Hook Form + Zod validation
-- **AI Processing:** AbacusAI / RouteLLM
+- **AI Processing:** OpenAI (GPT-4o)
 
 ### Directory Structure
 
