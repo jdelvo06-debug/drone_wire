@@ -35,8 +35,11 @@ export async function GET(req: NextRequest) {
     logger.info('Starting AI processing...');
     const startTime = Date.now();
 
-    // Process up to 10 articles per cron run to stay within time limits
-    const result = await processPendingArticles(10);
+    // Read optional limit from query params, default 10 for scheduled cron, max 50
+    const url = new URL(req.url);
+    const limit = Math.min(parseInt(url.searchParams.get('limit') || '10'), 50);
+
+    const result = await processPendingArticles(limit);
 
     const duration = (Date.now() - startTime) / 1000;
 
