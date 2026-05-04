@@ -1,0 +1,21 @@
+{
+  "name": "DroneWire",
+  "short_name": "DroneWire",
+  "description": "AI-curated news and explainers focused on drone warfare and counter-UAS technology",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e293b",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}
