@@ -3661,6 +3661,590 @@ The task force's success will depend on several factors: whether the DepSecDef r
 
 What is clear is that the Pentagon has decided coordination is no longer enough. JIATF-401 represents a bet that consolidation and elevated authority can accelerate the counter-drone response at the speed the threat demands. The 36-month clock is ticking.`,
   },
+  // === ORPHAN EXPORTER (May 5 2026): 7 explainers from DB, not previously in seed ===
+{
+    title: "Civilian Airport Drone Defense — Protecting the Skies Without Jamming ATC",
+    slug: "civilian-airport-drone-defense",
+    description: "How airports counter unauthorized drones without disrupting air traffic control, navigation, or commercial aviation — the Gatwick wake-up call and the layered civilian C-UAS approach.",
+    category: "policy",
+    difficulty: "beginner",
+    readTime: 10,
+    featured: false,
+    imageUrl: "https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2506/9107830/1000w_q95.jpg",
+    whatItIs: "Civilian airport C-UAS is the specialized practice of detecting and mitigating unauthorized drone activity at commercial airports — a unique challenge because traditional military countermeasures like RF jamming are prohibited in civilian airspace where they would disrupt air traffic control, navigation aids, and aircraft communications.",
+    howItWorks: "Airports deploy passive detection only — RF sensors that listen for drone signals, radar optimized for small slow targets, and EO/IR cameras for visual confirmation. When a drone threat is confirmed, the response is procedural rather than technical: alert ATC, suspend operations, deploy law enforcement to locate the operator. No jamming. No kinetic interception. No directed energy.",
+    keyFeatures: ["Passive detection only — no jamming","Procedural response rather than technical defeat","Multi-agency coordination (ATC, law enforcement, airport ops)","Remote ID integration for cooperative drone identification"],
+    advantages: ["No risk of disrupting aviation safety systems","Legal framework exists for operator prosecution","Integration with existing airport security infrastructure","Passive sensors avoid spectrum licensing issues"],
+    disadvantages: ["Cannot actively neutralize a drone in flight","Airport shutdowns cost millions per hour","Locating a drone operator is slow and often fails","Layered passive sensors are expensive to deploy and maintain"],
+    realWorldUse: "The December 2018 Gatwick Airport drone incident shut down the UK second-busiest airport for 33 hours, affecting 140,000 passengers and costing airlines over $60 million. No operator was ever identified. Since then, major airports worldwide have deployed dedicated C-UAS detection systems, but the fundamental tension between security and aviation safety remains unresolved.",
+    content: `# Civilian Airport Drone Defense — Protecting the Skies Without Jamming ATC
+
+Gatwick Airport. December 19, 2018. Three days before Christmas. Drone sightings near the runway shut down the United Kingdom's second-busiest airport for 33 hours. Over 1,000 flights were cancelled. Roughly 140,000 passengers were stranded. Airlines lost an estimated $60 million. And the drone operator was never caught.
+
+Gatwick was the wake-up call that transformed civilian airport drone defense from a hypothetical concern into an urgent operational requirement. But the core problem remains unsolved: how do you stop a drone at an airport when you cannot use the tools the military uses?
+
+## The Civilian Constraint: No Jamming, No Kinetics
+
+Military C-UAS has a full toolkit: jammers that disrupt drone control links, GPS spoofers that confuse navigation, directed energy weapons that burn drones out of the sky, and kinetic interceptors that physically destroy threats. None of these are legal or safe at a civilian airport.
+
+**RF jamming is prohibited.** The same frequencies drones use — 2.4 GHz, 5.8 GHz, GPS L1 — are used by aircraft navigation, air traffic control communications, and airport operations systems. Blanket jamming around an airport would create a safety-of-flight emergency worse than the drone threat itself.
+
+**Kinetic interception is unthinkable.** Firing projectiles — bullets, missiles, nets, anything — into the airspace above a commercial airport is not an option. The risk of hitting an aircraft, or debris falling onto aircraft or passengers, is unacceptable.
+
+**Directed energy carries collateral risk.** A laser powerful enough to destroy a drone is powerful enough to blind a pilot or damage aircraft sensors. Directed energy at civilian airports remains experimental, limited to controlled test environments.
+
+The result: civilian airport C-UAS is almost entirely passive. Detect, identify, locate the operator — but do not touch the drone.
+
+## How Civilian Airport C-UAS Actually Works
+
+### Detection Layer
+
+Airports deploy passive sensors in a layered architecture:
+
+**RF sensors.** These are the workhorses of civilian C-UAS. They listen for drone communication signals — the radio link between the drone and its controller, the telemetry downlink, the video transmission. By triangulating signals across multiple sensors, the system can locate both the drone and its operator in three dimensions. Critically, RF sensors do not transmit — they only listen — so they create no interference with aviation systems.
+
+**Specialized radar.** Conventional air traffic control radar is designed to track aircraft — large, fast, cooperative targets with transponders. It filters out small, slow objects as clutter. Drone detection radar is purpose-built for the opposite: high update rates to track small targets, Doppler processing tuned for multirotor propeller signatures, and software that distinguishes drones from birds based on flight behavior.
+
+**Electro-optical / infrared cameras.** Once radar or RF sensors detect a possible drone, PTZ (pan-tilt-zoom) cameras slew to the bearing and provide visual confirmation. AI computer vision analyzes the image to classify the object — drone vs. bird vs. balloon vs. debris — reducing false alarm rates that would otherwise overwhelm operators.
+
+### Response Protocol
+
+When a drone threat is confirmed, the response follows a carefully scripted procedure:
+
+1. **Alert ATC.** The control tower is notified immediately. Depending on the drone location relative to approach and departure corridors, ATC may suspend operations on affected runways.
+
+2. **Deploy law enforcement.** Airport police or local law enforcement move to the estimated operator location provided by RF triangulation. The goal is to find and detain the person controlling the drone — which also neutralizes the drone, since most consumer drones will return-to-home or auto-land when they lose control signal.
+
+3. **Suspend operations.** If the drone is in or near flight paths, operations are suspended. This is the costly part — every minute an airport is closed costs tens of thousands of dollars in airline operational impacts and passenger disruption.
+
+4. **Investigate and prosecute.** Post-incident, digital forensics on recovered drones can identify the operator. In the U.S., the FAA can impose civil penalties up to $37,000 per violation, and criminal charges under 18 U.S.C. 32 (aircraft sabotage) carry prison sentences up to 20 years.
+
+### Remote ID Integration
+
+Remote ID — essentially a digital license plate broadcast by drones — is the long-term solution for distinguishing legitimate drone operations from threats. In the U.S., the FAA Remote ID rule requires most drones to broadcast identification and location information. Airports are beginning to integrate Remote ID receivers into their C-UAS systems, allowing them to instantly identify cooperative drones and focus attention on non-cooperative or suspicious flights.
+
+## The Economic Reality
+
+Airport C-UAS is expensive, and the cost-benefit analysis is brutal:
+
+**Sensors.** A full airport C-UAS sensor suite — multiple radars, RF sensors, and cameras with the integration backend — costs $3-8 million to install, with annual maintenance and operator costs in the six figures.
+
+**Shutdown costs.** Every hour of airport closure costs airlines and passengers millions. Gatwick lost $60 million over 33 hours. A similar incident at a hub like Atlanta or Dubai would cost exponentially more.
+
+**The deterrence gap.** The most expensive sensor suite in the world cannot stop a drone whose operator is never found. As long as the response is procedural rather than technical, a single determined individual with a $500 drone can close a multi-billion dollar airport.
+
+The unsolved problem — and the reason airport C-UAS remains a growth market — is that passive detection is not enough. Until a safe, legal method of in-flight drone neutralization exists for civilian airspace, airports remain vulnerable to a threat that costs the attacker almost nothing and the defender everything.`
+  },
+  {
+    title: "C-UAS Command and Control — The Brain of the Operation",
+    slug: "cuas-command-and-control-platforms",
+    description: "How C2 platforms like FAAD C2, SkyTracker, and SAPIENT tie sensors and effectors together into a unified counter-drone system — and why \"open architecture\" is not just a buzzword.",
+    category: "concepts",
+    difficulty: "intermediate",
+    readTime: 12,
+    featured: true,
+    imageUrl: "https://www.navalnews.com/wp-content/uploads/2023/08/Iron-Dome-USMC.jpg",
+    whatItIs: "C-UAS Command and Control (C2) platforms are the software and hardware systems that fuse data from multiple sensors — radar, RF, EO/IR, acoustic — into a single integrated picture, then route threats to the appropriate effectors. Think of it as the brain that connects the eyes and the fists.",
+    howItWorks: "Multiple sensors detect drone signatures independently. The C2 platform ingests all these feeds, correlates them into unified tracks — ensuring the same drone is not shown as five separate targets — assesses threat priority, and presents the operator with engagement options — all in seconds, using standardized data formats that allow different vendors' equipment to interoperate.",
+    keyFeatures: ["Multi-sensor fusion","Standardized data interfaces","Automated threat prioritization","Vendor-agnostic architecture"],
+    advantages: ["Single operator can manage multiple sensors","Reduces cognitive overload during swarms","Enables best-of-breed sensor/effector mixing","Records data for after-action analysis"],
+    disadvantages: ["Integration complexity between vendors","Latency can be fatal at short ranges","Standardization remains incomplete","Cyber vulnerability at the integration layer"],
+    realWorldUse: "FAAD C2 (Forward Area Air Defense Command and Control) is the DoD primary C-UAS C2 platform, deployed at bases worldwide. It integrates sensors from multiple vendors and routes threats to everything from Coyote interceptors to electronic warfare systems, all through a single operator interface.",
+    content: `# C-UAS Command and Control — The Brain of the Operation
+
+A radar finds a drone. An RF sensor detects its control signal. A camera confirms it visually. Three different systems, three different vendors, three different data formats. Without a Command and Control platform to fuse these inputs, you have three confused operators looking at three partial pictures while the drone flies through your defenses.
+
+C2 is the least glamorous part of counter-drone operations, but it is the part that determines whether the expensive sensors and effectors actually work together or just create expensive confusion.
+
+## The Core Problem: Sensor Fragmentation
+
+No single sensor can reliably detect all drone threats. Radar struggles with small, slow-moving objects near the ground. RF sensors cannot detect autonomous drones that are not transmitting. EO/IR cameras are degraded by weather and darkness. Acoustic sensors have limited range.
+
+The solution is layering multiple sensor types — but that creates a new problem. If five sensors each detect the same drone, you need to know it is one drone, not five. If each sensor speaks a different data language, you cannot correlate their inputs. If each effector requires a different engagement interface, your operator cannot respond fast enough.
+
+C2 platforms solve this by serving as the universal translator and traffic controller at the center of the C-UAS system.
+
+## How C2 Fusion Works
+
+### Ingest
+
+The C2 platform connects to every sensor in the architecture — radar via ASTERIX or proprietary protocols, RF sensors via their API, cameras via video streams, ADS-B receivers for cooperative aircraft tracking. Each sensor feed arrives in its own format, at its own update rate, with its own coordinate system.
+
+### Correlate
+
+This is the hard part. The C2 platform must determine that the radar contact at bearing 045, range 3.2 km is the same object as the RF detection at frequency 2.4 GHz and the visual track in camera number 3. This requires sophisticated algorithms — Kalman filters for motion prediction, coordinate transforms to align different reference frames, and temporal synchronization to match detections that arrive at slightly different times.
+
+Poor correlation creates "ghost tracks" — phantom targets that exist only because the system failed to merge sensor inputs. In a swarm attack scenario, ghost tracks can make 10 drones look like 30, overwhelming the operator with false contacts.
+
+### Prioritize
+
+Once tracks are fused, the C2 platform assesses threat priority. A drone heading directly toward the flight line at high speed ranks higher than one orbiting at the perimeter. A drone exhibiting hostile behavior patterns ranks higher than one that might be a hobbyist. The system assigns threat scores that determine which targets the operator sees first and which get engagement priority.
+
+### Engage
+
+The C2 platform presents the operator with engagement options based on the threat characteristics, available effectors, and rules of engagement. The operator selects the response — jam, intercept, or monitor — and the C2 platform routes the command to the appropriate system, whether that is an electronic warfare system, a kinetic interceptor, or a directed energy weapon.
+
+## Key C2 Platforms
+
+### FAAD C2
+
+Forward Area Air Defense Command and Control is the DoD workhorse C-UAS C2 platform. Originally developed for short-range air defense, FAAD C2 has been adapted for counter-drone operations and now integrates sensors and effectors from dozens of vendors. It provides a single operator interface for the entire C-UAS kill chain and is deployed at U.S. bases worldwide.
+
+### SAPIENT
+
+The UK SAPIENT (Sensing for Asset Protection with Integrated Electronic Networked Technology) standard takes a different approach — rather than building a single C2 platform, it defines the interfaces that let different vendors' systems interoperate. SAPIENT-compliant sensors and effectors can plug into any SAPIENT-compliant C2 system, creating a true open architecture marketplace.
+
+### SkyTracker
+
+Dedrone SkyTracker C2 platform focuses on the civilian and critical infrastructure market. It integrates Dedrone own RF sensors with third-party radar and camera systems, providing a C2 solution for airports, prisons, and stadiums where military-grade FAAD C2 would be overkill.
+
+## Why Open Architecture Matters
+
+"Open architecture" is the most abused phrase in defense acquisition, but in C-UAS C2 it means something specific and important:
+
+**Vendor lock-in is a vulnerability.** If your C2 platform only works with one vendor sensors, you cannot take advantage of better technology from other companies. If that vendor goes out of business or discontinues a product, your entire C-UAS system needs replacement.
+
+**Threats evolve faster than contracts.** The drone threat changes every six months — new frequencies, new autonomy, new tactics. An open architecture C2 platform lets you integrate new sensors as they become available without rebuilding the entire system.
+
+**Competition drives down costs.** When sensors and effectors compete on performance rather than platform compatibility, the government gets better capabilities at lower prices.
+
+The SAPIENT standard represents the most mature effort to create true C-UAS interoperability. The U.S. is moving in the same direction with the JIATF-401 mandate for modular open systems approaches, but the integration challenge remains substantial.
+
+## The Operator Experience
+
+The best C2 platform is the one that lets a tired operator at 3 AM make the right decision in three seconds. That means:
+
+- **Decluttered display.** Only show what matters. A dozen sensor feeds merged into clean tracks, not a dozen separate windows.
+- **Automated recommendations.** The system suggests the best engagement option based on threat characteristics and available resources.
+- **Graceful degradation.** When a sensor drops offline or a communications link fails, the system keeps working with what remains.
+- **Record everything.** Every detection, track, and engagement decision is recorded for after-action analysis and — when things go wrong — accountability.
+
+C-UAS C2 is the difference between a collection of expensive sensors and a functioning air defense system. It is not the flashy part, but it is the part that makes everything else work.`
+  },
+  {
+    title: "Drone Classification — Groups 1 through 5",
+    slug: "drone-classification-groups-1-through-5",
+    description: "How NATO and the DoD categorize unmanned aircraft by weight, speed, and altitude — and why knowing your Groups matters for counter-drone planning.",
+    category: "concepts",
+    difficulty: "beginner",
+    readTime: 10,
+    featured: true,
+    imageUrl: "https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2506/9107830/1000w_q95.jpg",
+    whatItIs: "The NATO/DoD Group 1-5 classification system categorizes unmanned aircraft systems (UAS) by maximum takeoff weight, operating altitude, and airspeed. It's the universal shorthand used by military planners, C-UAS operators, and defense industry to describe what kind of drone they're facing or defending against.",
+    howItWorks: "Each Group is defined by three parameters: weight (from under 20 lbs for Group 1 to over 1,320 lbs for Group 5), altitude (from under 1,200 ft to over 18,000 ft), and speed (from under 100 knots to over 250 knots). As you go up in Groups, the drones get bigger, faster, fly higher, and require more sophisticated detection and defeat mechanisms.",
+    keyFeatures: ["Five-tier classification system","Based on weight, altitude, and speed","Used across NATO and allied forces","Determines appropriate countermeasures"],
+    advantages: ["Universal language across forces","Directly maps to C-UAS capability requirements","Simple to understand and apply","Drives acquisition and planning decisions"],
+    disadvantages: ["Blurred lines between Groups 2 and 3","Does not account for autonomy level","Commercial drones increasingly straddle categories","Does not address swarming behavior"],
+    realWorldUse: "Every C-UAS system in the DoD inventory is evaluated against which Group threats it can engage. A DroneDefender handheld jammer works against Group 1 and some Group 2. A Coyote Block 2 interceptor targets Group 2-3. Patriot batteries defend against Group 4-5. The Group classification is the first question any C-UAS planner asks when assessing a threat.",
+    content: `# Drone Classification — Groups 1 through 5
+
+Every conversation about counter-drone operations starts with the same question: "What Group are we talking about?" Understanding the NATO/DoD Group classification system is essential for anyone working in C-UAS, because the Group determines everything — what sensors can detect it, what effectors can defeat it, and how much time you have to react.
+
+## Where the Groups Came From
+
+The classification system originated from NATO Standardization Agreement (STANAG) 4670, which defined unmanned aircraft categories for airworthiness and interoperability purposes. The U.S. DoD adopted the framework and expanded it into the five-tier Group system used today. While originally intended for organizing friendly UAS operations, the system became equally useful for categorizing threats — because a Shahed-136 and a ScanEagle may have different origins, but they occupy similar Group categories with similar countermeasure requirements.
+
+## The Five Groups, Defined
+
+### Group 1 — Micro / Mini UAS
+
+**Weight:** Up to 20 lbs (9 kg)
+**Altitude:** Below 1,200 ft AGL
+**Airspeed:** Under 100 knots
+
+These are the drones that dominate the modern battlefield and create the hardest C-UAS problems. DJI Mavics, FPV racing drones converted to strike platforms, hand-launched ISR platforms like the RQ-11 Raven. They are small enough to carry in a backpack, cheap enough to be expendable, and their tiny radar cross-section makes them difficult to detect at range.
+
+In Ukraine, Group 1 FPV drones carrying RPG warheads have destroyed more armored vehicles than any other threat. A soldier can carry a dozen in a rucksack. That changes the math entirely — when your adversary can put eyes and explosives on target for approximately $500 per unit, the cost-exchange ratio against traditional air defense becomes untenable.
+
+### Group 2 — Small UAS
+
+**Weight:** 21-55 lbs (10-25 kg)
+**Altitude:** Below 3,500 ft AGL
+**Airspeed:** Under 250 knots
+
+The ScanEagle and its peers live here. These are catapult-launched, runway-independent platforms that provide persistent ISR for hours at a time. Group 2 systems are still small enough to evade many traditional air defense radars but large enough to carry meaningful sensor payloads.
+
+From a C-UAS perspective, Group 2 represents the "persistent stare" threat — a drone that can orbit your position for 12+ hours, feeding real-time intelligence to artillery or strike coordination. Detecting and tracking a Group 2 at range requires purpose-built counter-drone radar, not the air search radar designed for fighter-sized targets.
+
+### Group 3 — Medium Tactical UAS
+
+**Weight:** 55-1,320 lbs (25-600 kg)
+**Altitude:** Below 18,000 ft MSL
+**Airspeed:** Under 250 knots
+
+This is where things get serious. The RQ-7 Shadow, the Turkish Bayraktar TB2, and — critically — the Iranian Shahed-136 loitering munition all fall into Group 3. These platforms carry substantial payloads, operate at altitudes that make MANPADS engagement difficult, and have the range to strike targets hundreds of kilometers from their launch point.
+
+Group 3 is the hardest category for C-UAS planners. They are too big for handheld jammers and too small for many traditional air defense systems to track reliably. The Shahed-136 in particular has proven this — it is a Group 3 drone that costs around $20,000 to produce but requires missiles costing hundreds of thousands of dollars to intercept. Ukraine has shown that massed Group 3 attacks can exhaust even sophisticated air defense networks through sheer volume.
+
+### Group 4 — Medium Altitude Long Endurance (MALE)
+
+**Weight:** Over 1,320 lbs (600+ kg)
+**Altitude:** Below 18,000 ft MSL
+**Airspeed:** Any
+
+The MQ-1 Predator, MQ-9 Reaper, and their international equivalents define Group 4. These are full-scale aircraft — capable of carrying Hellfire missiles, operating for 24+ hours, and requiring dedicated runways and ground control stations. They show up clearly on conventional air defense radar and can be engaged by systems like Patriot, NASAMS, or fighter aircraft.
+
+From a C-UAS perspective, Group 4 is the "known problem" — they are detectable, trackable, and engageable with existing air defense architectures. The challenge is less about detection and more about the rules of engagement and the political-military context in which these platforms operate.
+
+### Group 5 — High Altitude Long Endurance (HALE)
+
+**Weight:** Over 1,320 lbs (600+ kg)
+**Altitude:** Above 18,000 ft MSL
+**Airspeed:** Any
+
+The RQ-4 Global Hawk and its strategic ISR peers occupy Group 5. These operate at airliner altitudes and are essentially indistinguishable from manned aircraft on radar. They are defended by the same air defense systems that protect against manned aviation threats.
+
+## Why Groups Matter for C-UAS
+
+The Group system is not just taxonomy — it directly drives capability requirements:
+
+**Sensors.** Detecting a Group 1 FPV drone requires specialized radar with high update rates and the signal processing to distinguish a 500g quadcopter from a bird. Detecting a Group 4 Reaper uses the same radar you would use for a MiG-29. The sensor problem space changes completely across Groups.
+
+**Effectors.** A Group 1 drone can be defeated by RF jamming, directed energy, or even a well-aimed shotgun. A Group 3 Shahed requires radar-guided guns or missile interceptors. A Group 5 Global Hawk needs a full-scale air defense engagement. The cost per engagement scales dramatically.
+
+**Timeline.** Group 1 threats might give you 30 seconds from detection to impact. Group 3 loitering munitions might give you minutes. Group 4-5 aircraft operations play out over hours. Your entire kill chain architecture depends on which timeline you are operating against.
+
+**Cost Exchange.** This is the central problem C-UAS faces. A Group 1 FPV costs $500. A Group 3 Shahed costs $20,000. Intercepting either with a $100,000+ missile is unsustainable at scale. This is why directed energy weapons and electronic warfare matter — they change the cost equation by making the marginal cost per engagement approach zero.
+
+## The Gray Areas
+
+The Groups are not perfect. The line between Group 2 and Group 3 is fuzzy, and some commercial platforms straddle categories depending on configuration. A heavily modified DJI Matrice might push into Group 2 weight territory. A small loitering munition might meet Group 3 range requirements while keeping Group 2 weight.
+
+More importantly, the Groups do not capture autonomy — arguably the most important variable in modern drone threats. A GPS-guided autonomous Group 3 drone is fundamentally different from a manually-piloted Group 3 drone, even if they share weight and altitude characteristics. The classification system is evolving, but for now, it remains the essential starting point for any C-UAS conversation.`
+  },
+  {
+    title: "Mobile and Dismounted C-UAS — Defense That Moves With the Fight",
+    slug: "mobile-dismounted-cuas-defense",
+    description: "How vehicle-mounted and man-packable counter-drone systems protect maneuver forces on the move — M-SHORAD, MadIS, and the unique challenges of countering drones from a moving platform.",
+    category: "systems",
+    difficulty: "intermediate",
+    readTime: 11,
+    featured: false,
+    imageUrl: "https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2308/7984704/1000w_q95.jpg",
+    whatItIs: "Mobile C-UAS systems are vehicle-mounted or man-portable counter-drone solutions designed to protect maneuver forces on the move, rather than fixed sites like air bases. They include short-range air defense vehicles (M-SHORAD), Marine Corps integrated systems (MadIS), and dismounted electronic warfare kits carried by infantry.",
+    howItWorks: "Mobile systems integrate detection sensors and effectors onto tactical vehicles or into man-packable configurations. They use compact radars, RF detectors, and EO/IR cameras optimized for size and power constraints, paired with vehicle-mounted guns, missiles, or EW systems — all designed to operate while moving, with crew served by the vehicle own soldiers or Marines.",
+    keyFeatures: ["Vehicle-mounted or man-portable","On-the-move capability","Integrated sensors and effectors","Organic to maneuver units"],
+    advantages: ["Protects forces where fixed systems cannot reach","Reduces dependence on base defense laydown","Operates at the tactical edge","Organic capability — no coordination delays"],
+    disadvantages: ["Power and weight constraints limit capability","On-the-move tracking is harder than static","Crew training burden on already-loaded units","Limited magazine depth for kinetic effectors"],
+    realWorldUse: "M-SHORAD Strykers are deployed with U.S. Army units in Europe, providing mobile counter-drone and short-range air defense for maneuver brigades. The Marine Corps MadIS has been deployed on JLTVs with Marine Expeditionary Units, while dismounted DroneDefender and Dronebuster systems are carried at the squad level in multiple theaters.",
+    content: `# Mobile and Dismounted C-UAS — Defense That Moves With the Fight
+
+Fixed-site C-UAS protects air bases, headquarters, and critical infrastructure. But maneuver forces operating beyond the wire cannot bring the base defense suite with them. They need counter-drone protection that moves at their speed, operates on their vehicles, and does not require a dedicated C-UAS platoon to employ.
+
+Mobile C-UAS is the answer — and it is one of the hardest problems in the counter-drone enterprise.
+
+## Why Mobile C-UAS Is Different
+
+Protecting a fixed site from drones is architecturally straightforward, if not technically easy. You have permanent power infrastructure. You can position sensors at optimal locations and calibrate them precisely. Your operators work in climate-controlled shelters with multiple displays. Your rules of engagement for airspace above your own base are clear.
+
+Now take that problem and put it on a Stryker moving at 45 mph through contested terrain.
+
+**Power constraints.** A fixed-site radar can draw from the base power grid. A vehicle-mounted radar draws from the vehicle alternator, competing with communications gear, electronic warfare systems, and the vehicle own systems. Everything must be sized for the available power budget.
+
+**Sensor placement.** Fixed sites can position sensors on towers with clear 360-degree coverage. Vehicle-mounted sensors are limited to what fits on the vehicle, in positions that may be blocked by the vehicle own structure, antennas, or other equipment.
+
+**On-the-move tracking.** A static radar filters out ground clutter through careful siting and calibration. A moving radar must filter out the motion of its own platform, the vibration of the vehicle, and terrain features passing through the field of view — while still detecting small, slow drones against cluttered backgrounds.
+
+**Operator workload.** The fixed-site C-UAS operator focuses on one mission. The vehicle crew is also navigating, communicating, maintaining security, and performing their primary combat function. The C-UAS interface must be simple enough to use under combat stress without becoming a full-time task.
+
+## Major Mobile C-UAS Systems
+
+### M-SHORAD (Maneuver Short-Range Air Defense)
+
+The U.S. Army M-SHORAD program puts a complete short-range air defense and counter-drone suite on a Stryker A1 vehicle. The system includes:
+
+- **MHR radar:** A multi-mission hemispheric radar providing 360-degree detection of Group 1-3 UAS, rotary-wing aircraft, and fixed-wing threats
+- **XM914 30mm cannon:** Fires proximity-fuzed ammunition effective against drone targets
+- **Stinger missile pods:** For longer-range engagement of larger threats
+- **Coyote interceptor integration:** On some variants, the ability to launch Coyote Block 2 kinetic interceptors
+- **Electronic warfare suite:** For non-kinetic defeat of drone control links and GPS
+
+M-SHORAD is organic to maneuver brigades, meaning it moves with the formation rather than being attached from a separate air defense unit. This is a fundamental shift — air defense as an organic maneuver capability rather than a separate branch asset.
+
+### MadIS (Marine Air Defense Integrated System)
+
+The Marine Corps MadIS takes a modular approach, mounting different C-UAS configurations on JLTVs and MRZR all-terrain vehicles:
+
+- **MadIS Increment 1:** On JLTV, pairing the RADA MHR radar with EW systems and a 30mm cannon
+- **Light-MadIS:** On MRZR, providing a highly mobile but capability-limited option for expeditionary operations
+- **Dismounted MadIS:** Man-portable components that can be carried by Marines operating on foot
+
+The Marine Corps emphasizes expeditionary capability — systems light enough to come off landing craft and operate in austere conditions without established infrastructure.
+
+### Dismounted Systems
+
+At the smallest scale, individual soldiers and Marines carry handheld C-UAS systems:
+
+- **DroneDefender:** A rifle-shaped RF jammer that disrupts drone control and GPS signals at close range
+- **Dronebuster:** A compact handheld jammer with selectable frequency bands
+- **Smart Shooter SMASH:** An optics system that mounts on standard rifles, using AI to calculate precise aim points against small drone targets
+
+These systems give squad-level forces organic counter-drone capability without adding significant weight or requiring specialized operators. They are limited in range and capability but provide a critical last line of defense.
+
+## The Tactical Reality
+
+Mobile C-UAS changes how maneuver forces think about air defense:
+
+**It is no longer a separate echelon.** When every Stryker company has organic M-SHORAD, counter-drone becomes a company-level task rather than something coordinated at brigade or division. This speeds response time but requires every maneuver leader to understand C-UAS employment.
+
+**Coverage is never complete.** A few M-SHORAD vehicles cannot provide umbrella coverage for an entire brigade. Mobile C-UAS provides point defense for key assets rather than area defense. Commanders must decide what to protect and accept risk elsewhere.
+
+**The cost equation shifts.** Every Stinger missile fired at a $500 drone is a loss for the defense. Mobile C-UAS relies increasingly on guns and electronic warfare because they offer better cost-exchange ratios. Directed energy weapons are the next frontier — providing unlimited magazine depth at near-zero marginal cost per engagement.
+
+## Future Direction
+
+The mobile C-UAS problem is evolving rapidly:
+
+- **Directed energy integration:** The Army DE-MSHORAD prototype puts a 50kW laser on a Stryker, providing silent, invisible, cost-free engagements
+- **Autonomous C-UAS vehicles:** Unmanned ground vehicles carrying C-UAS sensors could provide distributed detection without risking crews
+- **Networked fires:** Mobile sensors cueing effectors on other platforms across the formation — your radar finds it, someone else gun kills it
+- **AI-assisted target recognition:** Reducing operator workload by automating the detect-track-identify portion of the kill chain
+
+Mobile C-UAS is the hardest variant of the counter-drone problem, but it is also the most necessary — because the fight does not stay at the air base.`
+  },
+  {
+    title: "Naval C-UAS — Drone Defense at Sea",
+    slug: "naval-cuas-drone-defense-at-sea",
+    description: "How warships defend against drone swarms, loitering munitions, and maritime-specific UAS threats — from the Houthi Red Sea campaign to layered shipboard defense.",
+    category: "systems",
+    difficulty: "intermediate",
+    readTime: 12,
+    featured: true,
+    imageUrl: "https://www.navalnews.com/wp-content/uploads/2023/08/Iron-Dome-USMC.jpg",
+    whatItIs: "Naval C-UAS is the specialized practice of detecting, tracking, and defeating drone threats in the maritime environment — against surface warships, amphibious vessels, and support ships operating in contested waters. It differs fundamentally from land-based C-UAS due to the unique radar environment over water, the ship's own motion, and the need to defend a moving platform with organic weapons.",
+    howItWorks: "Shipboard sensors — including rotating phased-array radars, EO/IR systems, and electronic support measures — scan for airborne contacts. When a drone is detected, the combat management system correlates tracks across sensors, assesses threat priority, and recommends engagement options: hard-kill (missiles, guns), soft-kill (EW jamming, decoys), or layered defense combining both.",
+    keyFeatures: ["Organic shipboard sensors and weapons","Multipath radar effects over water","Integration with ship combat management system","Soft-kill and hard-kill layered defense"],
+    advantages: ["Ships carry significant sensor and weapon suites","Crewed by trained watch teams around the clock","Can maneuver to complicate targeting geometry","Electronic warfare systems already installed on most combatants"],
+    disadvantages: ["Radar clutter from sea state complicates detection","Small crews cannot sustain high-tempo defense indefinitely","Close-range engagements leave minimal reaction time","Expensive missiles wasted on cheap drones create cost-exchange problem"],
+    realWorldUse: "Since November 2023, U.S. Navy warships in the Red Sea have engaged hundreds of Houthi-launched one-way attack drones, employing Standard Missile-2 interceptors, 5-inch guns, and electronic warfare systems. The campaign represents the most sustained naval C-UAS operation in history and has revealed critical capability gaps in close-in defense against saturation attacks.",
+    content: `# Naval C-UAS — Drone Defense at Sea
+
+For decades, navies worried about anti-ship missiles, torpedoes, and aircraft. Drones were a surveillance nuisance. The Houthi Red Sea campaign changed everything — turning cheap one-way attack drones into a persistent, saturation-level threat against billion-dollar warships.
+
+Naval C-UAS is now one of the fastest-moving areas of counter-drone development, because the consequences of failure at sea are catastrophic. A drone that gets through the defense layers of a guided-missile destroyer can kill sailors, cripple a national strategic asset, and trigger escalation spirals that reach far beyond the tactical engagement.
+
+## Why the Maritime Environment Is Different
+
+Fighting drones over water is not the same as fighting them over land. Three factors make it uniquely difficult:
+
+### The Radar Problem
+
+Radar behaves differently over water. The sea surface creates strong multipath reflections — radar energy bounces off the water and creates ghost returns that confuse track algorithms. A drone flying at 30 feet above the waves can disappear into surface clutter that a land-based radar would never encounter. The ship's own rolling and pitching motion adds another layer of complexity, swinging the radar beam through angles that change the detection geometry continuously.
+
+### The Reaction Time Problem
+
+Land-based C-UAS often has minutes of warning from perimeter sensors. A sea-skimming drone approaching at 150 knots can appear over the horizon with less than 90 seconds of warning. If the ship is operating in a confined strait or littoral environment, warning time shrinks to 30 seconds or less. At those timelines, human-in-the-loop engagement decisions become dangerously slow.
+
+### The Magazine Depth Problem
+
+A warship carries what it carries. An Arleigh Burke-class destroyer has 96 Vertical Launch System cells — and those cells are shared across the entire mission set: air defense, strike, anti-submarine, and now counter-drone. Every Standard Missile-2 fired at a $20,000 drone is a cell that cannot be used against a Mach 3 anti-ship cruise missile later. Unlike a land base that can receive resupply, a ship at sea must manage its magazine across the entire deployment.
+
+## Shipboard C-UAS Architecture
+
+### Outer Layer: Area Air Defense
+
+The SM-2 and SM-6 missiles that engage high-altitude, long-range threats also engage Group 3-4 drones at extended ranges. The SPY-series phased-array radar detects and tracks incoming contacts, and the Aegis combat system automatically prioritizes threats. This layer provides the most reaction time but at the highest cost per engagement.
+
+### Middle Layer: Close-In Defense
+
+The Evolved Sea Sparrow Missile (ESSM) and shipboard guns — including the 5-inch/62 caliber Mark 45 — fill the middle layer. ESSM is more cost-effective than SM-2 against drone targets, and gun engagements using proximity-fuzed ammunition offer lower per-kill costs. The Phalanx CIWS (Close-In Weapon System), with its 20mm Gatling gun and integrated radar, provides a last-ditch hard-kill option at ranges under 2 nautical miles.
+
+### Inner Layer: Electronic Warfare
+
+The SLQ-32 electronic warfare suite provides soft-kill options across the electromagnetic spectrum. It can jam drone control links, spoof GPS signals, and create false radar returns that confuse incoming threats. Electronic warfare is the most sustainable counter-drone option at sea — unlimited magazine depth, near-zero marginal cost per engagement — but its effectiveness depends on the specific threat and its electronic protection measures.
+
+## The Houthi Campaign: Lessons Learned
+
+The Red Sea campaign that began in November 2023 represents the first sustained naval C-UAS operation in history. The key takeaways:
+
+**Volume matters more than sophistication.** Houthi drones are not technologically advanced — they are essentially Iranian Shahed-derivative one-way attack platforms with limited maneuverability. But launched in salvos from multiple azimuths, they create saturation problems that even Aegis destroyers struggle to manage.
+
+**Cost exchange is unsustainable.** An SM-2 costs approximately $2 million. A Houthi Samad-3 drone costs approximately $20,000. The U.S. Navy has fired hundreds of SM-2s against drone targets in the Red Sea — a cost-exchange ratio of 100:1 that is strategically unsustainable in a long-duration campaign.
+
+**Electronic warfare is underutilized.** The Navy has invested heavily in hard-kill systems while underinvesting in the soft-kill electronic warfare capabilities that offer the best cost-exchange against drone threats. The Red Sea campaign has exposed this imbalance.
+
+**Directed energy is the missing layer.** A shipboard laser with 150kW+ output could engage drone threats at near-zero marginal cost, with unlimited magazine depth, at the speed of light. The Navy's HELIOS laser program aims to field this capability, but it remains in development while the threat is operational today.
+
+## The Path Forward
+
+Naval C-UAS capability is evolving rapidly:
+
+- **HELIOS laser integration:** 60-150kW directed energy weapons on destroyers for zero-cost-per-engagement drone defense
+- **Improved soft-kill:** Enhanced SLQ-32 variants with drone-specific jamming waveforms
+- **Low-cost interceptors:** Purpose-built counter-drone missiles smaller than ESSM, designed for the cost-exchange environment
+- **Autonomous detection:** AI-assisted radar processing to reduce operator workload and accelerate the detect-to-engage timeline
+- **Distributed defense:** Unmanned surface vessels carrying C-UAS sensors and effectors to extend the defensive perimeter
+
+The fundamental lesson from the Red Sea is that the drone has democratized the anti-ship mission. A nation or non-state actor that cannot build or buy supersonic cruise missiles can still threaten major warships with cheap, proliferated drone technology. Naval C-UAS is no longer a niche mission — it is a core warfighting requirement.`
+  },
+  {
+    title: "Non-Kinetic Defeat — GPS Spoofing, Protocol Manipulation, and Cyber Takedowns",
+    slug: "non-kinetic-defeat-spoofing-cyber",
+    description: "The quiet side of counter-drone operations: how GPS spoofing, protocol manipulation, and cyber exploitation can silently neutralize drones without firing a shot — and why it's the most underreported C-UAS capability.",
+    category: "countermeasures",
+    difficulty: "advanced",
+    readTime: 14,
+    featured: false,
+    imageUrl: "https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2506/9107830/1000w_q95.jpg",
+    whatItIs: "Non-kinetic defeat encompasses all counter-drone techniques that neutralize a UAS threat without physically destroying it — including GPS spoofing, protocol manipulation, cyber exploitation, and RF takeover. These approaches offer unlimited magazine depth and near-zero marginal cost per engagement, making them the most sustainable counter-drone options for long-duration operations.",
+    howItWorks: "Rather than jamming or destroying, non-kinetic techniques take control. GPS spoofing feeds the drone false position data, causing it to fly off course or land. Protocol manipulation exploits known vulnerabilities in drone communication protocols to inject commands. Cyber exploitation accesses the drone onboard systems to alter its mission or disable it entirely — all without a single kinetic round fired.",
+    keyFeatures: ["GPS/GNSS spoofing","Protocol manipulation","Cyber exploitation","RF command injection"],
+    advantages: ["Zero cost per engagement after initial investment","Unlimited magazine depth — no ammunition constraint","Silent and invisible to the target","Can capture drones intact for intelligence exploitation"],
+    disadvantages: ["Requires deep technical intelligence on target systems","Effectiveness varies dramatically by drone type","Autonomous drones with no RF link are immune to protocol attacks","Legal constraints limit use outside of military operations"],
+    realWorldUse: "Russian electronic warfare units in Ukraine employ large-area GPS spoofing that has caused multiple Ukrainian drones to veer off course and crash. Israeli C-UAS systems have demonstrated the ability to take control of hostile drones mid-flight and redirect them safely away from protected areas. These capabilities are highly classified, and the full extent of operational non-kinetic defeat remains deliberately opaque.",
+    content: `# Non-Kinetic Defeat — GPS Spoofing, Protocol Manipulation, and Cyber Takedowns
+
+When most people think of C-UAS, they picture missiles, guns, or jammers — the loud, visible, kinetic side of counter-drone operations. But the most strategically significant counter-drone techniques are the quiet ones: the methods that neutralize drones without anyone knowing it happened.
+
+Non-kinetic defeat is the shadow war within the drone war. It is underreported because it is classified, technically complex, and fundamentally less dramatic than an interceptor missile streaking across the sky. But it may be the only approach that can scale to meet the volume and cost-exchange challenges that drone warfare presents.
+
+## The Three Pillars of Non-Kinetic Defeat
+
+### GPS / GNSS Spoofing
+
+Every drone that relies on GPS for navigation — which is most of them — is vulnerable to spoofing. A spoofing system transmits counterfeit GPS signals that are slightly stronger than the genuine satellite signals. The drone receiver locks onto the stronger fake signal and begins computing position based on false data.
+
+The results are often invisible to the operator. The drone thinks it is 200 meters to the east of its actual position and corrects course accordingly, drifting off its intended path. With precise control of the spoofed signal, the defender can steer a drone in any direction — including commanding it to land.
+
+**The range advantage.** GPS spoofing can be effective at much greater ranges than jamming, because the spoofed signal only needs to be slightly stronger than the GPS satellite signals, which are already extremely weak at the Earth surface.
+
+**The limitation.** Drones that use multi-constellation GNSS (GPS + GLONASS + Galileo + BeiDou) and inertial navigation backup are harder to spoof. Military-grade drones increasingly incorporate anti-spoofing technologies, including controlled reception pattern antennas that can detect and reject signals arriving from directions other than the sky.
+
+### Protocol Manipulation
+
+Every drone communication protocol — DJI OcuSync, the MAVLink open-source protocol, proprietary military datalinks — has vulnerabilities. Protocol manipulation exploits these vulnerabilities to inject commands that the drone interprets as legitimate.
+
+**Deauthentication attacks.** Many drone protocols have a deauthentication function — a command that tells the drone to disconnect from its current controller. If the defender can spoof this command, the drone initiates return-to-home or auto-land, neutralizing the threat without ever touching the controls.
+
+**Command injection.** More sophisticated attacks inject navigation commands — waypoint changes, altitude restrictions, or forced landing commands — that the drone executes as if they came from the legitimate operator. This requires deep understanding of the target protocol, including any encryption, authentication, or integrity checks.
+
+**The encryption arms race.** As drone manufacturers become aware of protocol vulnerabilities, they add encryption and authentication layers. DJI's newer protocols include cryptographic signatures on command packets. Breaking these requires capabilities that border on cryptographic exploitation — feasible for nation-state actors but beyond the reach of most commercial C-UAS providers.
+
+### Cyber Exploitation
+
+The most sophisticated non-kinetic approach targets the drone onboard systems directly — its flight controller, its companion computer, its firmware. This is cyber warfare applied to the tactical edge.
+
+**Firmware exploitation.** Many drone flight controllers run open-source firmware (ArduPilot, PX4) with known vulnerabilities. An attacker who can reach the drone over its RF link or through pre-positioned malware can exploit these vulnerabilities to gain root access to the flight controller.
+
+**Supply chain compromise.** The nightmare scenario for drone operators: a vulnerability introduced at the manufacturing stage that allows a defender to take control of a drone at will, regardless of its operator actions. This is the rationale for the scrutiny of Chinese-manufactured drones in U.S. government operations — the concern is less about known vulnerabilities and more about unknown ones that could be triggered remotely.
+
+## Operational Reality
+
+Non-kinetic defeat capabilities are among the most closely guarded secrets in the C-UAS enterprise. What is publicly acknowledged is almost certainly years behind what is operationally deployed.
+
+What we can observe publicly:
+
+- **Ukraine.** Russian GPS spoofing has been documented causing Ukrainian drones to crash or veer off course. Both sides employ protocol-level attacks against each other drone systems, with effectiveness that varies by platform and engagement geometry.
+
+- **Israel.** Israeli C-UAS systems have demonstrated the ability to take control of hostile drones and redirect them. Details are classified, but the capability is understood to span GPS spoofing through protocol manipulation to cyber exploitation, depending on the target.
+
+- **Commercial availability.** Protocol manipulation capabilities are increasingly available in commercial-off-the-shelf C-UAS systems, albeit at lower sophistication than state-level capabilities. The trend toward software-defined radio and AI-assisted signal analysis is democratizing what was once exclusively a signals intelligence agency capability.
+
+## The Strategic Significance
+
+Non-kinetic defeat matters because it solves the two hardest problems in C-UAS:
+
+**Cost exchange.** A GPS spoofing system has essentially zero marginal cost per engagement. You can spoof a thousand drones for the same cost as spoofing one. Against mass drone attacks — the hardest threat for kinetic systems to counter — non-kinetic methods scale effortlessly.
+
+**Collateral damage.** No debris falling from the sky. No unintended RF interference. No risk to bystanders. Non-kinetic defeat is the only approach suitable for urban operations, civilian airports, or any environment where the consequences of kinetic interception are unacceptable.
+
+**Intelligence exploitation.** A drone that is spoofed into landing intact provides forensic intelligence — who manufactured it, what firmware it runs, where it has flown, what it was targeting. A drone destroyed by a missile provides none of this.
+
+The quiet war is the part of C-UAS that will matter most over the long term. The countries and companies that master non-kinetic defeat will have an asymmetric advantage that kinetic systems — however impressive — cannot match.`
+  },
+  {
+    title: "Red Teaming — How Adversarial Drone Testing Makes C-UAS Better",
+    slug: "red-teaming-adversarial-drone-testing",
+    description: "Inside the world of adversarial C-UAS testing, where expert drone pilots probe defensive systems at ranges like China Lake and Yuma — and why you cannot know your system works until someone tries to break it.",
+    category: "concepts",
+    difficulty: "beginner",
+    readTime: 10,
+    featured: false,
+    imageUrl: "https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2506/9107830/1000w_q95.jpg",
+    whatItIs: "C-UAS red teaming is the practice of employing adversarial drone operators to test counter-drone systems against realistic, adaptive, uncooperative threat profiles — probing for gaps, identifying failure modes, and forcing defensive systems to prove their effectiveness against an opponent who is trying to win, not just demonstrate.",
+    howItWorks: "Red teams employ experienced drone pilots and autonomy specialists who design attack profiles specifically tailored to exploit known weaknesses in the C-UAS system under test. They vary approaches, tactics, frequencies, altitudes, and swarm configurations — then share results with the defenders (the blue team) so the system can be hardened. The cycle repeats until the system demonstrates reliable performance against the worst the red team can throw at it.",
+    keyFeatures: ["Opposition force with expert drone pilots","Adaptive, uncooperative attack profiles","Data collection on every engagement","Cyclical test-improve-retest methodology"],
+    advantages: ["Identifies real failure modes, not theoretical ones","Forces systems to prove capability under stress","Builds operator experience against realistic threats","Generates data that drives requirements and acquisitions"],
+    disadvantages: ["Expensive — specialized personnel and ranges required","Cannot perfectly replicate all threat types","Range safety constraints limit some realistic tactics","Results are often classified, slowing dissemination of lessons learned"],
+    realWorldUse: "The JCO (now JIATF-401) conducted regular red team exercises at Yuma Proving Ground, bringing together multiple C-UAS systems against a dedicated opposition force flying threat-representative drone profiles. Results from these events directly shaped which systems were approved for DoD deployment and identified capability gaps that drove subsequent acquisition decisions.",
+    content: `# Red Teaming — How Adversarial Drone Testing Makes C-UAS Better
+
+A C-UAS system that performs perfectly in a demonstration — cooperative drones flying predictable profiles on a clear day — may fail catastrophically when an adversary changes tactics, exploits a frequency gap, or simply flies lower and slower than expected. The only way to know is to let someone try to beat it.
+
+Red teaming is the difference between a C-UAS system that looks good in a PowerPoint slide and one that actually works when the threat is real.
+
+## What Is Red Teaming in C-UAS?
+
+Red teaming applies the military opposition force (OPFOR) concept to counter-drone testing. A dedicated team of drone pilots, autonomy specialists, and threat analysts designs and executes attack profiles specifically intended to find the seams in the defensive system — frequencies it cannot detect, altitudes it misses, approach angles that create blind spots, swarm behaviors that overwhelm its processing.
+
+The key distinction from standard testing: the red team is actively trying to win. They are not following a script. They adapt in real time based on how the defensive system responds. If the blue team shifts tactics, the red team shifts theirs. This adversarial dynamic exposes failure modes that scripted testing — however thorough — would never find.
+
+## The Range Environment
+
+Red team C-UAS testing occurs at specialized ranges with the infrastructure to support complex, multi-aircraft engagements:
+
+**China Lake (NAWCWD).** The Navy's premier electronic warfare range provides the electromagnetic environment to test sensors and effectors against jamming and spoofing while red team drones probe the defensive perimeter.
+
+**Yuma Proving Ground.** The Army's primary C-UAS test venue, used extensively by the JCO for Joint C-sUAS demonstrations and red team events. The desert environment provides clear RF conditions and the airspace to support complex engagements.
+
+**White Sands Missile Range.** Supports large-scale C-UAS testing with the instrumentation to capture detailed engagement data across multiple sensor and effector systems simultaneously.
+
+**Eglin AFB.** The Air Force C-UAS test hub, with particular emphasis on base defense scenarios and integration with airfield operations.
+
+These ranges provide capabilities that are impossible to replicate in a laboratory: controlled airspace, ground-truth instrumentation, telemetry collection, safety observers, and the legal authority to fly uncooperative drone profiles that would be illegal anywhere else.
+
+## How a Red Team Event Works
+
+### Preparation Phase
+
+Months before the event, the red team studies the C-UAS system under test. What sensors does it use? What frequencies? What is its detection range against different drone sizes? What are its known limitations? The red team designs attack profiles specifically tailored to exploit those limitations.
+
+### Execution Phase
+
+Over days or weeks, the red team executes a progression of attacks:
+
+**Phase 1 — Baseline.** Simple, single-drone approaches to establish the system's fundamental detection and tracking performance.
+
+**Phase 2 — Variation.** The same basic approaches but with variations in altitude, speed, flight profile, and electronic emissions — testing whether the system detects the threat when parameters change.
+
+**Phase 3 — Exploitation.** Profiles specifically designed around known vulnerabilities. If the system uses RF detection, the red team flies autonomous drones with no RF link. If the system relies on radar, the red team flies profiles that exploit radar blind spots — extremely low altitude, terrain masking, multirotor hover behavior.
+
+**Phase 4 — Saturation.** Swarm attacks that push the system's track management and operator workflow to failure. The goal is to find the threshold where the system can no longer manage the number of simultaneous threats.
+
+**Phase 5 — Complex.** Combined arms approaches — drones simultaneously with other threats, or drones used to distract while a different attack vector (ground, cyber, or other air) executes the primary mission.
+
+### Analysis Phase
+
+After each engagement, red and blue teams review the data together. What did the sensors detect? What did they miss? Where did tracks get confused? When did the operator make the wrong decision? The analysis is ruthlessly honest — the point is to find problems, not to make anyone look good.
+
+### Remediation Phase
+
+The blue team modifies the system based on findings — adjusting sensor placement, tuning detection algorithms, adding frequency coverage, rewriting engagement protocols. Then the cycle repeats, with the red team designing new attacks against the hardened system.
+
+## What Red Teaming Reveals
+
+The most important findings from C-UAS red teaming are rarely the things the system's designers expected:
+
+**Detection is not the same as classification.** A system may detect that something is in the air but fail to classify it as a drone vs. a bird, delaying the engagement decision until it is too late.
+
+**Integration is the failure point.** Individual sensors may work perfectly, but the C2 system may fail to correlate their tracks correctly, creating ghost tracks that confuse the operator or failing to merge tracks that should be a single contact.
+
+**Operators are the weakest link.** Under stress, with multiple tracks to manage and seconds to decide, operators make mistakes — engaging the wrong target, failing to engage the right one, or freezing entirely. Red teaming reveals where the human-machine interface breaks down.
+
+**Software-defined threats are the future.** A drone whose RF signature was catalogued yesterday can be updated with new firmware tonight, changing its frequency plan, modulation, and behavior. C-UAS systems must be able to detect novel signatures, not just match against a library of known threats.
+
+## Why Red Teaming Matters for Acquisition
+
+For program managers and acquisition professionals, red team results are gold:
+
+**Requirements validation.** Red teaming reveals whether the stated requirements actually address the real threat — or whether the threat has evolved past what the requirement was written to counter.
+
+**Source selection evidence.** When evaluating competing C-UAS solutions, red team performance data provides objective evidence of which system actually works under realistic conditions, cutting through the marketing claims.
+
+**Budget justification.** A C-UAS system that has been red-teamed and hardened carries more weight in budget discussions than one that has only demonstrated against cooperative targets. "It survived red team" is a powerful argument.
+
+Red teaming is expensive, time-consuming, and sometimes embarrassing for the blue team. It is also irreplaceable. No amount of engineering analysis, modeling and simulation, or cooperative testing can substitute for the moment when a determined, creative adversary tries to beat your system and you find out whether it holds.`
+  },
 ]
 
 async function seedExplainers() {
