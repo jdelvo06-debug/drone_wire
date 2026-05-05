@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
-import { scrapeContracts } from '@/lib/services/contract-scraper';
+import { scrapeContracts } from '@/lib/services/usaspending-scraper';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300; // 5 minutes max for Vercel
