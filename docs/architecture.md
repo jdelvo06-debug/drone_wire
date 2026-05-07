@@ -1,341 +1,288 @@
 # DroneWire Architecture
 
+**Last updated:** 2026-05-07
+
+DroneWire is a production Counter-UAS intelligence hub. It combines an RSS-backed article pipeline, AI enrichment, a C-UAS systems database, an explainer library, and a real defense-contract tracker backed by Supabase PostgreSQL.
+
+---
+
 ## System Overview
 
-DroneWire is an AI-curated intelligence platform for counter-UAS (Unmanned Aerial Systems) news and analysis. The system automatically aggregates content from multiple sources, processes it with AI, and presents it through a modern web interface.
-
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                              DRONEWIRE SYSTEM                               │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐  │
-│  │  RSS Feeds  │    │  DoD Site   │    │   Manual    │    │  AI Service │  │
-│  │  (News)     │    │ (Contracts) │    │   Input     │    │ (AbacusAI)  │  │
-│  └──────┬──────┘    └──────┬──────┘    └──────┬──────┘    └──────┬──────┘  │
-│         │                  │                  │                  │         │
-│         ▼                  ▼                  ▼                  │         │
-│  ┌─────────────────────────────────────────────────────┐        │         │
-│  │                   CRON JOBS (Vercel)                │        │         │
-│  │  ┌──────────────┐  ┌──────────────┐                 │        │         │
-│  │  │ scrape-news  │  │scrape-contract│                │        │         │
-│  │  │  (6 AM UTC)  │  │  (manual)    │                 │        │         │
-│  │  └──────┬───────┘  └──────┬───────┘                 │        │         │
-│  │         │                 │                         │        │         │
-│  │         └────────┬────────┘                         │        │         │
-│  │                  ▼                                  │        │         │
-│  │         ┌──────────────┐                            │        │         │
-│  │         │  process-ai  │◄───────────────────────────┼────────┘         │
-│  │         │  (8 AM UTC)  │                            │                  │
-│  │         └──────┬───────┘                            │                  │
-│  └────────────────┼────────────────────────────────────┘                  │
-│                   │                                                       │
-│                   ▼                                                       │
-│  ┌─────────────────────────────────────────────────────────────────────┐  │
-│  │                     SUPABASE POSTGRESQL                             │  │
-│  │  ┌─────────┐┌─────────┐┌─────────┐┌─────────┐┌─────────┐┌─────────┐ │  │
-│  │  │Articles ││Explainer││ Systems ││Contracts││  Tags  ││RssFeeds │ │  │
-│  │  └─────────┘└─────────┘└─────────┘└─────────┘└─────────┘└─────────┘ │  │
-│  └─────────────────────────────┬───────────────────────────────────────┘  │
-│                                │                                          │
-│                                ▼                                          │
-│  ┌─────────────────────────────────────────────────────────────────────┐  │
-│  │                      NEXT.JS APPLICATION                            │  │
-│  │  ┌─────────────────────────────────────────────────────────────┐   │  │
-│  │  │                    API ROUTES (/api)                        │   │  │
-│  │  │  /articles  /contracts  /explainers  /newsletter  /contact  │   │  │
-│  │  └─────────────────────────────────────────────────────────────┘   │  │
-│  │  ┌─────────────────────────────────────────────────────────────┐   │  │
-│  │  │                    PAGE ROUTES                              │   │  │
-│  │  │   /  /articles  /systems  /explainers  /contracts  /about   │   │  │
-│  │  └─────────────────────────────────────────────────────────────┘   │  │
-│  └─────────────────────────────────────────────────────────────────────┘  │
-│                                │                                          │
-│                                ▼                                          │
-│  ┌─────────────────────────────────────────────────────────────────────┐  │
-│  │                         VERCEL EDGE                                 │  │
-│  │                   https://drone-wire.vercel.app                     │  │
-│  └─────────────────────────────────────────────────────────────────────┘  │
-│                                                                           │
-└───────────────────────────────────────────────────────────────────────────┘
+│  ┌─────────────┐    ┌────────────────┐    ┌─────────────┐                  │
+│  │ RSS Feeds   │    │ USASpending.gov │    │ Manual Data │                  │
+│  │ News Intel  │    │ Contract Awards │    │ Images/Seeds│                  │
+│  └──────┬──────┘    └───────┬────────┘    └──────┬──────┘                  │
+│         │                   │                    │                         │
+│         ▼                   ▼                    ▼                         │
+│  ┌──────────────┐   ┌────────────────────┐  ┌────────────────────┐        │
+│  │ scrape-news  │   │ scrape-contracts   │  │ Seed/Fix Scripts   │        │
+│  │ Vercel cron  │   │ Manual/Hermes cron │  │ Local maintenance  │        │
+│  └──────┬───────┘   └─────────┬──────────┘  └─────────┬──────────┘        │
+│         │                     │                       │                   │
+│         ▼                     ▼                       ▼                   │
+│  ┌──────────────┐     ┌─────────────────────────────────────────────┐     │
+│  │ process-ai   │────►│           SUPABASE POSTGRESQL               │     │
+│  │ Vercel cron  │     │ Articles, Systems, Contracts, Explainers    │     │
+│  └──────────────┘     │ Tags, Subscribers, Contact Submissions       │     │
+│                       └────────────────────┬────────────────────────┘     │
+│                                            │                              │
+│                                            ▼                              │
+│                       ┌─────────────────────────────────────────────┐     │
+│                       │              NEXT.JS APP                    │     │
+│                       │ Pages, Server Components, API Routes        │     │
+│                       └────────────────────┬────────────────────────┘     │
+│                                            │                              │
+│                                            ▼                              │
+│                       ┌─────────────────────────────────────────────┐     │
+│                       │                 VERCEL                      │     │
+│                       │          https://drone-wire.vercel.app       │     │
+│                       └─────────────────────────────────────────────┘     │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## Runtime Stack
+
+- **Frontend/backend framework:** Next.js 14.2.28, App Router
+- **Language:** TypeScript
+- **Database:** Supabase PostgreSQL
+- **ORM:** Prisma 6.7.0
+- **Styling:** Tailwind CSS with Radix/shadcn-style UI components
+- **Email:** Resend
+- **Deployment:** Vercel
+- **Testing:** Jest
+
+---
 
 ## Data Flow
 
-### 1. Content Ingestion
+### 1. Article Ingestion
 
-```
-RSS Feeds ──► rss-scraper.ts ──► content-extractor.ts ──► Database (raw)
-                    │
-                    ▼
-              Filter by keywords
-              (counter-UAS related)
-```
-
-**Sources:**
-- Defense News RSS feeds
-- Drone industry publications
-- Government announcements
-- Technology news (filtered)
-
-### 2. AI Processing
-
-```
-Database (raw) ──► ai-processor.ts ──► AbacusAI API ──► Database (enriched)
-                        │
-                        ▼
-                  Generates:
-                  - Summary
-                  - Key points
-                  - "Why it matters"
-                  - Auto-tags
-                  - Confidence score
+```text
+RSS Feeds
+  └─► rss-scraper.ts
+        └─► content-extractor.ts
+              └─► Article records in Supabase
+                    └─► ai-processor.ts
+                          └─► summaries, key points, why-it-matters, tags
 ```
 
-### 3. Content Delivery
+Vercel cron routes:
 
-```
-User Request ──► Next.js Server Component ──► Prisma Query ──► PostgreSQL
-                        │
-                        ▼
-                  Render React Component
-                        │
-                        ▼
-                  HTML Response to Browser
-```
+- `/api/cron/scrape-news` — daily at 6 AM UTC
+- `/api/cron/process-ai` — daily at 8 AM UTC
 
-## Database Schema
+### 2. Contract Ingestion
 
-### Core Entities
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           DATABASE SCHEMA                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  ┌─────────────┐         ┌─────────────┐         ┌─────────────┐       │
-│  │   Article   │         │    Tag      │         │  Explainer  │       │
-│  ├─────────────┤         ├─────────────┤         ├─────────────┤       │
-│  │ id          │◄───┐    │ id          │    ┌───►│ id          │       │
-│  │ title       │    │    │ name        │    │    │ title       │       │
-│  │ content     │    │    │ slug        │    │    │ slug        │       │
-│  │ aiSummary   │    │    │ category    │    │    │ content     │       │
-│  │ keyPoints[] │    │    └─────────────┘    │    │ category    │       │
-│  │ whyItMatters│    │          ▲            │    │ difficulty  │       │
-│  │ sourceUrl   │    │          │            │    │ keyFeatures │       │
-│  │ imageUrl    │    │    ┌─────┴─────┐      │    │ advantages  │       │
-│  │ publishedAt │    │    │           │      │    │ disadvantage│       │
-│  │ confidence  │    │    │           │      │    │ views       │       │
-│  │ status      │    ├────┤ArticleTag │      │    └─────────────┘       │
-│  └─────────────┘    │    │           │      │          ▲               │
-│                     │    └───────────┘      │          │               │
-│                     │                       │    ┌─────┴─────┐         │
-│                     │    ┌───────────┐      │    │           │         │
-│                     └────┤ExplainerTag├─────┘    │ExplainerTag│        │
-│                          │           │           │           │         │
-│                          └───────────┘           └───────────┘         │
-│                                                                         │
-│  ┌─────────────┐         ┌─────────────┐         ┌─────────────┐       │
-│  │   System    │         │  Contract   │         │  RssFeed    │       │
-│  ├─────────────┤         ├─────────────┤         ├─────────────┤       │
-│  │ id          │         │ id          │         │ id          │       │
-│  │ name        │         │ title       │         │ name        │       │
-│  │ slug        │         │ description │         │ url         │       │
-│  │ category    │         │ awardAmount │         │ category    │       │
-│  │ manufacturer│         │ contractor  │         │ isActive    │       │
-│  │ country     │         │ awardDate   │         │ lastFetched │       │
-│  │ status      │         │ sourceUrl   │         └─────────────┘       │
-│  │ specs[]     │         └─────────────┘                               │
-│  │ combatRecord│                                  ┌─────────────┐       │
-│  └─────────────┘                                  │ Newsletter  │       │
-│        ▲                                          │ Subscriber  │       │
-│        │                                          ├─────────────┤       │
-│  ┌─────┴─────┐                                    │ id          │       │
-│  │ SystemTag │                                    │ email       │       │
-│  │           │                                    │ status      │       │
-│  └───────────┘                                    └─────────────┘       │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
+```text
+USASpending.gov Awards API
+  └─► lib/services/usaspending-scraper.ts
+        └─► scripts/seed-contracts.ts or /api/cron/scrape-contracts
+              └─► Contract records in Supabase
 ```
 
-### Article Status Flow
+Notes:
 
-```
-pending ──► processing ──► published
-                │
-                ▼
-             failed
-```
+- SAM.gov scraping was replaced by USASpending.gov for reliability.
+- Vercel Hobby tier only has two cron slots, so the contract refresh is scheduled externally through Hermes and can also be triggered manually.
 
-## Component Architecture
+### 3. Systems Database Maintenance
 
-### Frontend Components
-
-```
-/components
-├── /ui                    # Shadcn/UI primitives (49 components)
-│   ├── button.tsx
-│   ├── card.tsx
-│   ├── dialog.tsx
-│   └── ...
-│
-├── /layout               # Application shell
-│   ├── header.tsx        # Navigation, search, theme toggle
-│   ├── footer.tsx        # Links, newsletter signup
-│   └── mobile-nav.tsx    # Responsive navigation
-│
-├── /home                 # Landing page sections
-│   ├── hero-section.tsx
-│   ├── featured-articles.tsx
-│   ├── latest-intel.tsx
-│   └── newsletter-cta.tsx
-│
-├── /articles             # Article-related components
-│   ├── article-card.tsx
-│   ├── article-list.tsx
-│   ├── article-detail.tsx
-│   └── article-filters.tsx
-│
-├── /explainers           # Explainer-related components
-│   ├── explainer-card.tsx
-│   ├── explainer-grid.tsx
-│   └── explainer-content.tsx
-│
-├── /systems              # System-related components
-│   └── systems-header.tsx  # Search and filter controls
-│
-└── /contracts            # Contract-related components
-    ├── contracts-header.tsx   # Stats cards, search, filters (fetches aggregates)
-    └── contracts-table.tsx    # Sortable table with expandable details
+```text
+Manual source research / DVIDS / manufacturer assets / re-hosted assets
+  └─► scripts/fix-images-curated.ts or scripts/push-one.ts
+        └─► System.imageUrl updates in Supabase
+              └─► scripts/vision-audit-images.ts validates visual match quality
 ```
 
-### State Management
+Current image state:
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                     STATE MANAGEMENT                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌─────────────────┐    ┌─────────────────┐                    │
-│  │  TanStack Query │    │     Zustand     │                    │
-│  │  (Server State) │    │  (Client State) │                    │
-│  ├─────────────────┤    ├─────────────────┤                    │
-│  │ - Article lists │    │ - UI state      │                    │
-│  │ - Pagination    │    │ - Filter state  │                    │
-│  │ - Search results│    │ - Modal state   │                    │
-│  │ - Caching       │    │                 │                    │
-│  └─────────────────┘    └─────────────────┘                    │
-│                                                                 │
-│  ┌─────────────────┐                                           │
-│  │      Jotai      │                                           │
-│  │  (Atomic State) │                                           │
-│  ├─────────────────┤                                           │
-│  │ - Theme         │                                           │
-│  │ - Preferences   │                                           │
-│  └─────────────────┘                                           │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
+- 115 systems total
+- 103 systems with image URLs
+- 12 systems with null image URLs
+- Separate quality issue: last vision audit included PASS, FAIL, UNCERTAIN, and ERROR results
+
+### 4. Explainers Maintenance
+
+```text
+scripts/seed-explainers.ts
+  └─► Explainer records in Supabase
+        └─► /explainers pages and FeaturedExplainers server component
 ```
 
-## API Design
+Current state:
 
-### RESTful Endpoints
+- 40 explainers in DB
+- 40 explainers in seed file
+- Seed and DB reconciled as of May 2026
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/articles` | List articles (paginated, filterable) |
-| GET | `/api/articles/[id]` | Get single article |
-| GET | `/api/contracts` | List contracts (paginated, sortable) |
-| GET | `/api/explainers` | List explainers (filterable) |
-| GET | `/api/systems` | List systems (category, status, country filters) |
-| POST | `/api/systems` | Increment system view count |
-| POST | `/api/newsletter/subscribe` | Subscribe to newsletter |
-| POST | `/api/contact` | Submit contact form |
-| GET | `/api/stats` | Get live database counts |
-| GET | `/feed.xml` | RSS feed output |
+---
 
-### Admin Endpoints (Protected by CRON_SECRET)
+## Database Models
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/admin/reprocess-images` | Get image stats |
-| POST | `/api/admin/reprocess-images` | Reprocess articles missing images |
-| GET | `/api/admin/seed-explainers` | Get explainer seed status |
-| POST | `/api/admin/seed-explainers` | Seed explainers to database |
+Primary Prisma models:
 
-### Cron Endpoints (Protected by CRON_SECRET)
+- `Article`
+- `Tag`
+- `ArticleTag`
+- `ArticleRelation`
+- `Explainer`
+- `ExplainerTag`
+- `Contract`
+- `NewsletterSubscriber`
+- `RssFeed`
+- `ContactSubmission`
+- `System`
+- `SystemTag`
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/cron/scrape-news` | Scrape RSS feeds (daily 6 AM UTC) |
-| GET | `/api/cron/scrape-contracts` | Scrape SAM.gov contracts (manual) |
-| GET | `/api/cron/process-ai` | AI processing (daily 8 AM UTC) |
+High-level relationships:
 
-### Query Parameters
-
-**Articles:**
-```
-GET /api/articles?page=1&limit=10&status=published&tag=counter-uas&search=drone
+```text
+Article ── ArticleTag ── Tag
+Article ── ArticleRelation ── Article
+Explainer ── ExplainerTag ── Tag
+System ── SystemTag ── Tag
 ```
 
-**Contracts:**
+Core data tables currently used by the public site:
+
+- Articles feed and article detail pages
+- Systems list/detail pages
+- Contracts tracker
+- Explainers library
+- Newsletter/contact forms
+
+---
+
+## Application Routes
+
+### Public Pages
+
+- `/` — home page
+- `/articles` — article list
+- `/articles/[id]` — article detail
+- `/systems` — systems list
+- `/systems/[slug]` — system detail
+- `/explainers` — explainer library
+- `/explainers/[slug]` — explainer detail
+- `/contracts` — contracts tracker
+- `/about` — about page
+- `/feed.xml` — RSS output
+
+### API Routes
+
+- `GET /api/articles`
+- `GET /api/articles/[id]`
+- `GET /api/articles/[id]/related`
+- `GET /api/contracts`
+- `GET /api/systems`
+- `POST /api/systems`
+- `GET /api/stats`
+- `GET /api/search`
+- `POST /api/newsletter/subscribe`
+- `POST /api/contact`
+- `GET /api/health`
+
+### Admin / Maintenance Routes
+
+- `/api/admin/auth`
+- `/api/admin/stats`
+- `/api/admin/seed-explainers`
+- `/api/admin/reprocess-images`
+- `/api/admin/systems/[slug]/image`
+
+### Cron Routes
+
+- `/api/cron/scrape-news`
+- `/api/cron/process-ai`
+- `/api/cron/scrape-contracts`
+- `/api/cron/send-alerts`
+
+Only two cron routes are scheduled in Vercel because of the Hobby tier limit. Additional routes exist for manual or external triggering.
+
+---
+
+## Component Organization
+
+```text
+components/
+├── articles/      # Article cards, lists, detail, filters, related content
+├── contracts/     # Contract stats/header/table components
+├── explainers/    # Explainer cards/content/library UI
+├── home/          # Landing page sections
+├── layout/        # Header, footer, mobile navigation
+├── systems/       # Systems search/filter/list UI
+└── ui/            # Reusable UI primitives
 ```
-GET /api/contracts?page=1&limit=20&sortBy=awardDate&sortDir=desc
+
+Important recent change:
+
+- Featured explainers are rendered through an async server component that queries Prisma directly.
+- The old/dead `ExplainersGrid` component was removed.
+
+---
+
+## Deployment Architecture
+
+```text
+GitHub main branch
+  └─► Vercel auto-deploy
+        └─► Build: prisma generate && next build
+              └─► Runtime: Node.js 20.x
+                    └─► Supabase transaction pooler
 ```
 
-## Infrastructure
+Production URL:
 
-### Vercel Deployment
-
-```
-GitHub (main branch)
-        │
-        ▼ (auto-deploy on push)
-┌───────────────────────────────┐
-│        VERCEL                 │
-├───────────────────────────────┤
-│  Build: prisma generate &&    │
-│         next build            │
-│                               │
-│  Runtime: Node.js 20.x        │
-│                               │
-│  Cron Jobs:                   │
-│  - scrape-news (6 AM UTC)     │
-│  - process-ai (8 AM UTC)      │
-│                               │
-│  Edge Network: Global CDN     │
-└───────────────────────────────┘
-        │
-        ▼
-┌───────────────────────────────┐
-│      SUPABASE                 │
-├───────────────────────────────┤
-│  PostgreSQL Database          │
-│  Region: us-west-2            │
-│  Connection: Transaction      │
-│              Pooler (6543)    │
-└───────────────────────────────┘
+```text
+https://drone-wire.vercel.app
 ```
 
-### Environment Configuration
+Local dev:
 
-| Environment | Database | Cron | Domain |
-|-------------|----------|------|--------|
-| Development | Supabase (pooler) | Manual | localhost:3000 |
-| Production | Supabase (pooler) | Vercel | drone-wire.vercel.app |
+```bash
+cd ~/projects/drone_wire/app
+npm run dev
+```
 
-## Security
+Local URL:
 
-### Authentication
-- Cron endpoints protected by `CRON_SECRET` header
-- No user authentication (public content)
+```text
+http://localhost:3002
+```
 
-### Data Validation
-- Zod schemas for API input validation
-- Prisma for SQL injection protection
-- Content sanitization for user inputs
+---
 
-### Environment Variables
-- Sensitive keys stored in Vercel environment
-- `.env` excluded from git
-- Separate keys for development/production
+## Security and Configuration
+
+- Secrets live in `.env.local` locally and Vercel environment variables in production.
+- `.env*` files are excluded from git.
+- Cron/admin routes use `CRON_SECRET` or admin auth where implemented.
+- Prisma handles parameterized database access.
+- Public site does not require user login.
+
+Important environment variables:
+
+- `DATABASE_URL`
+- `OPENAI_API_KEY`
+- `CRON_SECRET`
+- `RESEND_API_KEY`
+- `ADMIN_EMAIL`
+
+---
+
+## Operational Notes
+
+- The database is the source of truth for counts and image state.
+- `NEXTSESSION.md` is the working tracker, but it can go stale; verify before acting.
+- DVIDS CloudFront thumbnail URLs are useful but unreliable long-term.
+- Some manufacturer URLs block hotlinking, scraping, or vision API access.
+- For complex DB writes, use standalone scripts under `scripts/` and run with `npx tsx`.
+- On the Mac Mini, local script/API calls may need `NODE_TLS_REJECT_UNAUTHORIZED=0` because of the Zscaler TLS proxy.

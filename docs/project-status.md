@@ -1,52 +1,59 @@
 # DroneWire Project Status
 
-**Last Updated:** January 24, 2026
-
----
+**Last Updated:** 2026-05-07
+**Status:** Production, active maintenance
+**Version:** 1.7.0
 **Live Site:** https://drone-wire.vercel.app
-**Status:** Production (Live)
-**Version:** 1.6.0
 
 ---
 
 ## Current State
 
-### Working Features
+Verified against the live Supabase database on **2026-05-07**.
+
+| Area | Current State |
+|---|---:|
+| Articles | 2,924 |
+| Systems | 115 |
+| Systems with images | 103 |
+| Systems missing images | 12 |
+| Explainers | 40 |
+| Contracts | 208 |
+| Contract value | about $2.34B |
+
+---
+
+## Working Features
 
 | Feature | Status | Notes |
-|---------|--------|-------|
-| Home Page | ✅ Working | Hero, featured articles, newsletter CTA |
-| Articles List | ✅ Working | 43 articles, pagination, filtering |
-| Article Detail | ✅ Working | AI summaries, key points, tags |
-| **Systems Database** | ✅ Working | **72 C-UAS systems with DVIDS images** |
-| **System Detail** | ✅ Working | **Specs, combat record, related systems** |
-| Explainers Library | ✅ Working | 24 explainers with categories |
-| Explainer Detail | ✅ Working | Full content, sidebar with features |
-| Contracts Page | ✅ Working | 56 DoD contracts with sorting |
-| About Page | ✅ Working | Project information |
-| Dark/Light Mode | ✅ Working | Theme toggle in header |
-| Mobile Responsive | ✅ Working | Responsive navigation |
-| Newsletter Signup | ✅ Working | Welcome emails via Resend |
-| Contact Form | ✅ Working | Needs ADMIN_EMAIL env var for notifications |
+|---|---|---|
+| Home Page | Working | Hero, featured articles, latest intel, newsletter CTA |
+| Articles List | Working | RSS-backed intelligence feed with pagination/filtering |
+| Article Detail | Working | AI summaries, key points, tags, why-it-matters content |
+| Systems Database | Working | 115 C-UAS systems; 103 currently have images |
+| System Detail | Working | Specs, combat record, related systems, manufacturer/country/status |
+| Explainers Library | Working | 40 structured explainers in DB and seed file |
+| Explainer Detail | Working | Rich explainer content with structured fields |
+| Featured Explainers | Working | Async server component queries DB directly |
+| Contracts Page | Working | 208 real USASpending award records |
+| About Page | Working | Project information |
+| Dark/Light Mode | Working | Theme toggle in header |
+| Mobile Responsive | Working | Responsive navigation |
+| Newsletter Signup | Working | Resend integration |
+| Contact Form | Working | Saves to DB; email notifications need ADMIN_EMAIL if desired |
 
-### Data Pipeline
+---
 
-| Component | Status | Schedule |
-|-----------|--------|----------|
-| RSS Scraping | ✅ Active | Daily 6 AM UTC (Vercel cron) |
-| AI Processing | ✅ Active | Daily 8 AM UTC (Vercel cron) |
-| Contract Scraping (SAM.gov) | ✅ Active | Trigger via curl (free tier limit) |
+## Data Pipeline
 
-### Database
-
-| Metric | Count |
-|--------|-------|
-| Articles | 43 |
-| **Systems** | **72** |
-| Explainers | 24 |
-| Contracts | 56 |
-| Tags | Multiple |
-| RSS Feeds | Configured |
+| Component | Status | Schedule/Trigger |
+|---|---|---|
+| RSS Scraping | Active | Vercel cron: daily 6 AM UTC |
+| AI Processing | Active | Vercel cron: daily 8 AM UTC |
+| Contract Scraping | Active | USASpending.gov scraper; weekly Hermes cron + manual route |
+| System Image Audit | Manual | `scripts/vision-audit-images.ts` |
+| System Image Fixes | Manual | `scripts/fix-images-curated.ts`, `scripts/push-one.ts` |
+| Explainer Seeding | Manual | `scripts/seed-explainers.ts` |
 
 ---
 
@@ -55,207 +62,184 @@
 ### Vercel Deployment
 
 | Setting | Value |
-|---------|-------|
-| Platform | Vercel (Hobby Tier) |
-| Node.js | 20.x |
+|---|---|
+| Platform | Vercel Hobby Tier |
+| Runtime | Node.js 20.x |
 | Build Command | `prisma generate && next build` |
-| Cron Jobs | 2 of 2 (free tier max) |
-| Domain | drone-wire.vercel.app |
+| Cron Jobs | 2 of 2 Vercel cron slots used |
+| Production Domain | https://drone-wire.vercel.app |
+| Deployment Model | Push to `main` auto-deploys |
 
 ### Supabase Database
 
 | Setting | Value |
-|---------|-------|
-| Plan | Free Tier |
-| Region | us-west-2 (AWS) |
-| Connection | Transaction Pooler (IPv4) |
+|---|---|
+| Provider | Supabase PostgreSQL |
+| Region | us-west-2 |
+| Connection | Transaction pooler |
 | Port | 6543 |
-| Tables | 12 |
+| ORM | Prisma |
+| Local env file | `.env.local` |
 
-### Environment Variables (Vercel)
+### Environment Variables
 
 | Variable | Status |
-|----------|--------|
-| DATABASE_URL | ✅ Configured (pooler URL) |
-| OPENAI_API_KEY | ✅ Configured |
-| CRON_SECRET | ✅ Configured |
-| SAM_GOV_API_KEY | ✅ Configured |
-| RESEND_API_KEY | ✅ Configured |
-| ADMIN_EMAIL | ⚠️ Not set (defaults to admin@dronewire.com) |
+|---|---|
+| DATABASE_URL | Configured |
+| OPENAI_API_KEY | Configured where AI processing is used |
+| CRON_SECRET | Configured |
+| RESEND_API_KEY | Configured |
+| ADMIN_EMAIL | Follow-up if contact notification emails are desired |
 
 ---
 
-## Known Issues
+## Active Issues / Follow-Ups
 
-### Active Issues
+### High Priority
 
-| Issue | Severity | Workaround |
-|-------|----------|------------|
-| No email notifications | Medium | Forms save to DB only |
-| manifest.json 404 | Low | PWA not configured |
+1. **12 systems have null images**
+   - Ground truth from DB: 103/115 systems have images.
+   - Remaining systems are listed in `../NEXTSESSION.md`.
+   - Most are the result of DVIDS CloudFront thumbnail URLs returning 404.
 
-### Resolved Issues
+2. **Image audit backlog**
+   - Last full vision audit found many images that were generic, uncertain, failed, or inaccessible.
+   - Current known audit result: 43 PASS, 13 FAIL, 49 UNCERTAIN, 10 ERROR from the 115-system audit.
+   - This is separate from the null-image count.
 
-| Issue | Resolution Date | Solution |
-|-------|-----------------|----------|
-| Article images missing | 2026-01-12 | Enhanced extraction + reprocessor API |
-| Contract scraper 403 | 2026-01-12 | Switched to SAM.gov Opportunities API |
-| Database connection (IPv4) | 2026-01-11 | Use Transaction pooler |
-| Cron job limit | 2026-01-11 | Reduced to 2 jobs |
-| Module resolution error | 2026-01-11 | Removed outputFileTracingRoot |
-| Node.js version | 2026-01-11 | Pinned to 20.x |
-| Prisma build error | 2026-01-11 | Added to build command |
-| Static generation | 2026-01-11 | Added force-dynamic |
+3. **Contract titles need verification**
+   - Prior session notes say contracts may display `contractNumber` where meaningful titles should appear.
+   - This should be checked in the UI and database before any fix.
+
+### Medium Priority
+
+- Configure `ADMIN_EMAIL` if contact form email notifications matter.
+- Review Vercel deployment health after each data/script change.
+- Decide whether to keep or replace generic/contextual DVIDS photos.
+
+### Future Enhancements
+
+- Admin dashboard improvements
+- Analytics and metrics
+- Email alerts for breaking C-UAS news
+- Better article relationship/recommendation features
+- More robust image hosting strategy for manufacturer/DoD assets that block hotlinking
 
 ---
 
 ## Roadmap
 
-### Completed (Priority 1)
-- [x] Set up Supabase database
-- [x] Seed initial data (RSS feeds, tags, explainers)
-- [x] Test scraping pipeline
-- [x] Deploy to Vercel
-- [x] Fix production database connection
+### Completed
 
-### Completed (Priority 2)
-- [x] Search functionality improvements (header search now functional)
-- [x] Related articles section (embedding-based similarity)
-- [x] Dynamic related explainers (based on article category)
-- [x] Dynamic trending topics (real tag counts from database)
+- Production deployment to Vercel
+- Supabase PostgreSQL database integration
+- Prisma schema and data access
+- RSS scraping pipeline
+- AI article processing
+- Newsletter signup with Resend
+- Systems database and system detail pages
+- Contracts tracker page
+- USASpending.gov contract data pipeline
+- Explainers library with 40 explainers
+- FeaturedExplainers server component fix
+- Seed file reconciliation for explainers
+- Initial image sourcing and audit workflow
 
-### In Progress (Priority 3)
-- [x] Email integration with Resend (RESEND_API_KEY configured)
-- [x] Newsletter welcome emails (working)
-- [ ] Contact form notifications - **TODO: Set ADMIN_EMAIL in Vercel**
-- [x] RSS feed output (/feed.xml)
+### In Progress
 
-### Completed (Priority 4 - UI/UX Polish)
-- [x] Dynamic stats section (real database counts via /api/stats)
-- [x] Fixed category badges (removed pipe-separated display)
-- [x] Fixed article excerpt truncation (proper line-clamp)
-- [x] Fixed explainer title truncation in sidebar
-- [x] Seeded 23 comprehensive counter-UAS explainers
+- System image accuracy and null-image cleanup
+- Documentation hygiene and session tracker discipline
+- Contract title verification
 
-### Completed (Priority 5 - Systems Feature)
-- [x] Database schema for Systems (System, SystemTag models)
-- [x] API route with filtering (/api/systems)
-- [x] Systems listing page with featured section
-- [x] System detail page with specifications sidebar
-- [x] Navigation tab added
-- [x] Seeded 72 C-UAS systems (US, Israel, Europe, Australia, others)
-- [x] **System images - COMPLETED (all 72 systems with DVIDS images)**
+### Next Recommended Work
 
-### Completed (Priority 5.5 - Image Infrastructure)
-- [x] All system images from DVIDS CloudFront CDN
-- [x] Replaced blocked manufacturer URLs (Rafael, Lockheed, Northrop, RTX)
-- [x] Fixed explainer images (C-UAS Kill Chain, LAWS, THAAD)
-- [x] Updated seed scripts to use upsert for reliable updates
-
-### Future (Priority 6)
-- [ ] Admin dashboard improvements
-- [ ] AI-powered related articles
-- [ ] Email alerts for breaking news
-- [ ] Analytics and metrics
+1. Confirm whether image work after the May 5 tracker update exists outside git/DB.
+2. Resolve the 12 null system images.
+3. Decide whether to fix only nulls or also attack the FAIL/UNCERTAIN audit pile.
+4. Verify contract titles.
 
 ---
 
 ## Quick Commands
 
 ### Development
+
 ```bash
-cd /counter_uas_hub/app
-npm run dev                    # Start dev server
-npx prisma studio              # Database GUI
+cd ~/projects/drone_wire/app
+npm run dev
 ```
 
-### Manual Cron Triggers
+Dev server:
+
+```text
+http://localhost:3002
+```
+
+### Build and Test
+
 ```bash
-# Scrape news
+npm run build
+npm test
+npm run lint
+```
+
+### Database Scripts
+
+```bash
+# Seed/update explainers
+NODE_TLS_REJECT_UNAUTHORIZED=0 npx tsx scripts/seed-explainers.ts
+
+# Seed/update systems
+NODE_TLS_REJECT_UNAUTHORIZED=0 npx tsx scripts/seed-systems.ts
+
+# Refresh contracts from USASpending.gov
+NODE_TLS_REJECT_UNAUTHORIZED=0 npx tsx scripts/seed-contracts.ts
+
+# Audit system images
+NODE_TLS_REJECT_UNAUTHORIZED=0 npx tsx scripts/vision-audit-images.ts
+```
+
+### Manual Cron Routes
+
+```bash
+# News scrape
 curl https://drone-wire.vercel.app/api/cron/scrape-news \
   -H "Authorization: Bearer $CRON_SECRET"
 
-# Process with AI
+# AI processing
 curl https://drone-wire.vercel.app/api/cron/process-ai \
   -H "Authorization: Bearer $CRON_SECRET"
 
-# Scrape contracts (manual only)
+# Contract scrape
 curl https://drone-wire.vercel.app/api/cron/scrape-contracts \
-  -H "Authorization: Bearer $CRON_SECRET"
-
-# Image stats
-curl https://drone-wire.vercel.app/api/admin/reprocess-images \
-  -H "Authorization: Bearer $CRON_SECRET"
-
-# Reprocess missing images
-curl -X POST https://drone-wire.vercel.app/api/admin/reprocess-images \
-  -H "Authorization: Bearer $CRON_SECRET" \
-  -H "Content-Type: application/json" \
-  -d '{"limit": 20}'
-
-# Get live stats
-curl https://drone-wire.vercel.app/api/stats
-
-# Seed explainers (check status)
-curl https://drone-wire.vercel.app/api/admin/seed-explainers \
-  -H "Authorization: Bearer $CRON_SECRET"
-
-# Seed explainers (trigger)
-curl -X POST https://drone-wire.vercel.app/api/admin/seed-explainers \
   -H "Authorization: Bearer $CRON_SECRET"
 ```
 
 ### Deployment
+
 ```bash
-git push origin main           # Auto-deploys to Vercel
+git push origin main
 ```
 
 ---
 
 ## Monitoring
 
-### Vercel Dashboard
-- **Logs:** https://vercel.com/jeremy-delvauxs-projects/drone-wire/logs
-- **Deployments:** https://vercel.com/jeremy-delvauxs-projects/drone-wire/deployments
-- **Analytics:** https://vercel.com/jeremy-delvauxs-projects/drone-wire/analytics
+### Vercel
 
-### Supabase Dashboard
-- **Project:** https://supabase.com/dashboard/project/qbeioesktbpvdlgzrgsm
-- **Database:** Table Editor, SQL Editor
-- **Logs:** Database logs and API logs
+- Logs: https://vercel.com/jeremy-delvauxs-projects/drone-wire/logs
+- Deployments: https://vercel.com/jeremy-delvauxs-projects/drone-wire/deployments
+- Analytics: https://vercel.com/jeremy-delvauxs-projects/drone-wire/analytics
 
----
+### Supabase
 
----
-
-## Where We Left Off (January 24, 2026)
-
-**Last Task Completed:** Contracts page UI improvements
-
-**Contracts v1.6.0 is live** with improved visual hierarchy and real data:
-- Stats cards now fetch real data from API (total value, count, average, max)
-- Table simplified to 6 columns with better visual hierarchy
-- Status badges with colored indicator dots
-- Category badges with subtle backgrounds
-- Expanded row details in two-column grid layout
-- API extended with byAgency and byMonth aggregations
-
-**Previous work (v1.5.0):** 72 C-UAS Systems with DVIDS images
-
-**To add/update systems:**
-```bash
-npx tsx scripts/seed-systems.ts  # Uses upsert - safe to re-run
-```
-
-**To add/update explainers:**
-```bash
-npx tsx scripts/seed-explainers.ts  # Uses upsert - safe to re-run
-```
+- Project: https://supabase.com/dashboard/project/qbeioesktbpvdlgzrgsm
+- Use Table Editor, SQL Editor, and logs for database checks.
 
 ---
 
 ## Contact & Support
 
-- **Repository:** GitHub (private)
-- **Issues:** Track in GitHub Issues
-- **Documentation:** `/docs` folder
+- Repository: https://github.com/jdelvo06-debug/drone_wire
+- Documentation: `README.md`, `PROJECT_REFERENCE.md`, and `/docs`
+- Session tracker: `../NEXTSESSION.md`

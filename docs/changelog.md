@@ -2,6 +2,89 @@
 
 All notable changes to DroneWire are documented in this file.
 
+---
+
+## [1.7.0] - 2026-05-07
+
+### Project State Refresh
+
+Documentation and project state were reconciled against the live Supabase database and recent git/session history.
+
+**Current verified counts:**
+- Systems: 115 total
+- Systems with images: 103/115
+- Systems missing images: 12
+- Contracts: 208 real awards
+- Contract value: about $2.34B
+- Explainers: 40
+- Articles: 2,924
+
+### Systems Database and Image Work
+
+Major C-UAS system database expansion and image remediation work occurred after the January 1.6.0 release.
+
+**Changes:**
+- Expanded the systems database from 72 to 115 records after removing 14 obscure or unsourceable systems from the broader working set.
+- Reached temporary 100% image coverage during the May 3 image sprint.
+- Ran vision-based image audits to identify incorrect, generic, uncertain, and unreachable imagery.
+- Re-hosted blocked/vision-inaccessible images where needed, including RTX/Raytheon CDN images via postimages.org.
+- Added local/public handling for the Bal Chatri image, then later set Bal Chatri back to null after the AI-generated image was flagged as unsuitable.
+- Ran `scripts/fix-images-curated.ts` against 28 hand-curated image fixes.
+- Result of the curated fix batch: 15 successful updates, 13 systems set to null because DVIDS CloudFront thumbnail URLs returned 404.
+- Bayraktar TB2 was fixed with a Wikipedia Commons runway image and verified as reachable.
+
+**Current unresolved image list:**
+- ALPS
+- Bal Chatri
+- CORVUS-RAVEN
+- Falcon Shield
+- IFPC Increment 2
+- IFPC-HPM
+- Iron Drone
+- Leonidas
+- LPWS
+- ODIN
+- Roadrunner
+- TOC-L
+
+**Known image sourcing constraints:**
+- DVIDS CloudFront thumbnails are unreliable and can 404 later.
+- BAE Systems pages are blocked by Imperva/hCaptcha.
+- Anduril product imagery often uses canvas/video rendering that is difficult to scrape directly.
+- Some manufacturer assets block hotlinking or vision inspection and may require download/re-host.
+
+### Contracts Data Pipeline
+
+**Changed:**
+- Replaced ghost/demo contract records with real USASpending.gov award data.
+- Added `lib/services/usaspending-scraper.ts` for C-UAS keyword searches across 2022–2026.
+- Populated 208 real awards totaling about $2.34B.
+- Updated `app/api/cron/scrape-contracts/route.ts` to use the USASpending scraper instead of the deprecated SAM.gov scraper.
+- Scheduled weekly contract refresh outside Vercel's two-cron limit using Hermes cron job `e2e48f408dee`, Mondays at 9 AM EST.
+
+**Known follow-up:**
+- Verify whether the contracts page still displays `contractNumber` where meaningful titles should be shown.
+
+### Explainers Library
+
+**Changed:**
+- Reconciled `scripts/seed-explainers.ts` with the database.
+- Exported and added 7 database-only orphan explainers back into the seed file.
+- Current state: 40 explainers in the database and 40 in the seed file.
+- Converted FeaturedExplainers to an async server component that queries the database directly.
+- Removed the dead `ExplainersGrid` component.
+
+### Deployment and Git
+
+**Recent commits:**
+- `b676cc9` — reconcile seed file with DB; export 7 orphan explainers; include prior batch scripts
+- `674b755` — swap cron route from deprecated SAM.gov scraper to USASpending scraper
+- `e364c88` — convert FeaturedExplainers to async server component; remove dead ExplainersGrid
+- `861d11c` — add PROJECT_REFERENCE.md with full project map
+- `3aeae46` — add USASpending.gov contract scraper, Bal Chatri image, 100% system coverage checkpoint
+
+---
+
 ## [1.6.0] - 2026-01-24
 
 ### Contracts Page Improvements
@@ -56,19 +139,19 @@ Major expansion of the Systems database from 13 to 72 systems with comprehensive
 - **Other:** Crow/ORCUS (UK/Spain), AS3 Surveyor (Poland), Sting (Ukraine)
 
 **Image Infrastructure:**
-- All 72 systems now have working images from DVIDS CloudFront CDN
-- Replaced blocked manufacturer URLs (Rafael, Lockheed Martin, Northrop Grumman, RTX, etc.) with DVIDS public domain images
-- Standardized URL pattern: `https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/YYMM/IMAGE_ID/1000w_q95.jpg`
-- Updated seed scripts to use upsert for reliable updates
+- All 72 systems had working images from DVIDS CloudFront CDN at the time of release.
+- Replaced blocked manufacturer URLs (Rafael, Lockheed Martin, Northrop Grumman, RTX, etc.) with DVIDS public domain images.
+- Standardized DVIDS thumbnail URL pattern: `https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/YYMM/IMAGE_ID/1000w_q95.jpg`
+- Updated seed scripts to use upsert for reliable updates.
 
 **Explainer Image Fixes:**
-- Fixed 3 broken explainer images (C-UAS Kill Chain, LAWS, THAAD)
-- Updated seed-explainers.ts to use upsert instead of skip-if-exists
+- Fixed 3 broken explainer images (C-UAS Kill Chain, LAWS, THAAD).
+- Updated `seed-explainers.ts` to use upsert instead of skip-if-exists.
 
 **Files Modified:**
-- `scripts/seed-systems.ts` - 72 systems with DVIDS images
-- `scripts/seed-explainers.ts` - Fixed images, upsert logic
-- `app/api/admin/seed-explainers/route.ts` - Fixed THAAD image
+- `scripts/seed-systems.ts`
+- `scripts/seed-explainers.ts`
+- `app/api/admin/seed-explainers/route.ts`
 
 ---
 
@@ -79,106 +162,59 @@ Major expansion of the Systems database from 13 to 72 systems with comprehensive
 Added new "Systems" tab showcasing Counter-UAS systems including C2 systems, sensors, effectors, and integrated solutions.
 
 **Database:**
-- Added `System` model with comprehensive fields (category, manufacturer, country, specifications, combat record, etc.)
-- Added `SystemTag` join table for many-to-many tag relationships
-- Categories: c2 (Command & Control), sensor, effector, integrated
-- Status types: operational, contracted, development, prototype
+- Added `System` model with comprehensive fields (category, manufacturer, country, specifications, combat record, etc.).
+- Added `SystemTag` join table for many-to-many tag relationships.
+- Categories: c2, sensor, effector, integrated.
+- Status types: operational, contracted, development, prototype.
 
 **API:**
-- `GET /api/systems` - Paginated list with category, status, country, manufacturer, and search filters
-- `POST /api/systems` - Increment view count
+- `GET /api/systems` - paginated list with category, status, country, manufacturer, and search filters.
+- `POST /api/systems` - increment view count.
 
 **Pages:**
-- `/systems` - Listing page with featured section, category/status filters, search
-- `/systems/[slug]` - Detail page with specifications sidebar, combat record, related systems
-
-**Components:**
-- `components/systems/systems-header.tsx` - Search and filter controls
-
-**Seed Data (13 systems):**
-- US Integrated: FS-LIDS, M-LIDS, MADIS, L-MADIS
-- US Sensors: KURFS, LSTAR
-- US Effectors: Coyote Block 2+, Coyote Block 3, THOR, DroneDefender
-- Allied: Drone Dome (Israel), Iron Dome (Israel), DroneShield RfPatrol (Australia)
+- `/systems` - listing page with featured section, category/status filters, search.
+- `/systems/[slug]` - detail page with specifications sidebar, combat record, related systems.
 
 **Navigation:**
-- Added "Systems" tab to main navigation (between Articles and Explainers)
-
-**Files Created:**
-- `prisma/schema.prisma` (updated with System, SystemTag models)
-- `app/api/systems/route.ts`
-- `app/systems/page.tsx`
-- `app/systems/[slug]/page.tsx`
-- `components/systems/systems-header.tsx`
-- `scripts/seed-systems.ts`
-
-**Files Modified:**
-- `components/layout/header.tsx` (navigation)
-
-**Known Limitation:**
-- System images currently use placeholder icons by category (photos pending - need verified public domain/DoD images)
+- Added "Systems" tab to main navigation.
 
 ---
 
 ## [1.3.0] - 2026-01-12
 
-### UI/UX Polish (Priority 4)
+### UI/UX Polish
 
-**Stats Section Improvements:**
-- Created `/api/stats` endpoint for real-time database counts
-- Stats section now fetches live data (articles, contracts, explainers)
-- Removed hardcoded inflated numbers
-
-**Visual Fixes:**
-- Fixed category badges displaying pipe-separated values (now shows primary only)
-- Added proper text truncation to article excerpts (`line-clamp-2`)
-- Fixed explainer titles being cut off in sidebar (removed `line-clamp-1`)
-
-**Content Seeding:**
-- Created `/api/admin/seed-explainers` endpoint with 24 comprehensive explainers
-- Seeded 17 new counter-UAS explainers to production (23 total)
-
-**Files Changed:**
-- `app/api/stats/route.ts` (new)
-- `app/api/admin/seed-explainers/route.ts` (new)
-- `components/home/stats-section.tsx`
-- `components/home/news-section.tsx`
-- `components/home/featured-explainers.tsx`
+- Created `/api/stats` endpoint for real-time database counts.
+- Stats section now fetches live data.
+- Removed hardcoded inflated numbers.
+- Fixed category badges displaying pipe-separated values.
+- Added proper text truncation to article excerpts.
+- Fixed explainer titles being cut off in sidebar.
+- Created `/api/admin/seed-explainers` endpoint with 24 comprehensive explainers.
+- Seeded 17 new counter-UAS explainers to production.
 
 ---
 
 ## [1.2.0] - 2026-01-12
 
-### Email Integration (Priority 3)
+### Email Integration
 
-- Integrated Resend for transactional emails
-- Newsletter welcome emails now working
-- RSS feed available at `/feed.xml`
-- Contact form saves to database (email notifications pending ADMIN_EMAIL)
-
-**Files Changed:**
-- `lib/services/email.ts` (new)
-- `app/api/newsletter/subscribe/route.ts`
-- `app/feed.xml/route.ts` (new)
+- Integrated Resend for transactional emails.
+- Newsletter welcome emails now working.
+- RSS feed available at `/feed.xml`.
+- Contact form saves to database; email notifications require `ADMIN_EMAIL`.
 
 ---
 
 ## [1.1.0] - 2026-01-12
 
-### Core UX Enhancements (Priority 2)
+### Core UX Enhancements
 
-- Header search now functional with results dropdown
-- Related articles section using embedding-based similarity
-- Dynamic related explainers based on article category
-- Trending topics show real tag counts from database
-- Enhanced article image extraction from RSS and content
-
-**Files Changed:**
-- `components/layout/header.tsx`
-- `components/articles/related-articles.tsx` (new)
-- `components/articles/related-explainers.tsx` (new)
-- `lib/services/rss-scraper.ts`
-- `lib/services/content-extractor.ts`
+- Header search now functional with results dropdown.
+- Related articles section using embedding-based similarity.
+- Dynamic related explainers based on article category.
+- Trending topics show real tag counts from database.
+- Enhanced article image extraction from RSS and content.
 
 ---
 
@@ -190,25 +226,20 @@ First production deployment of DroneWire to Vercel.
 
 **Live Site:** https://drone-wire.vercel.app
 
-### Features
-- **Articles Section** - AI-curated news articles with summaries, key points, and auto-tagging
-- **Explainers Library** - 24 educational guides on counter-UAS systems and technologies
-- **Contracts Page** - DoD defense contract tracking
-- **Home Page** - Featured articles, latest intel, newsletter signup
-- **About Page** - Project information
-- **Admin Dashboard** - Basic statistics (articles, sources, processing rates)
+**Features:**
+- Articles section with AI-curated news articles, summaries, key points, and auto-tagging
+- Explainers library
+- Contracts page
+- Home page with featured articles, latest intel, and newsletter signup
+- About page
+- Admin dashboard
 
-### Data Pipeline
-- RSS feed scraping from multiple defense/drone news sources
-- AI processing via AbacusAI for summaries and categorization
-- Automated daily cron jobs (scrape-news at 6 AM, process-ai at 8 AM UTC)
-
-### Technical Stack
-- Next.js 14.2.28 with App Router
-- TypeScript (strict mode)
+**Technical Stack:**
+- Next.js 14
+- TypeScript
 - Prisma ORM with Supabase PostgreSQL
-- Tailwind CSS with dark mode
-- 49 Shadcn/UI components
+- Tailwind CSS
+- shadcn/ui-style components
 
 ---
 
@@ -216,121 +247,48 @@ First production deployment of DroneWire to Vercel.
 
 ### 2026-01-11 - Production Fix: Database Connection
 
-**Problem:** Vercel deployment returning 500 errors on all database pages.
+**Problem:** Vercel deployment returned 500 errors on database pages.
 
-**Root Cause:** Supabase direct connection (port 5432) requires IPv6, but Vercel uses IPv4.
+**Root Cause:** Supabase direct connection on port 5432 requires IPv6; Vercel uses IPv4.
 
-**Solution:**
-1. Changed DATABASE_URL to use Transaction pooler:
-   - From: `db.qbeioesktbpvdlgzrgsm.supabase.co:5432`
-   - To: `aws-0-us-west-2.pooler.supabase.com:6543`
-2. Added `?pgbouncer=true` for Prisma compatibility
-
-**Files Changed:**
-- Vercel Environment Variables (DATABASE_URL)
-- `.env` (local development)
-
----
+**Solution:** Switched to Supabase transaction pooler on port 6543 with `pgbouncer=true`.
 
 ### 2026-01-11 - Production Fix: Cron Job Limit
 
-**Problem:** Vercel deployment failing with "Your plan allows your team to create up to 2 Cron Jobs".
+**Problem:** Vercel deployment failed because Hobby tier allows only two cron jobs.
 
-**Solution:** Reduced cron jobs from 4 to 2 in `vercel.json`:
-- Kept: `scrape-news`, `process-ai`
-- Removed: `scrape-contracts`, `send-alerts` (can be triggered manually)
-
-**Files Changed:**
-- `vercel.json`
-
----
+**Solution:** Kept news scraping and AI processing in Vercel cron. Contract refresh is handled externally/manual.
 
 ### 2026-01-11 - Production Fix: Module Resolution Error
 
-**Problem:** Build failing with "Cannot find module 'next/dist/compiled/next-server/server.runtime.prod.js'"
+**Problem:** Build failed with `Cannot find module 'next/dist/compiled/next-server/server.runtime.prod.js'`.
 
-**Root Cause:** Experimental `outputFileTracingRoot` config pointing to wrong directory.
-
-**Solution:** Removed experimental config from `next.config.js`:
-```javascript
-// Removed:
-experimental: {
-  outputFileTracingRoot: path.join(__dirname, '../'),
-}
-```
-
-**Files Changed:**
-- `next.config.js`
-
----
+**Solution:** Removed incorrect `experimental.outputFileTracingRoot` configuration.
 
 ### 2026-01-11 - Production Fix: Node.js Version
 
-**Problem:** Build inconsistencies with Node.js 24.x on Vercel.
+**Problem:** Build inconsistencies with unsupported Node versions.
 
-**Solution:**
-1. Created `.nvmrc` with Node 20
-2. Added `engines` field to `package.json`
-3. Changed Vercel Node.js setting to 20.x
-
-**Files Changed:**
-- `.nvmrc` (created)
-- `package.json`
-
----
+**Solution:** Pinned project to Node 20 via `.nvmrc`, `package.json`, and Vercel configuration.
 
 ### 2026-01-11 - Production Fix: Prisma Generation
 
-**Problem:** PrismaClientInitializationError on Vercel - client not generated.
+**Problem:** Prisma client was not generated during Vercel builds.
 
-**Solution:** Added prisma generate to build command:
-```json
-"build": "prisma generate && next build"
-```
-
-**Files Changed:**
-- `package.json`
-
----
+**Solution:** Added `prisma generate` to the build command.
 
 ### 2026-01-11 - Production Fix: Static Generation Errors
 
-**Problem:** Build failing when Prisma runs during static page generation.
+**Problem:** Build failed when Prisma ran during static page generation.
 
-**Solution:** Added `export const dynamic = 'force-dynamic'` to all pages using Prisma:
-- `app/articles/page.tsx`
-- `app/articles/[id]/page.tsx`
-- `app/explainers/page.tsx`
-- `app/explainers/[slug]/page.tsx`
-- `app/admin/page.tsx`
-
-**Files Changed:**
-- Multiple page components
+**Solution:** Marked database-backed pages as dynamic where required.
 
 ---
 
-## Pending Features
+## Pending Work
 
-### Priority 6: Future Enhancements
-- [x] System images - COMPLETED (72 systems with DVIDS images)
-- [ ] Admin dashboard improvements
-- [ ] AI-powered related articles (embeddings)
-- [ ] Email alerts for breaking news
-- [ ] Analytics and metrics
-
-### TODO
-- [ ] Set ADMIN_EMAIL in Vercel for contact form notifications
-
----
-
-## Version History Summary
-
-| Version | Date | Description |
-|---------|------|-------------|
-| 1.6.0 | 2026-01-24 | Contracts page UI refresh, real data, visual hierarchy |
-| 1.5.0 | 2026-01-16 | 72 C-UAS systems with DVIDS images, explainer fixes |
-| 1.4.0 | 2026-01-15 | Systems database with 13 C-UAS systems |
-| 1.3.0 | 2026-01-12 | UI/UX polish, dynamic stats, explainer seeding |
-| 1.2.0 | 2026-01-12 | Email integration (Resend), RSS feed |
-| 1.1.0 | 2026-01-12 | Search, related articles, image extraction |
-| 1.0.0 | 2026-01-11 | Initial production release |
+- Resolve 12 null system images.
+- Review 49 UNCERTAIN and 13 FAIL vision audit results if high-confidence imagery is required.
+- Verify/fix contract title display if still showing contract numbers as titles.
+- Configure `ADMIN_EMAIL` in Vercel if contact form email notifications are desired.
+- Future: admin dashboard improvements, analytics, alerting, and deeper article relationship features.
