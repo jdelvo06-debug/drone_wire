@@ -13,14 +13,14 @@ DroneWire is a Counter-Unmanned Aircraft Systems (C-UAS) intelligence hub built 
 Last verified: **2026-05-07** against the live Supabase database.
 
 - **Systems:** 115 total
-- **Systems with images:** 103/115
-- **Systems missing images:** 12
+- **Systems with images:** 115/115
+- **Systems missing images:** 0
 - **Contracts:** 208 real award records
 - **Total contract value:** about $2.34B
 - **Explainers:** 40
 - **Articles:** 2,924
 
-Current operational gap: **12 system records still need verified product/system images.** The remaining list is tracked in `../NEXTSESSION.md`.
+Current image state: **all 115 system records now have image URLs.** Next image work should focus on the remaining FAIL/UNCERTAIN vision-audit quality backlog, not null coverage.
 
 ---
 

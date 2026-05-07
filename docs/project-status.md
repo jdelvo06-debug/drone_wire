@@ -15,8 +15,8 @@ Verified against the live Supabase database on **2026-05-07**.
 |---|---:|
 | Articles | 2,924 |
 | Systems | 115 |
-| Systems with images | 103 |
-| Systems missing images | 12 |
+| Systems with images | 115 |
+| Systems missing images | 0 |
 | Explainers | 40 |
 | Contracts | 208 |
 | Contract value | about $2.34B |
@@ -30,7 +30,7 @@ Verified against the live Supabase database on **2026-05-07**.
 | Home Page | Working | Hero, featured articles, latest intel, newsletter CTA |
 | Articles List | Working | RSS-backed intelligence feed with pagination/filtering |
 | Article Detail | Working | AI summaries, key points, tags, why-it-matters content |
-| Systems Database | Working | 115 C-UAS systems; 103 currently have images |
+| Systems Database | Working | 115 C-UAS systems; all currently have image URLs |
 | System Detail | Working | Specs, combat record, related systems, manufacturer/country/status |
 | Explainers Library | Working | 40 structured explainers in DB and seed file |
 | Explainer Detail | Working | Rich explainer content with structured fields |
@@ -97,9 +97,9 @@ Verified against the live Supabase database on **2026-05-07**.
 
 ### High Priority
 
-1. **12 systems have null images**
-   - Ground truth from DB: 103/115 systems have images.
-   - Remaining systems are listed in `../NEXTSESSION.md`.
+1. **Null image backlog resolved**
+   - Ground truth from DB: 115/115 systems have image URLs.
+   - Remaining image work is quality-focused: FAIL/UNCERTAIN audit results.
    - Most are the result of DVIDS CloudFront thumbnail URLs returning 404.
 
 2. **Image audit backlog**
@@ -154,8 +154,8 @@ Verified against the live Supabase database on **2026-05-07**.
 ### Next Recommended Work
 
 1. Confirm whether image work after the May 5 tracker update exists outside git/DB.
-2. Resolve the 12 null system images.
-3. Decide whether to fix only nulls or also attack the FAIL/UNCERTAIN audit pile.
+2. Review the remaining FAIL/UNCERTAIN image audit backlog.
+3. Decide whether to re-run the full vision audit after the null-image sourcing pass.
 4. Verify contract titles.
 
 ---

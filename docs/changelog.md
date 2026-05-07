@@ -12,8 +12,8 @@ Documentation and project state were reconciled against the live Supabase databa
 
 **Current verified counts:**
 - Systems: 115 total
-- Systems with images: 103/115
-- Systems missing images: 12
+- Systems with images: 115/115
+- Systems missing images: 0
 - Contracts: 208 real awards
 - Contract value: about $2.34B
 - Explainers: 40
@@ -33,19 +33,10 @@ Major C-UAS system database expansion and image remediation work occurred after 
 - Result of the curated fix batch: 15 successful updates, 13 systems set to null because DVIDS CloudFront thumbnail URLs returned 404.
 - Bayraktar TB2 was fixed with a Wikipedia Commons runway image and verified as reachable.
 
-**Current unresolved image list:**
-- ALPS
-- Bal Chatri
-- CORVUS-RAVEN
-- Falcon Shield
-- IFPC Increment 2
-- IFPC-HPM
-- Iron Drone
-- Leonidas
-- LPWS
-- ODIN
-- Roadrunner
-- TOC-L
+**May 7 image resourcing pass:**
+- Restored 115/115 system image URL coverage.
+- Added verified/reachable sources for LPWS, Leonidas, Iron Drone, Roadrunner, IFPC Increment 2, CORVUS-RAVEN, Falcon Shield, ALPS, TOC-L, IFPC-HPM, ODIN, and Bal Chatri.
+- Added a stable local JPG asset for Bal Chatri converted from a real Defense One field photo source.
 
 **Known image sourcing constraints:**
 - DVIDS CloudFront thumbnails are unreliable and can 404 later.
@@ -287,7 +278,7 @@ First production deployment of DroneWire to Vercel.
 
 ## Pending Work
 
-- Resolve 12 null system images.
+- Re-run/refresh the image vision audit if updated PASS/FAIL/UNCERTAIN counts are needed.
 - Review 49 UNCERTAIN and 13 FAIL vision audit results if high-confidence imagery is required.
 - Verify/fix contract title display if still showing contract numbers as titles.
 - Configure `ADMIN_EMAIL` in Vercel if contact form email notifications are desired.

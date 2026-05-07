@@ -105,8 +105,8 @@ Manual source research / DVIDS / manufacturer assets / re-hosted assets
 Current image state:
 
 - 115 systems total
-- 103 systems with image URLs
-- 12 systems with null image URLs
+- 115 systems with image URLs
+- 0 systems with null image URLs
 - Separate quality issue: last vision audit included PASS, FAIL, UNCERTAIN, and ERROR results
 
 ### 4. Explainers Maintenance

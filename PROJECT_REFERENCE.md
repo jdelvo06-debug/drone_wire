@@ -43,8 +43,8 @@
 |---|---:|
 | Articles | 2,924 |
 | Systems | 115 |
-| Systems with images | 103 |
-| Systems missing images | 12 |
+| Systems with images | 115 |
+| Systems missing images | 0 |
 | Explainers | 40 |
 | Contracts | 208 |
 | Contract value | about $2.34B |
@@ -58,7 +58,7 @@
 - **Pages:** `/systems`, `/systems/[slug]`
 - **API:** `app/api/systems/route.ts`
 - **Primary model:** `System`
-- **Current gap:** 12 systems have null `imageUrl`
+- **Current gap:** null image coverage is resolved; remaining image risk is quality/audit confidence
 - **Audit script:** `scripts/vision-audit-images.ts`
 - **Fix scripts:** `scripts/fix-images-curated.ts`, `scripts/push-one.ts`
 
@@ -150,7 +150,7 @@
 
 ### Ground Truth
 
-The database currently has **12 null system images**.
+The database currently has **0 null system images** after the May 7 resourcing pass.
 
 Remaining nulls:
 
@@ -172,7 +172,8 @@ Remaining nulls:
 - Temporary 100% image coverage was reached during the May 3 image sprint.
 - Follow-on vision audit and curated fixes invalidated several weak/dead image choices.
 - `fix-images-curated.ts` updated 15 records successfully and set 13 to null because DVIDS URLs returned 404.
-- Bayraktar TB2 was later fixed with a verified Wikipedia Commons image, leaving 12 nulls.
+- Bayraktar TB2 was later fixed with a verified Wikipedia Commons image.
+- A May 7 resourcing pass restored 115/115 image URL coverage, including stable/local fixes for Bal Chatri and ODIN.
 - The larger quality problem remains: many non-null images may still be generic or uncertain based on the vision audit.
 
 ---
@@ -239,7 +240,7 @@ git push origin main
 
 ## Current Next Up
 
-1. Discuss whether image cleanup should target only the 12 nulls or also the 62 audit-questionable images.
-2. Resolve the 12 null system images.
+1. Review whether to attack the remaining FAIL/UNCERTAIN audit-questionable images.
+2. Re-run the vision audit if we need fresh PASS/FAIL/UNCERTAIN counts after the resourcing pass.
 3. Verify contract title display.
 4. Commit and push documentation updates after review.
