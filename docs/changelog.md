@@ -4,6 +4,36 @@ All notable changes to DroneWire are documented in this file.
 
 ---
 
+## [1.7.2] - 2026-05-16
+
+### Contract Title Fix — Human-Readable Display
+
+All 210 contracts were displaying raw award IDs (`W50S8U24FA042`) instead of meaningful titles. The `cleanTitle()` function in the USASpending scraper was a straight passthrough of the award ID field.
+
+**Changes:**
+- Rewrote `cleanTitle()` to extract the first sentence from the `Description` field, apply smart title case (preserves acronyms like UAS/CRG, lowercases small words mid-title), and cap at 80 chars with ellipsis truncation.
+- Expanded the upsert path to sync all fields (`title`, `company`, `agency`, `office`, `category`, `status`) on existing records — previously only updated `value` and `description`.
+- Seed script refreshed all 210 existing contracts with regenerated titles.
+- Deployed via Vercel auto-deploy from push to main (commit `28571ed`).
+- QA verified: 0 raw contract numbers, 0 ALL-CAPS titles, correct sort order, $253M top contract renders readable title.
+- Updated NEXTSESSION.md, docs/changelog.md, docs/project-status.md, PROJECT_REFERENCE.md.
+
+## [1.7.1] - 2026-05-10
+
+### Explainer Image Stability — DVIDS Eradication
+
+After the May 9 DVIDS CDN migration (`d1ldvf68ux039x` → `d2cto119c3bgok`) killed 22 explainer images, a mechanical URL swap restored 200 OK on all — but a follow-up vision audit revealed 7 images were completely wrong content and 2 were too generic. All 9 replaced, plus the remaining 13 DVIDS-linked explainers also moved to Commons. The explainer library is now 100% Wikimedia Commons-sourced and immune to DVIDS CDN migrations.
+
+**Changes:**
+- Ran full vision audit on all 24 DVIDS-linked explainer images.
+- Replaced 7 content mismatches (e.g., Arab SF for loitering munitions, Cobra helicopters for urban C-UAS, train hauling tanks for C2 platforms).
+- Replaced 2 marginal fits (sailor with binoculars for naval C-UAS, generic soldier for allied interoperability).
+- Remaining 15 DVIDS-linked explainers were also migrated to Commons in the batch.
+- Result: 40/40 explainer images are now Commons-stable — zero DVIDS links remain.
+- Triggered Vercel production redeploy; live at drone-wire.vercel.app.
+- Updated PROJECT_REFERENCE.md, docs/project-status.md, and docs/changelog.md.
+- Updated NEXTSESSION.md with full DVIDS Content Verification Pass section.
+
 ## [1.7.0] - 2026-05-07
 
 ### Project State Refresh

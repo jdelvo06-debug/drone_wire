@@ -1,8 +1,8 @@
 # DroneWire C-UAS Hub — Project Reference
 
-**Last updated:** 2026-05-07
+**Last updated:** 2026-05-16
 **Status:** Production, active maintenance
-**Version:** 1.7.0
+**Version:** 1.7.2
 
 ---
 
@@ -77,7 +77,7 @@
 
 - **Pages:** `/explainers`, `/explainers/[slug]`
 - **Seed script:** `scripts/seed-explainers.ts`
-- **Current state:** 40 DB explainers and 40 seed entries reconciled
+- **Current state:** 40 DB explainers, all unique, 100% Wikimedia Commons-sourced (0 DVIDS links)
 - **Recent fix:** FeaturedExplainers now queries DB as an async server component
 
 ### Articles / News
@@ -150,22 +150,7 @@
 
 ### Ground Truth
 
-The database currently has **0 null system images** after the May 7 resourcing pass.
-
-Remaining nulls:
-
-- `alps` — ALPS
-- `bal-chatri` — Bal Chatri
-- `corvus-raven` — CORVUS-RAVEN
-- `falcon-shield` — Falcon Shield
-- `ifpc-increment-2` — IFPC Increment 2
-- `ifpc-hpm` — IFPC-HPM
-- `iron-drone` — Iron Drone
-- `leonidas` — Leonidas
-- `lpws` — LPWS
-- `odin` — ODIN
-- `roadrunner` — Roadrunner
-- `toc-l` — TOC-L
+The database currently has **0 null system images** (May 10 resourcing pass confirmed). All 115 systems and 40 explainers have images. All explainer images are now 100% Wikimedia Commons-sourced — zero DVIDS links remain, eliminating CDN migration risk.
 
 ### Context
 
@@ -173,8 +158,9 @@ Remaining nulls:
 - Follow-on vision audit and curated fixes invalidated several weak/dead image choices.
 - `fix-images-curated.ts` updated 15 records successfully and set 13 to null because DVIDS URLs returned 404.
 - Bayraktar TB2 was later fixed with a verified Wikipedia Commons image.
-- A May 7 resourcing pass restored 115/115 image URL coverage, including stable/local fixes for Bal Chatri and ODIN.
-- The larger quality problem remains: many non-null images may still be generic or uncertain based on the vision audit.
+- A May 7 resourcing pass restored 115/115 system image URL coverage, including stable/local fixes for Bal Chatri and ODIN.
+- **May 9-10 explainer pass:** DVIDS CDN migration broke 22 explainer images; all migrated then vision-audited. Found 7 content mismatches (wrong subject entirely) and 2 marginal fits (too generic). All 9 replaced with Wikimedia Commons images. Final: 40/40 explainers, all unique, all Commons-stable.
+- The larger quality problem remains: some system images may still be generic/uncertain based on the vision audit.
 
 ---
 
@@ -240,7 +226,7 @@ git push origin main
 
 ## Current Next Up
 
-1. Review whether to attack the remaining FAIL/UNCERTAIN audit-questionable images.
-2. Re-run the vision audit if we need fresh PASS/FAIL/UNCERTAIN counts after the resourcing pass.
-3. Verify contract title display.
-4. Commit and push documentation updates after review.
+1. Review whether to attack the remaining FAIL/UNCERTAIN audit-questionable system images.
+2. Re-run the vision audit if we need fresh PASS/FAIL/UNCERTAIN counts.
+3. ~~Verify contract title display.~~ ✅ Fixed (v1.7.2) — `cleanTitle()` rewritten to use descriptions with smart title case. QA verified live.
+4. Review any remaining ghost data or stale content across sections.

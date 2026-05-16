@@ -1,8 +1,8 @@
 # DroneWire Project Status
 
-**Last Updated:** 2026-05-07
+**Last Updated:** 2026-05-16
 **Status:** Production, active maintenance
-**Version:** 1.7.0
+**Version:** 1.7.2
 **Live Site:** https://drone-wire.vercel.app
 
 ---
@@ -97,25 +97,28 @@ Verified against the live Supabase database on **2026-05-07**.
 
 ### High Priority
 
-1. **Null image backlog resolved**
+1. **System image quality backlog**
    - Ground truth from DB: 115/115 systems have image URLs.
    - Remaining image work is quality-focused: FAIL/UNCERTAIN audit results.
-   - Most are the result of DVIDS CloudFront thumbnail URLs returning 404.
+   - Many are the result of DVIDS CloudFront thumbnail URLs returning 404.
+   - Explainers: fully resolved — 40/40 Commons-sourced, zero DVIDS links.
 
 2. **Image audit backlog**
    - Last full vision audit found many images that were generic, uncertain, failed, or inaccessible.
    - Current known audit result: 43 PASS, 13 FAIL, 49 UNCERTAIN, 10 ERROR from the 115-system audit.
    - This is separate from the null-image count.
 
-3. **Contract titles need verification**
-   - Prior session notes say contracts may display `contractNumber` where meaningful titles should appear.
-   - This should be checked in the UI and database before any fix.
+3. **Contract title display** ✅ RESOLVED (2026-05-16)
+   - Contracts were displaying raw award IDs (`W50S8U24FA042`) instead of meaningful titles.
+   - Fixed: `cleanTitle()` rewritten to extract first sentence from descriptions with smart title case.
+   - Upsert path expanded to sync all fields on existing records, not just value.
+   - QA verified: 0 raw IDs, 0 ALL-CAPS, correct sort/structure across 210 contracts.
+   - Deployed via Vercel auto-deploy from commit `28571ed`.
 
 ### Medium Priority
 
 - Configure `ADMIN_EMAIL` if contact form email notifications matter.
 - Review Vercel deployment health after each data/script change.
-- Decide whether to keep or replace generic/contextual DVIDS photos.
 
 ### Future Enhancements
 
