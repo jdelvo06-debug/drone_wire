@@ -77,12 +77,42 @@ function categorizeContract(text: string, naics: string | null, psc: string | nu
   return 'general';
 }
 
-function cleanTitle(title: string, desc: string): string {
-  // Truncate and clean
-  if (!title || title.length < 5) {
-    return (desc || 'C-UAS Contract Award').slice(0, 200);
+function cleanTitle(awardId: string, desc: string): string {
+  const normalized = (desc || '').replace(/\s+/g, ' ').trim();
+ 
+  if (!normalized) {
+    return (awardId || 'C-UAS Contract Award').slice(0, 200);
   }
-  return title.slice(0, 200);
+ 
+  const sentenceMatch = normalized.match(/^[^.!?]+/);
+  const firstSentence = (sentenceMatch?.[0] || normalized).trim();
+  const excerpt = firstSentence.length > 80 ? `${firstSentence.slice(0, 80).trimEnd()}...` : firstSentence;
+ 
+  const smallWords = new Set(['a', 'an', 'and', 'as', 'at', 'by', 'for', 'in', 'of', 'on', 'or', 'the', 'to']);
+  const cased = excerpt
+    .split(' ')
+    .map((word, idx) => {
+      if (!word) return word;
+ 
+      const parts = word.split('-');
+      const casedParts = parts.map((part, partIdx) => {
+        if (!part) return part;
+        if (/^[A-Z0-9]{2,5}$/.test(part)) return part;
+ 
+        const lower = part.toLowerCase();
+        if (idx > 0 && partIdx > 0 && smallWords.has(lower)) return lower;
+        if (idx > 0 && partIdx === 0 && smallWords.has(lower)) return lower;
+ 
+        return lower.charAt(0).toUpperCase() + lower.slice(1);
+      });
+ 
+      return casedParts.join('-');
+    })
+    .join(' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+ 
+  return cased.slice(0, 200);
 }
 
 function parseAgency(raw: RawAward): { agency: string; office: string | null } {
@@ -210,12 +240,27 @@ export async function scrapeContracts(): Promise<ContractScrapingResult> {
       });
 
       if (existing) {
-        if (existing.value.toNumber() !== value) {
+        const needsUpdate =
+          existing.value.toNumber() !== value ||
+          existing.title !== title ||
+          existing.description !== description ||
+          existing.company !== company ||
+          existing.agency !== agency ||
+          existing.office !== office ||
+          existing.category !== category ||
+          existing.status !== 'active';
+ 
+        if (needsUpdate) {
           await prisma.contract.update({
             where: { id: existing.id },
             data: {
               value: new Decimal(value),
+              title,
               description,
+              company,
+              agency,
+              office,
+              category,
               status: 'active',
             },
           });
