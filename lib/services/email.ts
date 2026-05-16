@@ -1,30 +1,28 @@
-import * as nodemailer from 'nodemailer';
+import { google } from 'googleapis';
 import { logger } from '@/lib/logger';
 
-let transporter: nodemailer.Transporter | null = null;
+let gmailClient: ReturnType<typeof google.gmail> | null = null;
 
-function getTransporter() {
-  if (transporter) return transporter;
+function getGmailClient() {
+  if (gmailClient) return gmailClient;
 
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
 
-  if (!user || !pass || pass === 'placeholder-generate-app-password') {
-    logger.warn('SMTP not configured, skipping email send');
+  if (!clientId || !clientSecret || !refreshToken) {
+    logger.warn('Google OAuth not configured for Gmail — skipping email send');
     return null;
   }
 
-  transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.SMTP_PORT || '587', 10),
-    secure: false, // TLS
-    auth: { user, pass },
-  });
+  const oauth2Client = new google.auth.OAuth2(clientId, clientSecret);
+  oauth2Client.setCredentials({ refresh_token: refreshToken });
 
-  return transporter;
+  gmailClient = google.gmail({ version: 'v1', auth: oauth2Client });
+  return gmailClient;
 }
 
-const FROM_EMAIL = process.env.FROM_EMAIL || 'DroneWire <alfred.intel.handler@gmail.com>';
+const FROM_EMAIL = 'DroneWire <alfred.intel.handler@gmail.com>';
 
 export interface SendEmailOptions {
   to: string | string[];
@@ -33,26 +31,65 @@ export interface SendEmailOptions {
   text?: string;
 }
 
-export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
-  const transport = getTransporter();
+/**
+ * Build a RFC 2822 compliant raw email message.
+ * Gmail API requires base64url-encoded raw MIME messages.
+ */
+function buildRawEmail(to: string, subject: string, html: string, text?: string): string {
+  const recipients = Array.isArray(to) ? to.join(', ') : to;
+  const boundary = `dronewire_${Date.now()}`;
 
-  if (!transport) {
-    logger.warn('SMTP not configured, skipping email send');
-    return { success: false, error: 'Email not configured' };
+  const headers = [
+    `From: ${FROM_EMAIL}`,
+    `To: ${recipients}`,
+    `Subject: =?UTF-8?B?${Buffer.from(subject, 'utf-8').toString('base64')}?=`,
+    'MIME-Version: 1.0',
+    `Content-Type: multipart/alternative; boundary="${boundary}"`,
+    '',
+  ].join('\r\n');
+
+  // Plain text fallback
+  const plainBody = text || html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+
+  const body = [
+    `--${boundary}`,
+    'Content-Type: text/plain; charset="UTF-8"',
+    'Content-Transfer-Encoding: quoted-printable',
+    '',
+    plainBody,
+    '',
+    `--${boundary}`,
+    'Content-Type: text/html; charset="UTF-8"',
+    'Content-Transfer-Encoding: quoted-printable',
+    '',
+    html,
+    '',
+    `--${boundary}--`,
+  ].join('\r\n');
+
+  const raw = headers + body;
+  return Buffer.from(raw).toString('base64url');
+}
+
+export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
+  const gmail = getGmailClient();
+
+  if (!gmail) {
+    return { success: false, error: 'Gmail API not configured' };
   }
 
   try {
-    const info = await transport.sendMail({
-      from: FROM_EMAIL,
-      to: Array.isArray(to) ? to.join(', ') : to,
-      subject,
-      html,
-      text,
+    const recipients = Array.isArray(to) ? to.join(', ') : to;
+    const raw = buildRawEmail(recipients, subject, html, text);
+
+    const response = await gmail.users.messages.send({
+      userId: 'me',
+      requestBody: { raw },
     });
 
-    return { success: true, data: { messageId: info.messageId } };
+    return { success: true, data: { messageId: response.data.id } };
   } catch (error: any) {
-    logger.error('Failed to send email:', error?.message || error);
+    logger.error('Gmail send error:', error?.message || error);
     return { success: false, error: error?.message || 'Failed to send email' };
   }
 }
@@ -134,7 +171,6 @@ export function getContactNotificationHtml(data: {
   const safeSubject = escapeHtml(data.subject);
   const safeMessage = escapeHtml(data.message).replace(/\n/g, '<br>');
   const safeType = escapeHtml(data.type);
-  const encodedSubject = encodeURIComponent(`Re: ${data.subject}`);
 
   return `
 <!DOCTYPE html>
