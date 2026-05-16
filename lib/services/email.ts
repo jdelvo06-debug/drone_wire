@@ -1,28 +1,30 @@
-import { Resend } from 'resend';
+import * as nodemailer from 'nodemailer';
 import { logger } from '@/lib/logger';
 
-let resend: Resend | null = null;
+let transporter: nodemailer.Transporter | null = null;
 
-function getResendClient() {
-  if (!resend && process.env.RESEND_API_KEY) {
-    resend = new Resend(process.env.RESEND_API_KEY);
+function getTransporter() {
+  if (transporter) return transporter;
+
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+
+  if (!user || !pass || pass === 'placeholder-generate-app-password') {
+    logger.warn('SMTP not configured, skipping email send');
+    return null;
   }
-  return resend;
+
+  transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.SMTP_PORT || '587', 10),
+    secure: false, // TLS
+    auth: { user, pass },
+  });
+
+  return transporter;
 }
 
-const FROM_EMAIL = process.env.FROM_EMAIL || 'DroneWire <noreply@dronewire.com>';
-
-/**
- * Escape HTML special characters to prevent XSS attacks
- */
-function escapeHtml(unsafe: string): string {
-  return unsafe
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
+const FROM_EMAIL = process.env.FROM_EMAIL || 'DroneWire <alfred.intel.handler@gmail.com>';
 
 export interface SendEmailOptions {
   to: string | string[];
@@ -32,35 +34,31 @@ export interface SendEmailOptions {
 }
 
 export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
-  const client = getResendClient();
+  const transport = getTransporter();
 
-  if (!client) {
-    logger.warn('RESEND_API_KEY not configured, skipping email send');
+  if (!transport) {
+    logger.warn('SMTP not configured, skipping email send');
     return { success: false, error: 'Email not configured' };
   }
 
   try {
-    const { data, error } = await client.emails.send({
+    const info = await transport.sendMail({
       from: FROM_EMAIL,
-      to: Array.isArray(to) ? to : [to],
+      to: Array.isArray(to) ? to.join(', ') : to,
       subject,
       html,
       text,
     });
 
-    if (error) {
-      logger.error('Failed to send email:', error);
-      return { success: false, error: error.message };
-    }
-
-    return { success: true, data };
-  } catch (error) {
-    logger.error('Email send error:', error);
-    return { success: false, error: 'Failed to send email' };
+    return { success: true, data: { messageId: info.messageId } };
+  } catch (error: any) {
+    logger.error('Failed to send email:', error?.message || error);
+    return { success: false, error: error?.message || 'Failed to send email' };
   }
 }
 
-// Email templates
+// ── Templates ─────────────────────────────────────────────────────────
+
 export function getWelcomeEmailHtml(firstName?: string) {
   const name = firstName || 'there';
   return `
@@ -72,13 +70,11 @@ export function getWelcomeEmailHtml(firstName?: string) {
 </head>
 <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f5; margin: 0; padding: 40px 20px;">
   <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-    <!-- Header -->
     <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); padding: 32px; text-align: center;">
       <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">DroneWire</h1>
       <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0; font-size: 14px;">Counter-UAS Intelligence Hub</p>
     </div>
 
-    <!-- Content -->
     <div style="padding: 32px;">
       <h2 style="color: #18181b; margin: 0 0 16px; font-size: 24px;">Welcome to DroneWire, ${name}!</h2>
 
@@ -92,28 +88,36 @@ export function getWelcomeEmailHtml(firstName?: string) {
       </p>
 
       <ul style="color: #3f3f46; line-height: 1.8; margin: 0 0 24px; padding-left: 20px;">
-        <li><strong>Weekly Intelligence Digest</strong> - Curated news and analysis</li>
-        <li><strong>Contract Alerts</strong> - Latest defense contract awards</li>
-        <li><strong>Technology Deep Dives</strong> - Explainers on emerging systems</li>
-        <li><strong>Breaking News</strong> - Critical developments as they happen</li>
+        <li><strong>Weekly Intelligence Digest</strong> — Curated news and analysis</li>
+        <li><strong>Contract Alerts</strong> — Latest defense contract awards</li>
+        <li><strong>Technology Deep Dives</strong> — Explainers on emerging systems</li>
+        <li><strong>Breaking News</strong> — Critical developments as they happen</li>
       </ul>
 
-      <a href="https://dronewire.com/articles" style="display: inline-block; background-color: #3b82f6; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600;">
+      <a href="https://drone-wire.vercel.app/articles" style="display: inline-block; background-color: #3b82f6; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600;">
         Explore Latest Articles
       </a>
     </div>
 
-    <!-- Footer -->
     <div style="background-color: #f4f4f5; padding: 24px 32px; text-align: center;">
       <p style="color: #71717a; font-size: 12px; margin: 0;">
         You're receiving this email because you subscribed to DroneWire.<br>
-        <a href="https://dronewire.com/unsubscribe" style="color: #3b82f6; text-decoration: none;">Unsubscribe</a>
+        <a href="https://drone-wire.vercel.app/unsubscribe" style="color: #3b82f6; text-decoration: none;">Unsubscribe</a>
       </p>
     </div>
   </div>
 </body>
 </html>
   `;
+}
+
+function escapeHtml(unsafe: string): string {
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 export function getContactNotificationHtml(data: {
@@ -124,15 +128,12 @@ export function getContactNotificationHtml(data: {
   message: string;
   type: string;
 }) {
-  // Escape all user-provided data to prevent XSS
   const safeName = escapeHtml(data.name);
   const safeEmail = escapeHtml(data.email);
   const safeCompany = data.company ? escapeHtml(data.company) : '';
   const safeSubject = escapeHtml(data.subject);
   const safeMessage = escapeHtml(data.message).replace(/\n/g, '<br>');
   const safeType = escapeHtml(data.type);
-
-  // URL-encode email and subject for mailto link
   const encodedSubject = encodeURIComponent(`Re: ${data.subject}`);
 
   return `
@@ -144,12 +145,10 @@ export function getContactNotificationHtml(data: {
 </head>
 <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f5; margin: 0; padding: 40px 20px;">
   <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-    <!-- Header -->
     <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); padding: 24px; text-align: center;">
       <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700;">New Contact Form Submission</h1>
     </div>
 
-    <!-- Content -->
     <div style="padding: 32px;">
       <table style="width: 100%; border-collapse: collapse;">
         <tr>
@@ -182,12 +181,6 @@ export function getContactNotificationHtml(data: {
           ${safeMessage}
         </div>
       </div>
-
-      <div style="margin-top: 24px; text-align: center;">
-        <a href="mailto:${safeEmail}?subject=${encodedSubject}" style="display: inline-block; background-color: #3b82f6; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600;">
-          Reply to ${safeName}
-        </a>
-      </div>
     </div>
   </div>
 </body>
@@ -198,7 +191,7 @@ export function getContactNotificationHtml(data: {
 export async function sendWelcomeEmail(email: string, firstName?: string) {
   return sendEmail({
     to: email,
-    subject: 'Welcome to DroneWire - Your Counter-UAS Intelligence Source',
+    subject: 'Welcome to DroneWire — Your Counter-UAS Intelligence Source',
     html: getWelcomeEmailHtml(firstName),
   });
 }
@@ -211,7 +204,7 @@ export async function sendContactNotification(data: {
   message: string;
   type: string;
 }) {
-  const adminEmail = process.env.ADMIN_EMAIL || 'admin@dronewire.com';
+  const adminEmail = process.env.ADMIN_EMAIL || 'jdelvo06@gmail.com';
   return sendEmail({
     to: adminEmail,
     subject: `[DroneWire Contact] ${data.type}: ${data.subject}`,
