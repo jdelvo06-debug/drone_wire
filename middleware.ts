@@ -1,38 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { ADMIN_COOKIE, generateSessionToken, timingSafeEqual } from '@/lib/auth'
 
-export const ADMIN_COOKIE = 'dw-admin-session'
-
-// Web Crypto API — compatible with Next.js Edge Runtime
-export async function generateSessionToken(secret: string): Promise<string> {
-  const encoder = new TextEncoder()
-  const key = await crypto.subtle.importKey(
-    'raw',
-    encoder.encode(secret),
-    { name: 'HMAC', hash: 'SHA-256' },
-    false,
-    ['sign']
-  )
-  const sig = await crypto.subtle.sign('HMAC', key, encoder.encode('droneware-admin-session-v1'))
-  return Array.from(new Uint8Array(sig))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('')
-}
+// Re-export for route handlers that import from middleware
+export { ADMIN_COOKIE, generateSessionToken }
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Only intercept admin routes, leave login page open
-  if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
+  // Allow API routes that perform their own authentication.
+  // /api/admin/auth handles login/logout; the maintenance routes use bearer tokens.
+  if (
+    pathname === '/api/admin/auth' ||
+    pathname.startsWith('/api/admin/reprocess-images') ||
+    pathname.startsWith('/api/admin/seed-explainers')
+  ) {
+    return NextResponse.next()
+  }
+
+  // Protect admin pages (except login) and remaining API admin routes
+  const isAdminPage = pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')
+  const isAdminApi = pathname.startsWith('/api/admin')
+
+  if (isAdminPage || isAdminApi) {
     const adminSecret = process.env.ADMIN_SECRET
     const sessionToken = request.cookies.get(ADMIN_COOKIE)?.value
 
     if (!adminSecret) {
+      if (isAdminApi) {
+        return NextResponse.json({ error: 'Admin access not configured' }, { status: 503 })
+      }
       return new NextResponse('Admin access not configured. Set ADMIN_SECRET env var.', { status: 503 })
     }
 
     const expected = await generateSessionToken(adminSecret)
 
-    if (!sessionToken || sessionToken !== expected) {
+    if (!sessionToken || !(await timingSafeEqual(sessionToken, expected))) {
+      if (isAdminApi) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      }
       const loginUrl = new URL('/admin/login', request.url)
       loginUrl.searchParams.set('from', encodeURIComponent(pathname))
       return NextResponse.redirect(loginUrl)
@@ -43,5 +48,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/admin/:path*', '/api/admin/:path*'],
 }

@@ -1,27 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { ADMIN_COOKIE, generateSessionToken } from '@/middleware'
+import { ADMIN_COOKIE, generateSessionToken, timingSafeEqual, isValidAdminRedirect } from '@/lib/auth'
 
 export const dynamic = 'force-dynamic'
-
-// Constant-time comparison using Web Crypto to prevent timing attacks
-async function timingSafeEqual(a: string, b: string): Promise<boolean> {
-  const encoder = new TextEncoder()
-  const guard = encoder.encode('droneware-timing-guard')
-  const [keyA, keyB] = await Promise.all([
-    crypto.subtle.importKey('raw', encoder.encode(a), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']),
-    crypto.subtle.importKey('raw', encoder.encode(b), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']),
-  ])
-  const [sigA, sigB] = await Promise.all([
-    crypto.subtle.sign('HMAC', keyA, guard),
-    crypto.subtle.sign('HMAC', keyB, guard),
-  ])
-  const arrA = new Uint8Array(sigA)
-  const arrB = new Uint8Array(sigB)
-  if (arrA.length !== arrB.length) return false
-  let diff = 0
-  for (let i = 0; i < arrA.length; i++) diff |= arrA[i] ^ arrB[i]
-  return diff === 0
-}
 
 export async function POST(req: NextRequest) {
   const adminSecret = process.env.ADMIN_SECRET
@@ -50,7 +30,7 @@ export async function POST(req: NextRequest) {
   }
 
   const sessionToken = await generateSessionToken(adminSecret)
-  const redirectTo = from && from.startsWith('/') ? from : '/admin'
+  const redirectTo = isValidAdminRedirect(from) ? from : '/admin'
 
   const response = NextResponse.json({ success: true, redirect: redirectTo })
   response.cookies.set(ADMIN_COOKIE, sessionToken, {

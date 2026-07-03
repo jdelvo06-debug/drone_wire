@@ -1,10 +1,15 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { logger } from '@/lib/logger'
+import { requireAdmin } from '@/lib/auth'
 
 export const dynamic = 'force-dynamic'
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  // Defense-in-depth: middleware already covers /api/admin, but enforce at route level too
+  const authError = await requireAdmin(req)
+  if (authError) return authError
+
   try {
     // Get date ranges
     const now = new Date()

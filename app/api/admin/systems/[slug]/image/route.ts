@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { requireAdmin } from '@/lib/auth'
 
 export const dynamic = 'force-dynamic'
 
@@ -7,6 +8,10 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: { slug: string } }
 ) {
+  // Defense-in-depth: middleware already covers /api/admin, but enforce at route level too
+  const authError = await requireAdmin(req)
+  if (authError) return authError
+
   const { slug } = params
 
   let body: { imageUrl: string | null }

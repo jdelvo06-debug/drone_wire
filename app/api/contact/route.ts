@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import { sendContactNotification } from '@/lib/services/email'
+import { requireAdminBearer } from '@/lib/auth'
 
 export const dynamic = "force-dynamic"
 
@@ -82,7 +83,11 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  // Protect admin-ish stats endpoint with ADMIN_SECRET bearer token
+  const authError = await requireAdminBearer(req)
+  if (authError) return authError
+
   try {
     // This endpoint could be used by admins to fetch contact submissions
     const stats = await prisma.contactSubmission.groupBy({
