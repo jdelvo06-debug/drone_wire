@@ -6,7 +6,7 @@ import { isImageUrl as checkIsImageUrl } from '@/lib/constants/images';
 import { categorizeArticle } from '@/lib/utils';
 
 const parser = new Parser({
-  timeout: 30000,
+  timeout: 8000,
   headers: {
     'User-Agent': 'DroneWire/1.0 (Counter-UAS Intelligence Hub)',
   },
@@ -98,6 +98,22 @@ function estimateReadTime(content: string): number {
   return Math.max(1, Math.ceil(wordCount / wordsPerMinute));
 }
 
+/**
+ * Splits an array into batches of at most `limit` items.
+ * Pure helper — exported for unit testing.
+ */
+export function chunkArray<T>(items: T[], limit: number): T[][] {
+  if (limit < 1) throw new Error('chunkArray limit must be >= 1');
+  const chunks: T[][] = [];
+  for (let i = 0; i < items.length; i += limit) {
+    chunks.push(items.slice(i, i + limit));
+  }
+  return chunks;
+}
+
+// Maximum number of feeds fetched/parsed concurrently.
+export const FEED_CONCURRENCY = 5;
+
 export async function scrapeRssFeeds(): Promise<ScrapingResult> {
   const result: ScrapingResult = {
     feedsProcessed: 0,
@@ -116,13 +132,83 @@ export async function scrapeRssFeeds(): Promise<ScrapingResult> {
     return result;
   }
 
-  for (const feed of feeds) {
+  // Phase 1: Fetch and parse all feeds concurrently in limited-size batches.
+  // Network I/O is parallelized; DB processing is deferred to Phase 2 (serial)
+  // to avoid duplicate-insert races on Article.sourceUrl (which is NOT unique).
+  type FeedParseResult = {
+    feed: (typeof feeds)[number];
+  } & (
+    | { status: 'fulfilled'; items: RssFeedItem[] }
+    | { status: 'rejected'; error: string }
+  );
+
+  const parseResults: FeedParseResult[] = [];
+
+  const batches = chunkArray(feeds, FEED_CONCURRENCY);
+  for (const batch of batches) {
+    const settled = await Promise.allSettled(
+      batch.map(async (feed) => {
+        logger.debug(`Scraping feed: ${feed.name} (${feed.url})`);
+        const parsed = await parser.parseURL(feed.url);
+        return { feed, items: parsed.items as RssFeedItem[] };
+      }),
+    );
+
+    for (let i = 0; i < settled.length; i++) {
+      const feed = batch[i];
+      const outcome = settled[i];
+      if (outcome.status === 'fulfilled') {
+        parseResults.push({ status: 'fulfilled', ...outcome.value });
+      } else {
+        const errorMessage =
+          outcome.reason instanceof Error
+            ? outcome.reason.message
+            : 'Unknown error';
+        parseResults.push({ status: 'rejected', feed, error: errorMessage });
+      }
+    }
+  }
+
+  async function recordFeedFailure(
+    feed: (typeof feeds)[number],
+    errorMessage: string,
+    phase: 'scraping' | 'processing',
+  ) {
+    logger.error(`Error ${phase} ${feed.name}: ${errorMessage}`);
+    result.errors.push({ feed: feed.name, error: errorMessage });
+
+    const updatedFeed = await prisma.rssFeed.update({
+      where: { id: feed.id },
+      data: {
+        lastChecked: new Date(),
+        errorCount: { increment: 1 },
+      },
+    });
+
+    if (updatedFeed.errorCount >= 5) {
+      await prisma.rssFeed.update({
+        where: { id: feed.id },
+        data: { isActive: false },
+      });
+      logger.warn(`Disabled feed ${feed.name} due to repeated errors`);
+    }
+  }
+
+  // Phase 2: Process parse outcomes serially in original feed order. Article
+  // writes stay serial so two feeds cannot race the existing
+  // findFirst→create dedupe check on the non-unique sourceUrl column.
+  for (const parseResult of parseResults) {
+    const { feed } = parseResult;
+
+    if (parseResult.status === 'rejected') {
+      await recordFeedFailure(feed, parseResult.error, 'scraping');
+      continue;
+    }
+
     try {
-      logger.debug(`Scraping feed: ${feed.name} (${feed.url})`);
-      const parsed = await parser.parseURL(feed.url);
       result.feedsProcessed++;
 
-      for (const item of parsed.items as RssFeedItem[]) {
+      for (const item of parseResult.items) {
         // Skip if no title or link
         if (!item.title || !item.link) {
           continue;
@@ -181,31 +267,11 @@ export async function scrapeRssFeeds(): Promise<ScrapingResult> {
         },
       });
     } catch (error) {
+      // Defensive: if per-feed DB processing throws after a successful parse,
+      // record it as an error and update the feed's error status.
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      logger.error(`Error scraping ${feed.name}: ${errorMessage}`);
-      result.errors.push({ feed: feed.name, error: errorMessage });
-
-      // Update feed error status
-      const updatedFeed = await prisma.rssFeed.update({
-        where: { id: feed.id },
-        data: {
-          lastChecked: new Date(),
-          errorCount: { increment: 1 },
-        },
-      });
-
-      // Disable feeds with too many errors
-      if (updatedFeed.errorCount >= 5) {
-        await prisma.rssFeed.update({
-          where: { id: feed.id },
-          data: { isActive: false },
-        });
-        logger.warn(`Disabled feed ${feed.name} due to repeated errors`);
-      }
+      await recordFeedFailure(feed, errorMessage, 'processing');
     }
-
-    // Small delay between feeds to be respectful
-    await new Promise((resolve) => setTimeout(resolve, 1000));
   }
 
   return result;
