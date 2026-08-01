@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAdminBearer } from '@/lib/auth'
 
 export const dynamic = 'force-dynamic'
 
@@ -399,12 +400,8 @@ const explainersData = [
 ]
 
 export async function GET(request: NextRequest) {
-  const authHeader = request.headers.get('authorization')
-  const expectedToken = `Bearer ${process.env.CRON_SECRET}`
-
-  if (authHeader !== expectedToken) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const authError = await requireAdminBearer(request)
+  if (authError) return authError
 
   // Get current count
   const currentCount = await prisma.explainer.count()
@@ -417,12 +414,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const authHeader = request.headers.get('authorization')
-  const expectedToken = `Bearer ${process.env.CRON_SECRET}`
-
-  if (authHeader !== expectedToken) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const authError = await requireAdminBearer(request)
+  if (authError) return authError
 
   const results = {
     created: [] as string[],

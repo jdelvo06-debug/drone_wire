@@ -4,26 +4,15 @@ import {
   reprocessArticlesForImages,
   getImageStats,
 } from '@/lib/services/image-reprocessor';
+import { requireAdminBearer } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300; // 5 minutes
 
-function validateAdminSecret(req: NextRequest): boolean {
-  const authHeader = req.headers.get('authorization');
-  const adminSecret = process.env.CRON_SECRET;
-
-  if (!adminSecret) {
-    return false;
-  }
-
-  return authHeader === `Bearer ${adminSecret}`;
-}
-
 // GET - Get current image statistics
 export async function GET(req: NextRequest) {
-  if (!validateAdminSecret(req)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const authError = await requireAdminBearer(req);
+  if (authError) return authError;
 
   try {
     const stats = await getImageStats();
@@ -39,9 +28,8 @@ export async function GET(req: NextRequest) {
 
 // POST - Trigger image reprocessing
 export async function POST(req: NextRequest) {
-  if (!validateAdminSecret(req)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const authError = await requireAdminBearer(req);
+  if (authError) return authError;
 
   try {
     const body = await req.json().catch(() => ({}));
