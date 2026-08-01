@@ -106,7 +106,7 @@ export default function ExplainersHeader() {
           )}
           {searchTerm && (
             <Badge variant="outline" className="cursor-pointer" onClick={() => setSearchTerm('')}>
-              "{searchTerm}"
+              &quot;{searchTerm}&quot;
               <button className="ml-1 text-xs">×</button>
             </Badge>
           )}

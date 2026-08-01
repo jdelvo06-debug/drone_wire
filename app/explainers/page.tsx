@@ -67,7 +67,7 @@ export default async function ExplainersPage() {
             <div className="mb-12">
               <div className="flex items-center space-x-2 mb-6">
                 <h2 className="text-2xl font-bold text-foreground">Featured Explainers</h2>
-                <Badge variant="secondary">Editor's Choice</Badge>
+                <Badge variant="secondary">Editor&apos;s Choice</Badge>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
