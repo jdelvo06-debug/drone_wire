@@ -23,6 +23,7 @@ function getGmailClient() {
 }
 
 const FROM_EMAIL = 'DroneWire <alfred.intel.handler@gmail.com>';
+const SITE_URL = process.env.SITE_URL || 'https://dronewire.org';
 
 export interface SendEmailOptions {
   to: string | string[];
@@ -131,7 +132,7 @@ export function getWelcomeEmailHtml(firstName?: string) {
         <li><strong>Breaking News</strong> — Critical developments as they happen</li>
       </ul>
 
-      <a href="https://drone-wire.vercel.app/articles" style="display: inline-block; background-color: #3b82f6; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600;">
+      <a href="${SITE_URL}/articles" style="display: inline-block; background-color: #3b82f6; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600;">
         Explore Latest Articles
       </a>
     </div>
@@ -139,7 +140,7 @@ export function getWelcomeEmailHtml(firstName?: string) {
     <div style="background-color: #f4f4f5; padding: 24px 32px; text-align: center;">
       <p style="color: #71717a; font-size: 12px; margin: 0;">
         You're receiving this email because you subscribed to DroneWire.<br>
-        <a href="https://drone-wire.vercel.app/unsubscribe" style="color: #3b82f6; text-decoration: none;">Unsubscribe</a>
+        <a href="${SITE_URL}/unsubscribe" style="color: #3b82f6; text-decoration: none;">Unsubscribe</a>
       </p>
     </div>
   </div>

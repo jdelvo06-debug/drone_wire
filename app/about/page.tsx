@@ -1,6 +1,6 @@
 
 import { Metadata } from 'next'
-import { Shield, Target, Zap, Users, Mail, Phone, MapPin } from 'lucide-react'
+import { Shield, Target, Zap, Users, Mail, MapPin } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import ContactForm from '@/components/about/contact-form'
 
@@ -23,7 +23,7 @@ export default function AboutPage() {
           </div>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             DroneWire aggregates news, contract data, and technical explainers on drone warfare and
-            counter-UAS systems. We use AI to filter and summarize—so you don't have to read 50 articles a day.
+            counter-UAS systems. We use AI to filter and summarize so you do not have to read 50 articles a day.
           </p>
         </div>
       </section>
@@ -129,8 +129,8 @@ export default function AboutPage() {
               <Card className="bg-muted/30 border-0">
                 <CardContent className="p-8">
                   <blockquote className="text-lg italic text-muted-foreground mb-4">
-                    "There's too much drone news to track manually. We built this to solve our own problem—now
-                    we're sharing it."
+                    There is too much drone news to track manually. We built this to solve our own problem, and now
+                    we are sharing it.
                   </blockquote>
                   <cite className="text-sm font-semibold text-foreground">— Editorial Team</cite>
                 </CardContent>
@@ -151,16 +151,8 @@ export default function AboutPage() {
                   <Mail className="w-6 h-6 text-primary mt-1" />
                   <div>
                     <h4 className="font-semibold text-foreground">Email Us</h4>
-                    <p className="text-muted-foreground">info@counter-uas-hub.com</p>
-                    <p className="text-sm text-muted-foreground">We'll respond within 24 hours</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <Phone className="w-6 h-6 text-primary mt-1" />
-                  <div>
-                    <h4 className="font-semibold text-foreground">Phone</h4>
-                    <p className="text-muted-foreground">+1 (555) 123-4567</p>
-                    <p className="text-sm text-muted-foreground">Available Monday-Friday, 9 AM - 6 PM EST</p>
+                    <p className="text-muted-foreground">info@dronewire.org</p>
+                    <p className="text-sm text-muted-foreground">We will respond within 24 hours</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
@@ -177,10 +169,10 @@ export default function AboutPage() {
               <div className="mt-8 p-6 bg-muted/30 rounded-lg">
                 <h4 className="font-semibold text-foreground mb-2">Have a tip or story lead?</h4>
                 <p className="text-sm text-muted-foreground mb-4">
-                  We're always looking for credible sources and breaking news in the counter-UAS space. 
+                  We are always looking for credible sources and breaking news in the counter-UAS space.
                   Your insights help keep the defense community informed.
                 </p>
-                <p className="text-sm font-medium text-primary">tips@counter-uas-hub.com</p>
+                <p className="text-sm font-medium text-primary">tips@dronewire.org</p>
               </div>
             </div>
 

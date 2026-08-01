@@ -12,7 +12,7 @@ function escapeXml(str: string): string {
 }
 
 export async function GET() {
-  const siteUrl = process.env.SITE_URL || 'https://drone-wire.vercel.app'
+  const siteUrl = process.env.SITE_URL || 'https://dronewire.org'
 
   // Fetch latest published articles
   const articles = await prisma.article.findMany({
@@ -68,8 +68,8 @@ export async function GET() {
       <link>${siteUrl}</link>
     </image>
     <copyright>Copyright ${new Date().getFullYear()} DroneWire. All rights reserved.</copyright>
-    <managingEditor>editor@dronewire.com (DroneWire Editorial)</managingEditor>
-    <webMaster>admin@dronewire.com (DroneWire Technical)</webMaster>
+    <managingEditor>info@dronewire.org (DroneWire Editorial)</managingEditor>
+    <webMaster>info@dronewire.org (DroneWire Technical)</webMaster>
     <ttl>60</ttl>
     ${rssItems}
   </channel>

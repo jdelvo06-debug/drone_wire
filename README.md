@@ -2,7 +2,7 @@
 
 DroneWire is a Counter-Unmanned Aircraft Systems (C-UAS) intelligence hub built for tracking drone defense systems, defense contracts, explainers, and current news.
 
-**Live site:** https://drone-wire.vercel.app
+**Live site:** https://dronewire.org
 **Repository:** https://github.com/jdelvo06-debug/drone_wire
 **Local app path:** `~/projects/drone_wire/app/`
 
@@ -10,17 +10,17 @@ DroneWire is a Counter-Unmanned Aircraft Systems (C-UAS) intelligence hub built 
 
 ## Current Status
 
-Last verified: **2026-05-07** against the live Supabase database.
+Current reconciled ground truth:
 
-- **Systems:** 115 total
-- **Systems with images:** 115/115
-- **Systems missing images:** 0
-- **Contracts:** 208 real award records
-- **Total contract value:** about $2.34B
+- **Articles:** 4,669 total / 3,296 published
+- **Systems:** 111
+- **Contracts:** 228
 - **Explainers:** 40
-- **Articles:** 2,924
+- **RSS feeds:** 13
+- **Embeddings:** 2,430
+- **AI health:** `https://dronewire.org/api/health/ai` currently returns HTTP 200 with `status: "healthy"`
 
-Current image state: **all 115 system records now have image URLs.** Next image work should focus on the remaining FAIL/UNCERTAIN vision-audit quality backlog, not null coverage.
+Image coverage was not re-audited during this reconciliation; historical image-audit notes are not current database-count evidence.
 
 ---
 
@@ -37,8 +37,7 @@ Current image state: **all 115 system records now have image URLs.** Next image 
 
 - Real DoD award data populated from USASpending.gov
 - Contract list with sorting, filters, stats cards, and expandable details
-- Current database contains 208 real contract awards totaling about $2.34B
-- Weekly refresh is handled outside Vercel's free cron limit via Hermes scheduled job
+- Current database contains 228 contract records
 
 ### Explainers Library
 
@@ -54,9 +53,12 @@ Current image state: **all 115 system records now have image URLs.** Next image 
 
 ### Newsletter and Contact
 
-- Newsletter signup with Resend integration
+- Newsletter signup with Gmail API welcome emails when OAuth credentials are configured
 - Contact form saves submissions to the database
-- Contact notifications still require `ADMIN_EMAIL` to be configured in production if email alerts are desired
+- Contact notifications use `ADMIN_EMAIL` when it is configured
+- Public Cloudflare Email Routing MX is live; the only intentional inbound aliases are `info@dronewire.org` and `tips@dronewire.org`, with catch-all disabled
+- Outbound site email uses Gmail API OAuth credentials
+- The sender identity is currently hard-coded in `lib/services/email.ts`; `FROM_EMAIL` is legacy/unused and is not active configuration
 
 ---
 
@@ -67,7 +69,7 @@ Current image state: **all 115 system records now have image URLs.** Next image 
 - **Database:** Supabase PostgreSQL
 - **ORM:** Prisma 6.7.0
 - **Styling:** Tailwind CSS, shadcn/ui-style components, Radix UI
-- **Email:** Resend
+- **Email:** Gmail API for outbound site email; Cloudflare Email Routing for inbound domain aliases
 - **Deployment:** Vercel
 - **Testing:** Jest
 
@@ -92,7 +94,7 @@ Useful commands:
 ```bash
 npm run build          # Prisma generate + Next build
 npm test               # Jest test suite
-npm run lint           # Next lint
+npm run lint           # ESLint
 npm run health:local   # Local health check
 npm run health         # Production health check
 ```
@@ -109,15 +111,25 @@ Common variables:
 DATABASE_URL
 OPENAI_API_KEY
 CRON_SECRET
-RESEND_API_KEY
+ADMIN_SECRET
+GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET
+GOOGLE_REFRESH_TOKEN
 ADMIN_EMAIL
+OLLAMA_API_KEY
+OLLAMA_MODEL
+OLLAMA_FALLBACK_MODEL
+SITE_URL
 ```
 
 Notes:
 
 - Supabase uses the transaction pooler URL for Vercel compatibility.
+- AI processing defaults to `OLLAMA_MODEL=deepseek-v4-flash` with `OLLAMA_FALLBACK_MODEL=glm-5.2`; production can override both.
+- `SITE_URL` is `https://dronewire.org` in production and drives canonical metadata and email links.
+- `.env.example` contains placeholders only. Do not copy secrets into it.
+- `FROM_EMAIL` is not read by the app; the Gmail sender is hard-coded in `lib/services/email.ts`.
 - On the Mac Mini, local DB/script runs may need `NODE_TLS_REJECT_UNAUTHORIZED=0` because of the Zscaler TLS proxy.
-- Vercel free tier only supports two cron jobs. DroneWire currently uses those for news scraping and AI processing.
 
 ---
 
@@ -140,11 +152,7 @@ When writing DB update scripts, prefer standalone TypeScript files under `script
 
 ## Deployment
 
-Production deploys from `main` to Vercel.
-
-```bash
-git push origin main
-```
+Production is hosted on Vercel. Deployment actions are intentionally outside this local reconciliation.
 
 Build command:
 
@@ -155,7 +163,7 @@ prisma generate && next build
 Production URL:
 
 ```text
-https://drone-wire.vercel.app
+https://dronewire.org
 ```
 
 ---
@@ -173,7 +181,6 @@ https://drone-wire.vercel.app
 
 ## Current Next Work
 
-1. Resolve the 12 remaining null system images.
-2. Review the 49 UNCERTAIN and 13 FAIL results from the last vision audit.
-3. Confirm whether contract titles still need cleanup in the UI/database.
-4. Keep documentation updated after each major data or deployment change.
+1. Run a fresh vision audit before treating historical image-quality results as current.
+2. Re-run production health checks after domain or data-pipeline changes.
+3. Keep documentation updated after each major data or deployment change.

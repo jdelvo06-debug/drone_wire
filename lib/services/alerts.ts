@@ -74,7 +74,7 @@ export async function getAlertSubscribers(category?: string) {
 // Generate alert email HTML
 export function getAlertEmailHtml(article: AlertArticle, firstName?: string): string {
   const name = firstName || 'there'
-  const siteUrl = process.env.SITE_URL || 'https://dronewire.com'
+  const siteUrl = process.env.SITE_URL || 'https://dronewire.org'
   const confidencePercent = Math.round((article.confidence || 0) * 100)
 
   const keyPointsHtml = article.keyPoints

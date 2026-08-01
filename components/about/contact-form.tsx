@@ -83,7 +83,7 @@ export default function ContactForm() {
             Thank You!
           </h3>
           <p className="text-green-700 dark:text-green-300">
-            Your message has been sent successfully. We'll review your inquiry and get back to you within 24 hours.
+            Your message has been sent successfully. We will review your inquiry and get back to you within 24 hours.
           </p>
         </CardContent>
       </Card>

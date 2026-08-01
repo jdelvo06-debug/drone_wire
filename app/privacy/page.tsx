@@ -72,8 +72,8 @@ export default function PrivacyPage() {
             <h2>Contact Us</h2>
             <p>
               If you have any questions about this Privacy Policy, please contact us at{' '}
-              <a href="mailto:privacy@counter-uas-hub.com" className="text-primary hover:underline">
-                privacy@counter-uas-hub.com
+              <a href="mailto:info@dronewire.org" className="text-primary hover:underline">
+                info@dronewire.org
               </a>
             </p>
           </div>

@@ -187,7 +187,7 @@ export async function extractContentFromUrl(url: string): Promise<ExtractedConte
 
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; DroneWire/1.0; +https://dronewire.com)',
+        'User-Agent': 'Mozilla/5.0 (compatible; DroneWire/1.0; +https://dronewire.org)',
         Accept: 'text/html,application/xhtml+xml',
       },
       signal: controller.signal,

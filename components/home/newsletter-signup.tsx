@@ -73,7 +73,7 @@ export default function NewsletterSignup() {
             Welcome Aboard!
           </h3>
           <p className="text-green-700 dark:text-green-300 text-sm">
-            You're now subscribed to our weekly Counter-UAS intelligence briefing.
+            You are now subscribed to our weekly Counter-UAS intelligence briefing.
           </p>
         </CardContent>
       </Card>

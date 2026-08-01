@@ -1,6 +1,6 @@
 # DroneWire Architecture
 
-**Last updated:** 2026-05-07
+**Last updated:** 2026-08-01
 
 DroneWire is a production Counter-UAS intelligence hub. It combines an RSS-backed article pipeline, AI enrichment, a C-UAS systems database, an explainer library, and a real defense-contract tracker backed by Supabase PostgreSQL.
 
@@ -40,7 +40,7 @@ DroneWire is a production Counter-UAS intelligence hub. It combines an RSS-backe
 │                                            ▼                              │
 │                       ┌─────────────────────────────────────────────┐     │
 │                       │                 VERCEL                      │     │
-│                       │          https://drone-wire.vercel.app       │     │
+│                       │             https://dronewire.org            │     │
 │                       └─────────────────────────────────────────────┘     │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
@@ -55,7 +55,7 @@ DroneWire is a production Counter-UAS intelligence hub. It combines an RSS-backe
 - **Database:** Supabase PostgreSQL
 - **ORM:** Prisma 6.7.0
 - **Styling:** Tailwind CSS with Radix/shadcn-style UI components
-- **Email:** Resend
+- **Email:** Gmail API for outbound site email; Cloudflare Email Routing for inbound aliases
 - **Deployment:** Vercel
 - **Testing:** Jest
 
@@ -91,7 +91,7 @@ USASpending.gov Awards API
 Notes:
 
 - SAM.gov scraping was replaced by USASpending.gov for reliability.
-- Vercel Hobby tier only has two cron slots, so the contract refresh is scheduled externally through Hermes and can also be triggered manually.
+- Contract refresh can be scheduled externally or triggered manually; cron route behavior is unchanged by this reconciliation.
 
 ### 3. Systems Database Maintenance
 
@@ -102,12 +102,10 @@ Manual source research / DVIDS / manufacturer assets / re-hosted assets
               └─► scripts/vision-audit-images.ts validates visual match quality
 ```
 
-Current image state:
+Current database count:
 
-- 115 systems total
-- 115 systems with image URLs
-- 0 systems with null image URLs
-- Separate quality issue: last vision audit included PASS, FAIL, UNCERTAIN, and ERROR results
+- 111 systems total
+- Image coverage was not re-audited in this reconciliation; historical audit results are not current-count evidence
 
 ### 4. Explainers Maintenance
 
@@ -119,9 +117,7 @@ scripts/seed-explainers.ts
 
 Current state:
 
-- 40 explainers in DB
-- 40 explainers in seed file
-- Seed and DB reconciled as of May 2026
+- 40 explainers in the database
 
 ---
 
@@ -189,6 +185,7 @@ Core data tables currently used by the public site:
 - `POST /api/newsletter/subscribe`
 - `POST /api/contact`
 - `GET /api/health`
+- `GET /api/health/ai` — public AI model availability; HTTP 200 with `healthy` or `degraded`, HTTP 503 with `unhealthy`
 
 ### Admin / Maintenance Routes
 
@@ -205,7 +202,7 @@ Core data tables currently used by the public site:
 - `/api/cron/scrape-contracts`
 - `/api/cron/send-alerts`
 
-Only two cron routes are scheduled in Vercel because of the Hobby tier limit. Additional routes exist for manual or external triggering.
+Cron route behavior and scheduling are unchanged by this reconciliation.
 
 ---
 
@@ -232,17 +229,25 @@ Important recent change:
 ## Deployment Architecture
 
 ```text
-GitHub main branch
-  └─► Vercel auto-deploy
-        └─► Build: prisma generate && next build
-              └─► Runtime: Node.js 20.x
-                    └─► Supabase transaction pooler
+Vercel
+  └─► Build: prisma generate && next build
+        └─► Next.js application
+              └─► Supabase PostgreSQL
 ```
+
+Current data snapshot:
+
+- 4,669 articles (3,296 published)
+- 111 systems
+- 40 explainers
+- 228 contracts
+- 13 RSS feeds
+- 2,430 embeddings
 
 Production URL:
 
 ```text
-https://drone-wire.vercel.app
+https://dronewire.org
 ```
 
 Local dev:
@@ -264,7 +269,7 @@ http://localhost:3002
 
 - Secrets live in `.env.local` locally and Vercel environment variables in production.
 - `.env*` files are excluded from git.
-- Cron/admin routes use `CRON_SECRET` or admin auth where implemented.
+- Cron routes use `CRON_SECRET`; admin maintenance routes use `ADMIN_SECRET` bearer auth or admin session auth.
 - Prisma handles parameterized database access.
 - Public site does not require user login.
 
@@ -273,8 +278,28 @@ Important environment variables:
 - `DATABASE_URL`
 - `OPENAI_API_KEY`
 - `CRON_SECRET`
-- `RESEND_API_KEY`
+- `ADMIN_SECRET`
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
+- `GOOGLE_REFRESH_TOKEN`
 - `ADMIN_EMAIL`
+- `OLLAMA_API_KEY`
+- `OLLAMA_MODEL` (default `deepseek-v4-flash`)
+- `OLLAMA_FALLBACK_MODEL` (default `glm-5.2`)
+- `SITE_URL`
+
+Mail routing notes:
+
+- Public Cloudflare Email Routing MX is live for `dronewire.org`.
+- The only intentional inbound aliases are `info@dronewire.org` and `tips@dronewire.org`; catch-all routing is disabled.
+- Outbound transactional email uses the Gmail API with OAuth credentials.
+- The Gmail sender identity is currently hard-coded in `lib/services/email.ts`.
+- `FROM_EMAIL` exists in production only as a legacy/unused variable; source does not read it, so it is not active configuration.
+
+AI operations notes:
+
+- Production provides `OLLAMA_MODEL` and `OLLAMA_FALLBACK_MODEL` overrides; source defaults are `deepseek-v4-flash` and `glm-5.2`.
+- `GET /api/health/ai` reports configured model availability without authentication or mutation; current production status is healthy.
 
 ---
 

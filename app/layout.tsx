@@ -8,8 +8,10 @@ import Header from '@/components/layout/header'
 import Footer from '@/components/layout/footer'
 
 const inter = Inter({ subsets: ['latin'] })
+const siteUrl = process.env.SITE_URL || 'https://dronewire.org'
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'DroneWire',
     template: '%s | DroneWire',
@@ -27,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://dronewire.com',
+    url: siteUrl,
     title: 'DroneWire',
     description: 'AI-curated news and explainers focused on drone warfare and counter-UAS technology',
     siteName: 'DroneWire',

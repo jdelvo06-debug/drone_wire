@@ -34,7 +34,7 @@ export default function Footer() {
                   <span className="sr-only">GitHub</span>
                 </Button>
               </Link>
-              <Link href="mailto:info@dronewire.com">
+              <Link href="mailto:info@dronewire.org">
                 <Button variant="ghost" size="icon">
                   <Mail className="h-4 w-4" />
                   <span className="sr-only">Email</span>

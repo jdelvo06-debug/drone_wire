@@ -1,8 +1,7 @@
 # DroneWire C-UAS Hub — Project Reference
 
-**Last updated:** 2026-05-16
+**Last updated:** 2026-08-01
 **Status:** Production, active maintenance
-**Version:** 1.7.2
 
 ---
 
@@ -12,19 +11,32 @@
 - **Branch:** `main`
 - **Local clone:** `~/projects/drone_wire/app/`
 - **Session tracker:** `~/projects/drone_wire/NEXTSESSION.md`
-- **Git status as of doc refresh:** clean before documentation updates; documentation changes pending commit
+- **Git status as of doc refresh:** dirty local worktree with domain/mail/docs/ops changes pending commit
 
 ---
 
 ## Deployment
 
 - **Platform:** Vercel
-- **Live URL:** https://drone-wire.vercel.app
+- **Live URL:** https://dronewire.org
 - **Framework:** Next.js 14.2.28, App Router
 - **Build command:** `prisma generate && next build`
 - **Dev server:** `cd ~/projects/drone_wire/app && npm run dev`
 - **Local port:** 3002
-- **Auto-deploy:** push to `main`
+- **Public AI health:** `GET https://dronewire.org/api/health/ai` currently returns HTTP 200 with `status: "healthy"`
+- **Verified production variables in this reconciliation:** `ADMIN_SECRET`, `OLLAMA_MODEL`, `OLLAMA_FALLBACK_MODEL`, `SITE_URL`, Gmail OAuth variables, and legacy/unused `FROM_EMAIL`
+
+---
+
+## Email and Domain
+
+- **Canonical site:** `https://dronewire.org`
+- **Custom domain:** Vercel serves the canonical `https://dronewire.org` URL; production `SITE_URL` matches it.
+- **Inbound mail:** public Cloudflare Email Routing MX records are live for `dronewire.org`.
+- **Forwarding rules:** the only intentional inbound aliases are `info@dronewire.org` and `tips@dronewire.org`.
+- **Catch-all:** disabled; only intentional aliases receive mail.
+- **Outbound app email:** Gmail API using `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `GOOGLE_REFRESH_TOKEN`.
+- **Sender identity:** currently hard-coded in `lib/services/email.ts`; the production `FROM_EMAIL` variable is legacy/unused and should not be treated as active configuration.
 
 ---
 
@@ -37,17 +49,17 @@
 - **Local TLS note:** Mac Mini/Zscaler may require `NODE_TLS_REJECT_UNAUTHORIZED=0` for local scripts
 - **Schema file:** `prisma/schema.prisma`
 
-### Verified Live Counts — 2026-05-07
+### Current Ground-Truth Counts
 
 | Metric | Value |
 |---|---:|
-| Articles | 2,924 |
-| Systems | 115 |
-| Systems with images | 115 |
-| Systems missing images | 0 |
+| Articles | 4,669 |
+| Published articles | 3,296 |
+| Systems | 111 |
 | Explainers | 40 |
-| Contracts | 208 |
-| Contract value | about $2.34B |
+| Contracts | 228 |
+| RSS feeds | 13 |
+| Embeddings | 2,430 |
 
 ---
 
@@ -71,13 +83,13 @@
 - **Old scraper:** `lib/services/contract-scraper.ts` (SAM.gov, kept for reference)
 - **Seed script:** `scripts/seed-contracts.ts`
 - **External refresh:** Hermes cron job `e2e48f408dee`, Mondays 9 AM EST
-- **Known follow-up:** verify whether contract titles still show contract numbers instead of meaningful names
+- **Contract title state:** title cleanup is resolved; `cleanTitle()` now uses USASpending descriptions with smart title case and QA found no raw contract-number titles in the sampled set
 
 ### Explainers
 
 - **Pages:** `/explainers`, `/explainers/[slug]`
 - **Seed script:** `scripts/seed-explainers.ts`
-- **Current state:** 40 DB explainers, all unique, 100% Wikimedia Commons-sourced (0 DVIDS links)
+- **Current state:** 40 DB explainers
 - **Recent fix:** FeaturedExplainers now queries DB as an async server component
 
 ### Articles / News
@@ -150,7 +162,7 @@
 
 ### Ground Truth
 
-The database currently has **0 null system images** (May 10 resourcing pass confirmed). All 115 systems and 40 explainers have images. All explainer images are now 100% Wikimedia Commons-sourced — zero DVIDS links remain, eliminating CDN migration risk.
+The current database contains **111 systems** and **40 explainers**. This reconciliation did not re-audit image coverage, so historical image-audit results below should not be read as a current count.
 
 ### Context
 
@@ -226,7 +238,7 @@ git push origin main
 
 ## Current Next Up
 
-1. Review whether to attack the remaining FAIL/UNCERTAIN audit-questionable system images.
-2. Re-run the vision audit if we need fresh PASS/FAIL/UNCERTAIN counts.
+1. Re-run the vision audit before treating historical PASS/FAIL/UNCERTAIN image results as current.
+2. Review any image-quality backlog established by that fresh audit.
 3. ~~Verify contract title display.~~ ✅ Fixed (v1.7.2) — `cleanTitle()` rewritten to use descriptions with smart title case. QA verified live.
 4. Review any remaining ghost data or stale content across sections.

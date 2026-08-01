@@ -1,25 +1,24 @@
 # DroneWire Project Status
 
-**Last Updated:** 2026-05-16
+**Last Updated:** 2026-08-01
 **Status:** Production, active maintenance
-**Version:** 1.7.2
-**Live Site:** https://drone-wire.vercel.app
+**Live Site:** https://dronewire.org
 
 ---
 
 ## Current State
 
-Verified against the live Supabase database on **2026-05-07**.
+Current reconciled ground truth:
 
 | Area | Current State |
 |---|---:|
-| Articles | 2,924 |
-| Systems | 115 |
-| Systems with images | 115 |
-| Systems missing images | 0 |
+| Articles | 4,669 |
+| Published articles | 3,296 |
+| Systems | 111 |
 | Explainers | 40 |
-| Contracts | 208 |
-| Contract value | about $2.34B |
+| Contracts | 228 |
+| RSS feeds | 13 |
+| Embeddings | 2,430 |
 
 ---
 
@@ -30,17 +29,19 @@ Verified against the live Supabase database on **2026-05-07**.
 | Home Page | Working | Hero, featured articles, latest intel, newsletter CTA |
 | Articles List | Working | RSS-backed intelligence feed with pagination/filtering |
 | Article Detail | Working | AI summaries, key points, tags, why-it-matters content |
-| Systems Database | Working | 115 C-UAS systems; all currently have image URLs |
+| Systems Database | Working | 111 C-UAS systems; image coverage was not re-audited in this reconciliation |
 | System Detail | Working | Specs, combat record, related systems, manufacturer/country/status |
 | Explainers Library | Working | 40 structured explainers in DB and seed file |
 | Explainer Detail | Working | Rich explainer content with structured fields |
 | Featured Explainers | Working | Async server component queries DB directly |
-| Contracts Page | Working | 208 real USASpending award records |
+| Contracts Page | Working | 228 contract records |
 | About Page | Working | Project information |
 | Dark/Light Mode | Working | Theme toggle in header |
 | Mobile Responsive | Working | Responsive navigation |
-| Newsletter Signup | Working | Resend integration |
-| Contact Form | Working | Saves to DB; email notifications need ADMIN_EMAIL if desired |
+| Newsletter Signup | Working | Gmail API welcome emails when OAuth credentials are configured |
+| Contact Form | Working | Saves to DB; email notifications use `ADMIN_EMAIL` when configured |
+| Cloudflare Email Routing | Working | Public MX is live; only `info@dronewire.org` and `tips@dronewire.org` are intentional aliases; catch-all is disabled |
+| AI Health Endpoint | Healthy | Production `/api/health/ai` returns HTTP 200 with `status: "healthy"` |
 
 ---
 
@@ -63,12 +64,10 @@ Verified against the live Supabase database on **2026-05-07**.
 
 | Setting | Value |
 |---|---|
-| Platform | Vercel Hobby Tier |
-| Runtime | Node.js 20.x |
+| Platform | Vercel |
 | Build Command | `prisma generate && next build` |
-| Cron Jobs | 2 of 2 Vercel cron slots used |
-| Production Domain | https://drone-wire.vercel.app |
-| Deployment Model | Push to `main` auto-deploys |
+| Production Domain | https://dronewire.org |
+| Public AI Health | HTTP 200, `status: "healthy"` |
 
 ### Supabase Database
 
@@ -85,11 +84,22 @@ Verified against the live Supabase database on **2026-05-07**.
 
 | Variable | Status |
 |---|---|
-| DATABASE_URL | Configured |
-| OPENAI_API_KEY | Configured where AI processing is used |
-| CRON_SECRET | Configured |
-| RESEND_API_KEY | Configured |
-| ADMIN_EMAIL | Follow-up if contact notification emails are desired |
+| ADMIN_SECRET | Configured in production |
+| OLLAMA_MODEL / OLLAMA_FALLBACK_MODEL | Configured in production; source defaults are `deepseek-v4-flash` / `glm-5.2` |
+| GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET / GOOGLE_REFRESH_TOKEN | Configured in production for Gmail API delivery |
+| SITE_URL | `https://dronewire.org` |
+| FROM_EMAIL | Legacy/unused; source does not read it |
+| ADMIN_EMAIL | Documented application setting; production presence is not asserted here |
+
+### Email and Domain
+
+| Capability | Current State |
+|---|---|
+| Website domain | `https://dronewire.org`, matching production `SITE_URL` |
+| Inbound aliases | Only `info@dronewire.org` and `tips@dronewire.org` |
+| Catch-all | Disabled |
+| Outbound app email | Gmail API via OAuth credentials |
+| Sender identity | Hard-coded in `lib/services/email.ts`; not controlled by `FROM_EMAIL` |
 
 ---
 
@@ -98,15 +108,13 @@ Verified against the live Supabase database on **2026-05-07**.
 ### High Priority
 
 1. **System image quality backlog**
-   - Ground truth from DB: 115/115 systems have image URLs.
-   - Remaining image work is quality-focused: FAIL/UNCERTAIN audit results.
-   - Many are the result of DVIDS CloudFront thumbnail URLs returning 404.
-   - Explainers: fully resolved — 40/40 Commons-sourced, zero DVIDS links.
+   - Current DB count: 111 systems.
+   - Image coverage was not re-audited in this reconciliation.
+   - Run a fresh audit before treating prior FAIL/UNCERTAIN results as current.
 
 2. **Image audit backlog**
-   - Last full vision audit found many images that were generic, uncertain, failed, or inaccessible.
-   - Current known audit result: 43 PASS, 13 FAIL, 49 UNCERTAIN, 10 ERROR from the 115-system audit.
-   - This is separate from the null-image count.
+   - Historical audits found generic, uncertain, failed, or inaccessible images.
+   - Those results predate the current 111-system count and require refresh before use.
 
 3. **Contract title display** ✅ RESOLVED (2026-05-16)
    - Contracts were displaying raw award IDs (`W50S8U24FA042`) instead of meaningful titles.
@@ -117,7 +125,6 @@ Verified against the live Supabase database on **2026-05-07**.
 
 ### Medium Priority
 
-- Configure `ADMIN_EMAIL` if contact form email notifications matter.
 - Review Vercel deployment health after each data/script change.
 
 ### Future Enhancements
@@ -139,7 +146,7 @@ Verified against the live Supabase database on **2026-05-07**.
 - Prisma schema and data access
 - RSS scraping pipeline
 - AI article processing
-- Newsletter signup with Resend
+- Newsletter signup with Gmail API email delivery
 - Systems database and system detail pages
 - Contracts tracker page
 - USASpending.gov contract data pipeline
@@ -150,9 +157,8 @@ Verified against the live Supabase database on **2026-05-07**.
 
 ### In Progress
 
-- System image accuracy and null-image cleanup
+- System image accuracy review
 - Documentation hygiene and session tracker discipline
-- Contract title verification
 
 ### Next Recommended Work
 
@@ -206,15 +212,15 @@ NODE_TLS_REJECT_UNAUTHORIZED=0 npx tsx scripts/vision-audit-images.ts
 
 ```bash
 # News scrape
-curl https://drone-wire.vercel.app/api/cron/scrape-news \
+curl https://dronewire.org/api/cron/scrape-news \
   -H "Authorization: Bearer $CRON_SECRET"
 
 # AI processing
-curl https://drone-wire.vercel.app/api/cron/process-ai \
+curl https://dronewire.org/api/cron/process-ai \
   -H "Authorization: Bearer $CRON_SECRET"
 
 # Contract scrape
-curl https://drone-wire.vercel.app/api/cron/scrape-contracts \
+curl https://dronewire.org/api/cron/scrape-contracts \
   -H "Authorization: Bearer $CRON_SECRET"
 ```
 

@@ -4,6 +4,28 @@ All notable changes to DroneWire are documented in this file.
 
 ---
 
+## [Unreleased]
+
+### Local Domain, Mail, and Operations Reconciliation
+
+This work remains local and uncommitted; it has not been pushed or deployed.
+
+**Changes:**
+- Kept `https://dronewire.org` as the canonical URL through `SITE_URL`, app metadata, RSS output, email links, and health tooling.
+- Preserved `ADMIN_SECRET` bearer hardening for the two admin maintenance routes without changing cron routes.
+- Limited public email links and RSS metadata to the reachable `info@dronewire.org` and `tips@dronewire.org` aliases.
+- Documented that public Cloudflare Email Routing MX is live, only the `info@` and `tips@` aliases are intentional, and catch-all is disabled.
+- Documented outbound Gmail API delivery: the sender is hard-coded in `lib/services/email.ts`, while production `FROM_EMAIL` is legacy/unused.
+- Added documented AI model defaults (`deepseek-v4-flash` primary, `glm-5.2` fallback) and production override variables.
+- Extended the public-only health script to require HTTP 200 plus `status: "healthy"` from `/api/health/ai`; removed unauthenticated cron-route probes so the script invokes no authenticated or mutating endpoints.
+- Replaced the obsolete `next lint` command with direct ESLint and removed unused Resend/React Email dependencies.
+- Retained UI copy/entity escaping cleanup and the canonical Bal Chatri URL update without running any database-writing script.
+
+**Current ground truth:**
+- Database: 4,669 articles / 3,296 published / 111 systems / 40 explainers / 228 contracts / 13 RSS feeds / 2,430 embeddings.
+- Production `GET https://dronewire.org/api/health/ai`: HTTP 200 with healthy status.
+- Production Vercel configuration includes `ADMIN_SECRET`, `OLLAMA_MODEL`, `OLLAMA_FALLBACK_MODEL`, `SITE_URL`, Gmail OAuth variables, and legacy/unused `FROM_EMAIL`.
+
 ## [1.7.2] - 2026-05-16
 
 ### Contract Title Fix — Human-Readable Display
