@@ -155,8 +155,8 @@ async function main() {
 
     console.log('\n✅ Database seeding complete!');
     console.log('\nNext steps:');
-    console.log('1. Run the scraper: curl http://localhost:3000/api/cron/scrape-news -H "Authorization: Bearer YOUR_CRON_SECRET"');
-    console.log('2. Run AI processing: curl http://localhost:3000/api/cron/process-ai -H "Authorization: Bearer YOUR_CRON_SECRET"');
+    console.log('1. Run the scraper: curl http://localhost:3002/api/cron/scrape-news -H "Authorization: Bearer YOUR_CRON_SECRET"');
+    console.log('2. Run AI processing: curl http://localhost:3002/api/cron/process-ai -H "Authorization: Bearer YOUR_CRON_SECRET"');
   } catch (error) {
     console.error('Seeding error:', error);
     throw error;

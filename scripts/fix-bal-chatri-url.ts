@@ -6,7 +6,7 @@ const prisma = new PrismaClient()
 async function main() {
   await prisma.system.update({
     where: { slug: 'bal-chatri' },
-    data: { imageUrl: 'https://drone-wire.vercel.app/bal-chatri.png' }
+    data: { imageUrl: 'https://dronewire.org/bal-chatri.png' }
   })
 
   const v = await prisma.system.findFirst({

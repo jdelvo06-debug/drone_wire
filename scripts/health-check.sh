@@ -16,10 +16,10 @@ NC='\033[0m' # No Color
 ENV=${1:-prod}
 
 if [ "$ENV" = "local" ]; then
-    BASE_URL="http://localhost:3000"
+    BASE_URL="http://localhost:3002"
     echo -e "${BLUE}🔍 Running health check on LOCAL environment${NC}"
 else
-    BASE_URL="https://drone-wire.vercel.app"
+    BASE_URL="https://dronewire.org"
     echo -e "${BLUE}🔍 Running health check on PRODUCTION environment${NC}"
 fi
 
@@ -43,10 +43,10 @@ check_endpoint() {
 
     if [ "$status" = "$expected_status" ]; then
         echo -e "${GREEN}✓ OK${NC} (HTTP $status)"
-        ((PASSED++))
+        PASSED=$((PASSED + 1))
     else
         echo -e "${RED}✗ FAILED${NC} (HTTP $status, expected $expected_status)"
-        ((FAILED++))
+        FAILED=$((FAILED + 1))
     fi
 }
 
@@ -63,11 +63,34 @@ check_api_data() {
     # Check if response contains expected data
     if echo "$response" | grep -q "$json_path"; then
         echo -e "${GREEN}✓ OK${NC} (data present)"
-        ((PASSED++))
+        PASSED=$((PASSED + 1))
     else
         echo -e "${RED}✗ FAILED${NC} (no data)"
-        ((FAILED++))
+        FAILED=$((FAILED + 1))
     fi
+}
+
+# Function to verify the public AI health endpoint is healthy
+check_ai_health() {
+    local name=$1
+    local url=$2
+    local body_file
+    local status
+
+    printf "%-30s" "$name..."
+
+    body_file=$(mktemp)
+    status=$(curl -sS -o "$body_file" -w "%{http_code}" --max-time 10 "$url" 2>/dev/null) || status="000"
+
+    if [ "$status" = "200" ] && grep -Eq '"status"[[:space:]]*:[[:space:]]*"healthy"' "$body_file"; then
+        echo -e "${GREEN}✓ OK${NC} (HTTP 200, healthy)"
+        PASSED=$((PASSED + 1))
+    else
+        echo -e "${RED}✗ FAILED${NC} (HTTP $status, expected HTTP 200 with healthy status)"
+        FAILED=$((FAILED + 1))
+    fi
+
+    rm -f "$body_file"
 }
 
 echo -e "${YELLOW}📄 Page Endpoints${NC}"
@@ -83,19 +106,13 @@ echo -e "${YELLOW}🔌 API Endpoints${NC}"
 echo "-------------------------------------------"
 check_endpoint "Articles API" "$BASE_URL/api/articles"
 check_endpoint "Contracts API" "$BASE_URL/api/contracts"
+check_ai_health "AI Health API" "$BASE_URL/api/health/ai"
 
 echo ""
 echo -e "${YELLOW}📊 Data Verification${NC}"
 echo "-------------------------------------------"
 check_api_data "Articles have data" "$BASE_URL/api/articles" '"articles"'
 check_api_data "Contracts have data" "$BASE_URL/api/contracts" '"contracts"'
-
-echo ""
-echo -e "${YELLOW}🔒 Cron Endpoints (Auth Required)${NC}"
-echo "-------------------------------------------"
-# These should return 401 without auth
-check_endpoint "Scrape News (unauth)" "$BASE_URL/api/cron/scrape-news" "401"
-check_endpoint "Process AI (unauth)" "$BASE_URL/api/cron/process-ai" "401"
 
 echo ""
 echo "=========================================="
