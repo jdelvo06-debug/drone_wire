@@ -1,4 +1,7 @@
 // Centralized image constants and utilities
+import optimizedImageHosts from '@/config/optimized-image-hosts.json';
+
+const optimizedHostSet = new Set<string>(optimizedImageHosts);
 
 export const PLACEHOLDER_IMAGES = {
   article: '/images/placeholder-article.svg',
@@ -23,6 +26,18 @@ export function getImageWithFallback(
     return imageUrl;
   }
   return getPlaceholderImage(type);
+}
+
+/** Only proxy/optimize local assets and explicitly inventoried HTTPS hosts. */
+export function canOptimizeImage(url: string | null | undefined): boolean {
+  if (!url || url.startsWith('/')) return true;
+
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'https:' && optimizedHostSet.has(parsed.hostname);
+  } catch {
+    return false;
+  }
 }
 
 /**
