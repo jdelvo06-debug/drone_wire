@@ -1,0 +1,60 @@
+# Local browser, test, and coverage output
+.playwright-cli
+output
+coverage
+playwright-report
+test-results
+blob-report
+
+# Local tool state and generated caches
+.herenow
+.swc
+# This checkout's supabase directory contains only local CLI link metadata.
+supabase
+*.tsbuildinfo
+.DS_Store
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# Outside-release evidence and disposable restore artifacts
+evidence
+artifacts
+reports
+tmp
+temp
+*.har
+*.trace.zip
+**/*-restore.sql
+**/*-backup.sql
+**/*.dump
+**/*.backup
+
+# Repository-only guidance and audit material
+.github
+AGENTS.md
+CODEX_*.md
+PROJECT_REFERENCE.md
+README.md
+docs
+check_fails*.ts
+
+# Superseded one-off maintenance helpers. Active package scripts, release
+# migrations, validation tests, application source, and public assets remain.
+scripts/_get_systems_tmp.ts
+scripts/batch-push.ts
+scripts/cleanup.ts
+scripts/final-push.ts
+scripts/fix-bal-chatri-url.ts
+scripts/fix-images-curated.ts
+scripts/generate-embeddings.ts
+scripts/push-*.ts
+scripts/seed-contracts.ts
+scripts/seed-new-explainers*.ts
+scripts/seed-procurement-data.ts
+scripts/seed-systems.ts
+scripts/update-system-images*.ts
+scripts/update-threat-images.ts
+scripts/vision-audit-*
