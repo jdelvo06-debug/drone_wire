@@ -39,7 +39,7 @@ export async function middleware(request: NextRequest) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
       }
       const loginUrl = new URL('/admin/login', request.url)
-      loginUrl.searchParams.set('from', encodeURIComponent(pathname))
+      loginUrl.searchParams.set('from', pathname)
       return NextResponse.redirect(loginUrl)
     }
   }
