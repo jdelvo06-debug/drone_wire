@@ -6,6 +6,7 @@ import { ArrowRight, Eye, AlertTriangle, Crosshair, Radar, Zap, Plane } from 'lu
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { prisma } from '@/lib/db'
+export const dynamic = 'force-dynamic'
 
 export const revalidate = 600 // ISR: revalidate every 10 minutes
 

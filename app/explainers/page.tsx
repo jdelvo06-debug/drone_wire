@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 
 export const revalidate = 600 // ISR: revalidate every 10 minutes
+export const dynamic = 'force-dynamic'
 import Image from 'next/image'
 import { canOptimizeImage } from '@/lib/constants/images'
 import { Clock, ArrowRight, Users, BookOpen } from 'lucide-react'

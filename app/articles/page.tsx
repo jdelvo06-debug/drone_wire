@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { canOptimizeImage, getImageWithFallback } from '@/lib/constants/images'
 
 export const revalidate = 300 // ISR: revalidate every 5 minutes
+export const dynamic = 'force-dynamic'
 import { Clock, ExternalLink, Calendar, Tag as TagIcon } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'

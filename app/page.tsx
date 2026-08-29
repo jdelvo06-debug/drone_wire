@@ -8,6 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Search } from 'lucide-react'
 
 export const revalidate = 600
+// Homepage data is backed by Supabase; defer rendering until request time so
+// a credential-less clean checkout can still compile successfully.
+export const dynamic = 'force-dynamic'
 
 export default function HomePage() {
   return (

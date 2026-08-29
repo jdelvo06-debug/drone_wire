@@ -4,6 +4,7 @@ import SystemsHeader from '@/components/systems/systems-header'
 import SystemsGrid from '@/components/systems/systems-grid'
 
 export const revalidate = 600 // ISR: revalidate every 10 minutes
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'C-UAS Systems Database',
