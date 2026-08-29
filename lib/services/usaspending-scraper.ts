@@ -248,7 +248,7 @@ export async function scrapeContracts(): Promise<ContractScrapingResult> {
           existing.agency !== agency ||
           existing.office !== office ||
           existing.category !== category ||
-          existing.status !== 'active';
+          existing.status !== 'Not reported';
  
         if (needsUpdate) {
           await prisma.contract.update({
@@ -261,7 +261,7 @@ export async function scrapeContracts(): Promise<ContractScrapingResult> {
               agency,
               office,
               category,
-              status: 'active',
+              status: 'Not reported',
             },
           });
           result.contractsUpdated++;
@@ -281,7 +281,7 @@ export async function scrapeContracts(): Promise<ContractScrapingResult> {
             awardDate,
             sourceUrl,
             category,
-            status: 'active',
+            status: 'Not reported',
           },
         });
         result.contractsAdded++;

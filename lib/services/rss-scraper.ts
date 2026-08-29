@@ -4,6 +4,7 @@ import { logger } from '@/lib/logger';
 import { isRelevantContent } from '@/lib/constants/rss-feeds';
 import { isImageUrl as checkIsImageUrl } from '@/lib/constants/images';
 import { categorizeArticle } from '@/lib/utils';
+import { fetchPinnedExternal } from '@/lib/services/content-extractor';
 
 const parser = new Parser({
   timeout: 8000,
@@ -113,6 +114,34 @@ export function chunkArray<T>(items: T[], limit: number): T[][] {
 
 // Maximum number of feeds fetched/parsed concurrently.
 export const FEED_CONCURRENCY = 5;
+const FEED_MAX_REDIRECTS = 3;
+
+async function fetchFeedXml(initialUrl: string): Promise<string> {
+  let currentUrl = initialUrl;
+  for (let redirectCount = 0; redirectCount <= FEED_MAX_REDIRECTS; redirectCount++) {
+    const response = await fetchPinnedExternal(currentUrl, {
+      headers: {
+        'User-Agent': 'DroneWire/1.0 (Counter-UAS Intelligence Hub)',
+        Accept: 'application/rss+xml, application/atom+xml, application/xml, text/xml',
+      },
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!response) throw new Error('Feed URL is not a safe external destination');
+
+    if ([301, 302, 303, 307, 308].includes(response.status)) {
+      const location = response.headers.get('location');
+      if (!location || redirectCount === FEED_MAX_REDIRECTS) throw new Error('Feed redirect could not be validated');
+      currentUrl = new URL(location, currentUrl).toString();
+      continue;
+    }
+
+    if (!response.ok) throw new Error(`Feed returned HTTP ${response.status}`);
+    const mime = response.headers.get('content-type')?.toLowerCase() || '';
+    if (!/(?:rss|atom|xml)/.test(mime)) throw new Error('Feed response did not contain XML');
+    return response.text();
+  }
+  throw new Error('Feed redirect limit exceeded');
+}
 
 export async function scrapeRssFeeds(): Promise<ScrapingResult> {
   const result: ScrapingResult = {
@@ -148,8 +177,9 @@ export async function scrapeRssFeeds(): Promise<ScrapingResult> {
   for (const batch of batches) {
     const settled = await Promise.allSettled(
       batch.map(async (feed) => {
-        logger.debug(`Scraping feed: ${feed.name} (${feed.url})`);
-        const parsed = await parser.parseURL(feed.url);
+        logger.debug(`Scraping feed: ${feed.name}`);
+        const xml = await fetchFeedXml(feed.url);
+        const parsed = await parser.parseString(xml);
         return { feed, items: parsed.items as RssFeedItem[] };
       }),
     );

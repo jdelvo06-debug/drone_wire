@@ -1,11 +1,12 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import type { ArticleCategory } from '@/lib/article-category'
  
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function categorizeArticle(title: string, content: string): string {
+export function categorizeArticle(title: string, content: string): ArticleCategory {
   const text = `${title} ${content}`.toLowerCase();
 
   if (text.includes('contract') || text.includes('award') || text.includes('procurement')) {

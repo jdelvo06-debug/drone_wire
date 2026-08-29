@@ -335,7 +335,7 @@ export async function scrapeContracts(): Promise<ContractScrapingResult> {
             sourceUrl: contract.sourceUrl,
             contractNumber: contract.contractNumber,
             category: contract.category,
-            status: 'active',
+            status: 'Not reported',
           },
         });
 

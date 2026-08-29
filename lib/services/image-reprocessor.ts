@@ -62,19 +62,19 @@ export async function reprocessArticlesForImages(
       logger.debug(`Extracting image for: ${article.title.slice(0, 50)}...`);
       const extracted = await extractContentFromUrl(article.sourceUrl);
 
-      if (extracted?.imageUrl) {
+      if (extracted?.quality === 'clean' && extracted.imageQuality === 'usable' && extracted.imageUrl) {
         await prisma.article.update({
           where: { id: article.id },
           data: { imageUrl: extracted.imageUrl },
         });
         result.updated++;
-        logger.debug(`  Updated with image: ${extracted.imageUrl.slice(0, 60)}...`);
+        logger.debug('  Updated with a verified editorial image');
       } else {
         logger.debug(`  No image found`);
       }
     } catch (error) {
       result.failed++;
-      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      const errorMsg = error instanceof Error ? error.name : 'UnknownError';
       result.errors.push(`${article.id}: ${errorMsg}`);
       logger.error(`  Error: ${errorMsg}`);
     }

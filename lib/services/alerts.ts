@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import { sendEmail } from './email'
+import { escapeHtml, safeHttpUrl } from '@/lib/security/html'
+import { createUnsubscribeUrl } from '@/lib/security/unsubscribe-token'
 
 export interface AlertArticle {
   id: string
@@ -57,6 +59,8 @@ export async function getAlertSubscribers(category?: string) {
     where: {
       status: 'active',
       alertsEnabled: true,
+      breakingAlertsEnabled: true,
+      breakingAlertsConsentedAt: { not: null },
       alertFrequency: 'instant',
     },
   })
@@ -72,14 +76,28 @@ export async function getAlertSubscribers(category?: string) {
 }
 
 // Generate alert email HTML
-export function getAlertEmailHtml(article: AlertArticle, firstName?: string): string {
-  const name = firstName || 'there'
+export function getAlertEmailHtml(
+  article: AlertArticle,
+  firstName: string | undefined,
+  unsubscribeUrl: string,
+): string {
+  const name = escapeHtml(firstName || 'there')
   const siteUrl = process.env.SITE_URL || 'https://dronewire.org'
   const confidencePercent = Math.round((article.confidence || 0) * 100)
+  const safeTitle = escapeHtml(article.title)
+  const safeSummary = escapeHtml(article.aiSummary || '')
+  const safeWhyItMatters = article.whyItMatters ? escapeHtml(article.whyItMatters) : ''
+  const safeSourceName = escapeHtml(article.sourceName)
+  const safeCategory = escapeHtml(article.category.toUpperCase())
+  const safeSourceUrl = safeHttpUrl(article.sourceUrl)
+  const safeImageUrl = safeHttpUrl(article.imageUrl)
+  const safeUnsubscribeUrl = escapeHtml(safeHttpUrl(unsubscribeUrl) || `${siteUrl}/privacy`)
+  const sourceHref = safeSourceUrl ? escapeHtml(safeSourceUrl) : null
+  const imageSrc = safeImageUrl ? escapeHtml(safeImageUrl) : null
 
   const keyPointsHtml = article.keyPoints
     .slice(0, 3)
-    .map(point => `<li style="margin-bottom: 8px; color: #3f3f46;">${point}</li>`)
+    .map(point => `<li style="margin-bottom: 8px; color: #3f3f46;">${escapeHtml(point)}</li>`)
     .join('')
 
   return `
@@ -100,7 +118,7 @@ export function getAlertEmailHtml(article: AlertArticle, firstName?: string): st
     <!-- Alert Badge -->
     <div style="background-color: #fef2f2; padding: 16px; text-align: center; border-bottom: 1px solid #fecaca;">
       <span style="display: inline-block; background-color: #dc2626; color: #ffffff; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">
-        ${confidencePercent}% Confidence Score • ${article.category.toUpperCase()}
+        ${confidencePercent}% Confidence Score • ${safeCategory}
       </span>
     </div>
 
@@ -112,26 +130,26 @@ export function getAlertEmailHtml(article: AlertArticle, firstName?: string): st
       </p>
 
       <h2 style="color: #18181b; margin: 0 0 16px; font-size: 20px; line-height: 1.4;">
-        ${article.title}
+        ${safeTitle}
       </h2>
 
-      ${article.imageUrl ? `
+      ${imageSrc ? `
       <div style="margin-bottom: 20px;">
-        <img src="${article.imageUrl}" alt="" style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 6px;">
+        <img src="${imageSrc}" alt="" style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 6px;">
       </div>
       ` : ''}
 
       <div style="background-color: #f4f4f5; padding: 16px; border-radius: 6px; margin-bottom: 20px;">
         <p style="color: #3f3f46; margin: 0; line-height: 1.6; font-size: 15px;">
-          ${article.aiSummary || ''}
+          ${safeSummary}
         </p>
       </div>
 
-      ${article.whyItMatters ? `
+      ${safeWhyItMatters ? `
       <div style="margin-bottom: 20px;">
         <h3 style="color: #18181b; margin: 0 0 8px; font-size: 14px; font-weight: 600;">Why It Matters</h3>
         <p style="color: #3f3f46; margin: 0; line-height: 1.6; font-size: 14px;">
-          ${article.whyItMatters}
+          ${safeWhyItMatters}
         </p>
       </div>
       ` : ''}
@@ -153,7 +171,9 @@ export function getAlertEmailHtml(article: AlertArticle, firstName?: string): st
 
       <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #e4e4e7;">
         <p style="color: #71717a; margin: 0; font-size: 12px;">
-          Source: <a href="${article.sourceUrl || '#'}" style="color: #3b82f6;">${article.sourceName}</a>
+          Source: ${sourceHref
+            ? `<a href="${sourceHref}" style="color: #3b82f6;">${safeSourceName}</a>`
+            : safeSourceName}
         </p>
       </div>
     </div>
@@ -164,8 +184,8 @@ export function getAlertEmailHtml(article: AlertArticle, firstName?: string): st
         You're receiving this alert because you subscribed to DroneWire breaking news alerts.
       </p>
       <p style="color: #71717a; font-size: 12px; margin: 0;">
-        <a href="${siteUrl}/unsubscribe" style="color: #3b82f6; text-decoration: none;">Manage preferences</a> •
-        <a href="${siteUrl}/unsubscribe" style="color: #3b82f6; text-decoration: none;">Unsubscribe</a>
+        <a href="${safeUnsubscribeUrl}" style="color: #3b82f6; text-decoration: none;">Manage preferences</a> •
+        <a href="${safeUnsubscribeUrl}" style="color: #3b82f6; text-decoration: none;">Unsubscribe</a>
       </p>
     </div>
   </div>
@@ -190,7 +210,11 @@ export async function sendArticleAlert(article: AlertArticle): Promise<{ sent: n
       const result = await sendEmail({
         to: subscriber.email,
         subject: `🚨 Breaking: ${article.title.slice(0, 60)}...`,
-        html: getAlertEmailHtml(article, subscriber.firstName || undefined),
+        html: getAlertEmailHtml(
+          article,
+          subscriber.firstName || undefined,
+          createUnsubscribeUrl(subscriber.id, subscriber.preferenceTokenRevision),
+        ),
       })
 
       if (result.success) {
@@ -204,10 +228,10 @@ export async function sendArticleAlert(article: AlertArticle): Promise<{ sent: n
           },
         })
       } else {
-        errors.push(`Failed to send to ${subscriber.email}: ${result.error}`)
+        errors.push('provider-send-failed')
       }
-    } catch (error) {
-      errors.push(`Error sending to ${subscriber.email}: ${error}`)
+    } catch {
+      errors.push('unexpected-send-failure')
     }
 
     // Small delay between emails

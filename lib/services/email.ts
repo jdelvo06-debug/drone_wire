@@ -1,5 +1,7 @@
 import { google } from 'googleapis';
 import { logger } from '@/lib/logger';
+import { escapeHtml, safeHttpUrl } from '@/lib/security/html';
+import { createUnsubscribeUrl } from '@/lib/security/unsubscribe-token';
 
 let gmailClient: ReturnType<typeof google.gmail> | null = null;
 
@@ -22,7 +24,7 @@ function getGmailClient() {
   return gmailClient;
 }
 
-const FROM_EMAIL = 'DroneWire <alfred.intel.handler@gmail.com>';
+const FROM_EMAIL = process.env.FROM_EMAIL || 'DroneWire <info@dronewire.org>';
 const SITE_URL = process.env.SITE_URL || 'https://dronewire.org';
 
 export interface SendEmailOptions {
@@ -30,13 +32,14 @@ export interface SendEmailOptions {
   subject: string;
   html: string;
   text?: string;
+  messageId?: string;
 }
 
 /**
  * Build a RFC 2822 compliant raw email message.
  * Gmail API requires base64url-encoded raw MIME messages.
  */
-function buildRawEmail(to: string, subject: string, html: string, text?: string): string {
+function buildRawEmail(to: string, subject: string, html: string, text?: string, messageId?: string): string {
   const recipients = Array.isArray(to) ? to.join(', ') : to;
   const boundary = `dronewire_${Date.now()}`;
 
@@ -44,6 +47,7 @@ function buildRawEmail(to: string, subject: string, html: string, text?: string)
     `From: ${FROM_EMAIL}`,
     `To: ${recipients}`,
     `Subject: =?UTF-8?B?${Buffer.from(subject, 'utf-8').toString('base64')}?=`,
+    ...(messageId && /^<[A-Za-z0-9._-]+@[A-Za-z0-9.-]+>$/.test(messageId) ? [`Message-ID: ${messageId}`] : []),
     'MIME-Version: 1.0',
     `Content-Type: multipart/alternative; boundary="${boundary}"`,
     '',
@@ -72,7 +76,7 @@ function buildRawEmail(to: string, subject: string, html: string, text?: string)
   return Buffer.from(raw).toString('base64url');
 }
 
-export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
+export async function sendEmail({ to, subject, html, text, messageId }: SendEmailOptions) {
   const gmail = getGmailClient();
 
   if (!gmail) {
@@ -81,7 +85,7 @@ export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
 
   try {
     const recipients = Array.isArray(to) ? to.join(', ') : to;
-    const raw = buildRawEmail(recipients, subject, html, text);
+    const raw = buildRawEmail(recipients, subject, html, text, messageId);
 
     const response = await gmail.users.messages.send({
       userId: 'me',
@@ -90,15 +94,37 @@ export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
 
     return { success: true, data: { messageId: response.data.id } };
   } catch (error: any) {
-    logger.error('Gmail send error:', error?.message || error);
-    return { success: false, error: error?.message || 'Failed to send email' };
+    const numericCode = Number(error?.code);
+    const ambiguous = !Number.isFinite(numericCode) || numericCode === 408 || numericCode === 429 || numericCode >= 500;
+    logger.error('Gmail send failed', { code: Number.isFinite(numericCode) ? String(numericCode) : 'provider-error' });
+    return { success: false, error: 'Provider send failed', ambiguous };
+  }
+}
+
+export async function findSentEmailByMessageId(messageId: string): Promise<{ found: boolean; providerMessageId?: string } | null> {
+  if (!/^<[A-Za-z0-9._-]+@[A-Za-z0-9.-]+>$/.test(messageId)) return null;
+  const gmail = getGmailClient();
+  if (!gmail) return null;
+  try {
+    const response = await gmail.users.messages.list({
+      userId: 'me',
+      labelIds: ['SENT'],
+      q: `rfc822msgid:${messageId}`,
+      maxResults: 1,
+    });
+    const providerMessageId = response.data.messages?.[0]?.id || undefined;
+    return { found: Boolean(providerMessageId), providerMessageId };
+  } catch {
+    logger.warn('Gmail delivery reconciliation failed');
+    return null;
   }
 }
 
 // ── Templates ─────────────────────────────────────────────────────────
 
-export function getWelcomeEmailHtml(firstName?: string) {
-  const name = firstName || 'there';
+export function getWelcomeEmailHtml(firstName: string | undefined, unsubscribeUrl: string) {
+  const name = escapeHtml(firstName || 'there');
+  const safeUnsubscribeUrl = escapeHtml(safeHttpUrl(unsubscribeUrl) || `${SITE_URL}/privacy`);
   return `
 <!DOCTYPE html>
 <html>
@@ -140,22 +166,13 @@ export function getWelcomeEmailHtml(firstName?: string) {
     <div style="background-color: #f4f4f5; padding: 24px 32px; text-align: center;">
       <p style="color: #71717a; font-size: 12px; margin: 0;">
         You're receiving this email because you subscribed to DroneWire.<br>
-        <a href="${SITE_URL}/unsubscribe" style="color: #3b82f6; text-decoration: none;">Unsubscribe</a>
+        <a href="${safeUnsubscribeUrl}" style="color: #3b82f6; text-decoration: none;">Unsubscribe</a>
       </p>
     </div>
   </div>
 </body>
 </html>
   `;
-}
-
-function escapeHtml(unsafe: string): string {
-  return unsafe
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
 }
 
 export function getContactNotificationHtml(data: {
@@ -225,11 +242,12 @@ export function getContactNotificationHtml(data: {
   `;
 }
 
-export async function sendWelcomeEmail(email: string, firstName?: string) {
+export async function sendWelcomeEmail(email: string, firstName: string | undefined, subscriberId: string, preferenceTokenRevision = 0) {
+  const unsubscribeUrl = createUnsubscribeUrl(subscriberId, preferenceTokenRevision);
   return sendEmail({
     to: email,
     subject: 'Welcome to DroneWire — Your Counter-UAS Intelligence Source',
-    html: getWelcomeEmailHtml(firstName),
+    html: getWelcomeEmailHtml(firstName, unsubscribeUrl),
   });
 }
 
@@ -241,7 +259,7 @@ export async function sendContactNotification(data: {
   message: string;
   type: string;
 }) {
-  const adminEmail = process.env.ADMIN_EMAIL || 'jdelvo06@gmail.com';
+  const adminEmail = process.env.ADMIN_EMAIL || 'info@dronewire.org';
   return sendEmail({
     to: adminEmail,
     subject: `[DroneWire Contact] ${data.type}: ${data.subject}`,
