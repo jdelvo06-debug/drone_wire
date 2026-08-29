@@ -118,9 +118,9 @@ export default function AboutPage() {
                 <li className="flex items-start space-x-3">
                   <Users className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold text-foreground">Intelligence Briefings</h4>
+                    <h4 className="font-semibold text-foreground">Curated Analysis</h4>
                     <p className="text-sm text-muted-foreground">
-                      Weekly newsletters with curated insights and trend analysis
+                      Trend coverage and explainers distilled from daily counter-UAS developments
                     </p>
                   </div>
                 </li>
@@ -153,15 +153,14 @@ export default function AboutPage() {
                   <div>
                     <h4 className="font-semibold text-foreground">Email Us</h4>
                     <p className="text-muted-foreground">info@dronewire.org</p>
-                    <p className="text-sm text-muted-foreground">We will respond within 24 hours</p>
+                    <p className="text-sm text-muted-foreground">We read everything and reply as we can</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
                   <MapPin className="w-6 h-6 text-primary mt-1" />
                   <div>
                     <h4 className="font-semibold text-foreground">Location</h4>
-                    <p className="text-muted-foreground">Washington, D.C. Metro Area</p>
-                    <p className="text-sm text-muted-foreground">United States</p>
+                    <p className="text-muted-foreground">United States</p>
                   </div>
                 </div>
               </div>

@@ -49,9 +49,9 @@ export default function ContactForm() {
 
       if (response.ok) {
         setIsSubmitted(true)
-        toast({
-          title: "Message sent successfully!",
-          description: "We'll get back to you within 24 hours.",
+        toast({ 
+          title: "Message sent successfully!", 
+          description: "Thanks for reaching out — we've received your message.", 
         })
       } else {
         throw new Error('Failed to send message')
@@ -83,7 +83,7 @@ export default function ContactForm() {
             Thank You!
           </h3>
           <p className="text-green-700 dark:text-green-300">
-            Your message has been sent successfully. We will review your inquiry and get back to you within 24 hours.
+            Your message has been sent successfully. Thank you for reaching out — we review every inquiry.
           </p>
         </CardContent>
       </Card>
