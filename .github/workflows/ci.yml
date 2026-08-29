@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      ADMIN_SECRET: ci-only-admin-secret
+      RATE_LIMIT_SECRET: ci-only-rate-limit-secret
+      UNSUBSCRIBE_SECRET: ci-only-unsubscribe-secret
+      SITE_URL: https://dronewire.org
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npx tsc --noEmit
+      - run: npm test -- --runInBand --silent
+      - run: npm audit --omit=dev --audit-level=critical
+      - name: Build
+        if: ${{ env.DATABASE_URL != '' }}
+        run: npm run build
+      - name: Require build database secret
+        if: ${{ env.DATABASE_URL == '' }}
+        run: |
+          echo "Repository secret DATABASE_URL is required for the production build gate."
+          exit 1
