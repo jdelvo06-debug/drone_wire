@@ -10,15 +10,15 @@ DroneWire is a Counter-Unmanned Aircraft Systems (C-UAS) intelligence hub built 
 
 ## Current Status
 
-Current reconciled ground truth:
+Audit snapshot from 2026-08-22 (production data was not modified):
 
-- **Articles:** 4,669 total / 3,296 published
+- **Articles:** 4,840 total / 3,663 published / 1,175 pending AI / 2 failed
 - **Systems:** 111
 - **Contracts:** 228
 - **Explainers:** 40
 - **RSS feeds:** 13
-- **Embeddings:** 2,430
-- **AI health:** `https://dronewire.org/api/health/ai` currently returns HTTP 200 with `status: "healthy"`
+- **Embeddings:** not re-counted in the full audit
+- **AI health:** degraded at audit time: primary unavailable, fallback available
 
 Image coverage was not re-audited during this reconciliation; historical image-audit notes are not current database-count evidence.
 
@@ -55,16 +55,16 @@ Image coverage was not re-audited during this reconciliation; historical image-a
 
 - Newsletter signup with Gmail API welcome emails when OAuth credentials are configured
 - Contact form saves submissions to the database
-- Contact notifications use `ADMIN_EMAIL` when it is configured
+- Contact notifications use `ADMIN_EMAIL`; outbound identity uses `FROM_EMAIL`
+- Subscriber-specific signed unsubscribe links immediately suppress future sends
 - Public Cloudflare Email Routing MX is live; the only intentional inbound aliases are `info@dronewire.org` and `tips@dronewire.org`, with catch-all disabled
 - Outbound site email uses Gmail API OAuth credentials
-- The sender identity is currently hard-coded in `lib/services/email.ts`; `FROM_EMAIL` is legacy/unused and is not active configuration
 
 ---
 
 ## Tech Stack
 
-- **Framework:** Next.js 14.2.28, App Router
+- **Framework:** Next.js 15.5.23, App Router
 - **Language:** TypeScript
 - **Database:** Supabase PostgreSQL
 - **ORM:** Prisma 6.7.0
@@ -112,10 +112,13 @@ DATABASE_URL
 OPENAI_API_KEY
 CRON_SECRET
 ADMIN_SECRET
+RATE_LIMIT_SECRET
+UNSUBSCRIBE_SECRET
 GOOGLE_CLIENT_ID
 GOOGLE_CLIENT_SECRET
 GOOGLE_REFRESH_TOKEN
 ADMIN_EMAIL
+FROM_EMAIL
 OLLAMA_API_KEY
 OLLAMA_MODEL
 OLLAMA_FALLBACK_MODEL
@@ -128,7 +131,7 @@ Notes:
 - AI processing defaults to `OLLAMA_MODEL=deepseek-v4-flash` with `OLLAMA_FALLBACK_MODEL=glm-5.2`; production can override both.
 - `SITE_URL` is `https://dronewire.org` in production and drives canonical metadata and email links.
 - `.env.example` contains placeholders only. Do not copy secrets into it.
-- `FROM_EMAIL` is not read by the app; the Gmail sender is hard-coded in `lib/services/email.ts`.
+- `FROM_EMAIL` must exactly match an identity authorized by the configured Gmail account.
 - On the Mac Mini, local DB/script runs may need `NODE_TLS_REJECT_UNAUTHORIZED=0` because of the Zscaler TLS proxy.
 
 ---
@@ -145,6 +148,8 @@ Key scripts live in `scripts/`.
 - `fix-images-curated.ts` — batch-update system image URLs
 - `push-one.ts` — utility for single-system image pushes
 - `cleanup.ts` — cleanup script used during system list reduction
+- `audit-article-categories.ts` — read-only report of category values and malformed rows
+- `benchmark-vector-query.ts` — read-only `EXPLAIN ANALYZE` for a selected related-article vector query
 
 When writing DB update scripts, prefer standalone TypeScript files under `scripts/` and run them with `npx tsx`. Avoid stuffing multi-line database updates into shell one-liners.
 
@@ -181,6 +186,6 @@ https://dronewire.org
 
 ## Current Next Work
 
-1. Run a fresh vision audit before treating historical image-quality results as current.
-2. Re-run production health checks after domain or data-pipeline changes.
-3. Keep documentation updated after each major data or deployment change.
+1. Follow `docs/remediation-runbook.md`; migration, production data, email, cloud settings, and deployment remain approval-gated.
+2. Run a fresh vision audit before treating historical image-quality results as current.
+3. Re-run production health checks after domain or data-pipeline changes.

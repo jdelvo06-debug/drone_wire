@@ -50,7 +50,7 @@ DroneWire is a production Counter-UAS intelligence hub. It combines an RSS-backe
 
 ## Runtime Stack
 
-- **Frontend/backend framework:** Next.js 14.2.28, App Router
+- **Frontend/backend framework:** Next.js 15.5.23, App Router
 - **Language:** TypeScript
 - **Database:** Supabase PostgreSQL
 - **ORM:** Prisma 6.7.0
@@ -235,14 +235,14 @@ Vercel
               └─► Supabase PostgreSQL
 ```
 
-Current data snapshot:
+Read-only data snapshot from 2026-08-22:
 
-- 4,669 articles (3,296 published)
+- 4,840 articles (3,663 published, 1,175 pending AI, 2 failed)
 - 111 systems
 - 40 explainers
 - 228 contracts
 - 13 RSS feeds
-- 2,430 embeddings
+- Embeddings were not re-counted in this audit
 
 Production URL:
 
@@ -293,8 +293,8 @@ Mail routing notes:
 - Public Cloudflare Email Routing MX is live for `dronewire.org`.
 - The only intentional inbound aliases are `info@dronewire.org` and `tips@dronewire.org`; catch-all routing is disabled.
 - Outbound transactional email uses the Gmail API with OAuth credentials.
-- The Gmail sender identity is currently hard-coded in `lib/services/email.ts`.
-- `FROM_EMAIL` exists in production only as a legacy/unused variable; source does not read it, so it is not active configuration.
+- The Gmail sender identity is configured through `FROM_EMAIL` and must be authorized by the configured account.
+- Subscriber links use a dedicated signed token; `UNSUBSCRIBE_SECRET` and `RATE_LIMIT_SECRET` must be independent production secrets.
 
 AI operations notes:
 

@@ -1,7 +1,7 @@
 # DroneWire C-UAS Hub — Project Reference
 
-**Last updated:** 2026-08-01
-**Status:** Production, active maintenance
+**Last updated:** 2026-08-22
+**Status:** Production; remediation implemented locally and not deployed
 
 ---
 
@@ -19,12 +19,12 @@
 
 - **Platform:** Vercel
 - **Live URL:** https://dronewire.org
-- **Framework:** Next.js 14.2.28, App Router
+- **Framework:** Next.js 15.5.23, App Router
 - **Build command:** `prisma generate && next build`
 - **Dev server:** `cd ~/projects/drone_wire/app && npm run dev`
 - **Local port:** 3002
-- **Public AI health:** `GET https://dronewire.org/api/health/ai` currently returns HTTP 200 with `status: "healthy"`
-- **Verified production variables in this reconciliation:** `ADMIN_SECRET`, `OLLAMA_MODEL`, `OLLAMA_FALLBACK_MODEL`, `SITE_URL`, Gmail OAuth variables, and legacy/unused `FROM_EMAIL`
+- **Public AI health at audit time:** primary unavailable, fallback available
+- **Required remediation variables:** independent `RATE_LIMIT_SECRET` and `UNSUBSCRIBE_SECRET`, plus authorized `FROM_EMAIL`
 
 ---
 
@@ -36,7 +36,7 @@
 - **Forwarding rules:** the only intentional inbound aliases are `info@dronewire.org` and `tips@dronewire.org`.
 - **Catch-all:** disabled; only intentional aliases receive mail.
 - **Outbound app email:** Gmail API using `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `GOOGLE_REFRESH_TOKEN`.
-- **Sender identity:** currently hard-coded in `lib/services/email.ts`; the production `FROM_EMAIL` variable is legacy/unused and should not be treated as active configuration.
+- **Sender identity:** configured through `FROM_EMAIL`; Gmail must authorize the exact identity.
 
 ---
 
@@ -53,13 +53,15 @@
 
 | Metric | Value |
 |---|---:|
-| Articles | 4,669 |
-| Published articles | 3,296 |
+| Articles | 4,840 |
+| Published articles | 3,663 |
+| Pending AI | 1,175 |
+| Failed articles | 2 |
 | Systems | 111 |
 | Explainers | 40 |
 | Contracts | 228 |
 | RSS feeds | 13 |
-| Embeddings | 2,430 |
+| Embeddings | Not re-counted in the 2026-08-22 audit |
 
 ---
 

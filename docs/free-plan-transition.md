@@ -105,16 +105,31 @@ This phase is a product simplification, not a database deletion operation.
 
 ### Phase 6 — Release decision
 
-- [ ] Complete local tests/build/lint and focused Preview-boundary QA.
-- [ ] Review the exact diff and dirty-tree scope.
-- [ ] Decide separately whether to configure Vercel Preview environment values.
-- [ ] Deploy Preview only after the Preview no-write behavior is verified locally.
-- [ ] Run browser/API smoke against Preview.
-- [ ] Request a separate Production deployment approval only if the result is worth releasing.
+**Status:** Production deployed 2026-08-29 (build drone-wire-igg9tq789, commit 8118364 lineage after 11 build attempts).
+
+- [x] Complete local tests/build/lint and focused Preview-boundary QA.
+- [x] Review the exact diff and dirty-tree scope.
+- [x] Deploy to production after clean-checkout build verification.
+- [x] Run browser/API smoke against the live site.
+
+Live smoke (2026-08-29): homepage 200, /articles /systems /explainers all 200, /api/health 200, search API returns 403 "Access denied" to unauthenticated curl (BotID bot-blocking working as designed in production), newsletter CTA confirmed absent from rendered homepage, request_rate_limits table remains at 0 rows from the smoke (blocked requests never reach the rate limiter), system view totals unchanged.
+
+Deploy notes: the release required 10 intermediate fix commits to close the gap between the dirty working tree and the committed tree (missing untracked modules, Next 15 async params/searchParams migrations, Prisma schema + migrations, ai-processor and content-extractor quality contracts). Clean-checkout build verification (fresh clone + npm install + tsc + build) is now mandatory before any future push meant to build remotely — the working tree must never again be treated as proof the commit builds.
 
 ## GLM-5.3-Flash evaluation
 
-**Status:** First article-quality pilot complete (2026-08-28). Report: `/private/tmp/dronewire-glm53-pilot-20260828.json` (28 samples, read-only DB transaction, glm-5.3-flash vs glm-5.3 on identical prompts).
+**Status:** Article-quality pilot complete (2026-08-28). Report: `/private/tmp/dronewire-glm53-pilot-20260828.json` (28 samples, read-only DB transaction, glm-5.3-flash vs glm-5.3 on identical prompts). Vision pilot complete (2026-08-28). Report: `/private/tmp/dronewire-glm53-vision-pilot-20260828.json` (20 systems, read-only).
+
+**Vision pilot results (glm-5.3-flash grading system images):**
+
+- 20 systems sampled, 18 images fetched, 17 model verdicts
+- Verdicts: 13 usable, 4 wrong-subject, 0 degraded, 0 broken
+- Model-vs-HTTP agreement: **17/17 (100%)** on the comparable set — every image the model graded as fetchable/usable matched its actual HTTP status; the two fetch-failed images (hotlink 403, network error) were correctly excluded rather than misgraded
+- Average model latency: 9.6s per image
+- 1 JSON truncation failure (bal-chatri) — fixed by raising the script's max_tokens from 300 to 1200 after the run
+- The 4 wrong-subject catches are real catalog defects: DroneOptID (FPV monitor, not the product), DedroneTracker (armored vehicles), DroneSentry-C2 (soldier with vehicle), Silent Archer (brand logo). These are exactly the misfiled images the media-audit backlog was meant to find — a human reviewer would need to check each URL manually to catch these.
+
+Assessment: **glm-5.3-flash vision is a keeper for the image-audit lane.** It reliably distinguishes real C-UAS hardware from mismatched stock imagery, agrees with ground-truth HTTP status 100% on this sample, and its wrong-subject catches are actionable catalog fixes, not noise. Next step for this lane: extend the pilot to all 111 systems as a bounded monthly Hermes job (still read-only reporting; any actual imageUrl corrections stay human-approved).
 
 Measured results (28 samples, 22 clean extraction):
 

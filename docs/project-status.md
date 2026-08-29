@@ -1,24 +1,28 @@
 # DroneWire Project Status
 
-**Last Updated:** 2026-08-01
-**Status:** Production, active maintenance
+> **Active direction:** DroneWire remains on the free plan. Preview is being made no-write against shared Production state. Newsletter delivery and unattended full-backlog AI processing are deferred; see `docs/free-plan-transition.md`.
+
+**Last Updated:** 2026-08-22
+**Status:** Production; remediation implemented locally and not deployed
 **Live Site:** https://dronewire.org
 
 ---
 
 ## Current State
 
-Current reconciled ground truth:
+Read-only audit snapshot from 2026-08-22:
 
 | Area | Current State |
 |---|---:|
-| Articles | 4,669 |
-| Published articles | 3,296 |
+| Articles | 4,840 |
+| Published articles | 3,663 |
+| Pending AI | 1,175 |
+| Failed articles | 2 |
 | Systems | 111 |
 | Explainers | 40 |
 | Contracts | 228 |
 | RSS feeds | 13 |
-| Embeddings | 2,430 |
+| Embeddings | Not re-counted in this audit |
 
 ---
 
@@ -37,11 +41,11 @@ Current reconciled ground truth:
 | Contracts Page | Working | 228 contract records |
 | About Page | Working | Project information |
 | Dark/Light Mode | Working | Theme toggle in header |
-| Mobile Responsive | Working | Responsive navigation |
-| Newsletter Signup | Working | Gmail API welcome emails when OAuth credentials are configured |
-| Contact Form | Working | Saves to DB; email notifications use `ADMIN_EMAIL` when configured |
+| Mobile Responsive | Local fix pending deployment | Contract table containment repaired at audited viewports |
+| Newsletter Signup | Deferred | Public signup and delivery are not part of the active free-plan rollout; preserve existing data until separately dispositioned |
+| Contact Form | Local fix pending deployment | Bounded input, persistent throttling, BotID, and awaited notification behavior |
 | Cloudflare Email Routing | Working | Public MX is live; only `info@dronewire.org` and `tips@dronewire.org` are intentional aliases; catch-all is disabled |
-| AI Health Endpoint | Healthy | Production `/api/health/ai` returns HTTP 200 with `status: "healthy"` |
+| AI Health Endpoint | Degraded at audit time | Primary unavailable; fallback available |
 
 ---
 
@@ -67,7 +71,7 @@ Current reconciled ground truth:
 | Platform | Vercel |
 | Build Command | `prisma generate && next build` |
 | Production Domain | https://dronewire.org |
-| Public AI Health | HTTP 200, `status: "healthy"` |
+| Public AI Health | Degraded at 2026-08-22 audit; refresh before operational decisions |
 
 ### Supabase Database
 
@@ -88,7 +92,9 @@ Current reconciled ground truth:
 | OLLAMA_MODEL / OLLAMA_FALLBACK_MODEL | Configured in production; source defaults are `deepseek-v4-flash` / `glm-5.2` |
 | GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET / GOOGLE_REFRESH_TOKEN | Configured in production for Gmail API delivery |
 | SITE_URL | `https://dronewire.org` |
-| FROM_EMAIL | Legacy/unused; source does not read it |
+| RATE_LIMIT_SECRET | Required before remediation deployment; status unverified |
+| UNSUBSCRIBE_SECRET | Required before remediation deployment; status unverified |
+| FROM_EMAIL | Active source configuration; Gmail authorization must be verified |
 | ADMIN_EMAIL | Documented application setting; production presence is not asserted here |
 
 ### Email and Domain
@@ -99,7 +105,7 @@ Current reconciled ground truth:
 | Inbound aliases | Only `info@dronewire.org` and `tips@dronewire.org` |
 | Catch-all | Disabled |
 | Outbound app email | Gmail API via OAuth credentials |
-| Sender identity | Hard-coded in `lib/services/email.ts`; not controlled by `FROM_EMAIL` |
+| Sender identity | Controlled by `FROM_EMAIL`; authorization and delivery remain unverified |
 
 ---
 
@@ -107,16 +113,24 @@ Current reconciled ground truth:
 
 ### High Priority
 
-1. **System image quality backlog**
+1. **Remediation release gates**
+   - Follow `docs/remediation-runbook.md`.
+   - Migration, Vercel secrets/BotID, production data repair, email tests, and deployment need separate approval.
+
+2. **Taxonomy and AI backlog**
+   - 1,175 articles were `pending_ai`; malformed pipe-delimited category values exist in published data.
+   - Run the read-only category audit, export a rollback checkpoint, approve mappings, then repair/process bounded batches.
+
+3. **System image quality backlog**
    - Current DB count: 111 systems.
    - Image coverage was not re-audited in this reconciliation.
    - Run a fresh audit before treating prior FAIL/UNCERTAIN results as current.
 
-2. **Image audit backlog**
+4. **Image audit backlog**
    - Historical audits found generic, uncertain, failed, or inaccessible images.
    - Those results predate the current 111-system count and require refresh before use.
 
-3. **Contract title display** ✅ RESOLVED (2026-05-16)
+5. **Contract title display** ✅ RESOLVED (2026-05-16)
    - Contracts were displaying raw award IDs (`W50S8U24FA042`) instead of meaningful titles.
    - Fixed: `cleanTitle()` rewritten to extract first sentence from descriptions with smart title case.
    - Upsert path expanded to sync all fields on existing records, not just value.

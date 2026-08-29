@@ -6,6 +6,20 @@ All notable changes to DroneWire are documented in this file.
 
 ## [Unreleased]
 
+### Full Audit Remediation (local only)
+
+This implementation has not been deployed and has not changed production data, cloud settings, or email state.
+
+- Added persistent HMAC-keyed rate limits and Vercel BotID checks for public cost/write routes, plus bounded request parsing and idempotent daily view events.
+- Added signed subscriber-specific unsubscribe links, an idempotent confirmation flow, send-path suppression, and HTML/URL escaping in email templates.
+- Centralized the five article categories, corrected the contradictory AI prompt example, added regression tests, and added a read-only category audit script.
+- Removed unused vulnerable NextAuth packages, aligned the Next.js ESLint toolchain, and removed the stale Prisma seed declaration.
+- Upgraded the bounded framework line to Next.js 15.5.23 and pinned affected transitive packages; the Next 16-only bundled PostCSS fix remains outside this packet.
+- Corrected admin counts, contract sorting/aggregation, duplicate view increments, responsive table overflow, control labels/state, security headers, RSS image/CDATA, and external-content URL/size validation.
+- Added canonical metadata, branded error states, a least-sensitive health response with deployment commit reporting, CI gates, and a production release runbook.
+
+**Approval gates:** the rate-limit migration, new secrets/BotID configuration, article repair, AI backlog drain, email delivery test, cloud alerts, preview, and deployment all remain separate production actions.
+
 ### Local Domain, Mail, and Operations Reconciliation
 
 This work remains local and uncommitted; it has not been pushed or deployed.
