@@ -2,9 +2,18 @@ import OpenAI from 'openai'
 import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/db'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+// Lazily constructed so module import stays safe during builds without
+// credentials (e.g. clean checkouts). The SDK only throws if an embedding
+// is actually requested without a key.
+let _openai: OpenAI | null = null
+function getOpenAI(): OpenAI {
+  if (!_openai) {
+    _openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    })
+  }
+  return _openai
+}
 
 export interface SemanticSearchResult {
   id: string
@@ -20,7 +29,7 @@ export interface SemanticSearchResult {
 }
 
 async function generateQueryEmbedding(query: string): Promise<number[]> {
-  const response = await openai.embeddings.create({
+  const response = await getOpenAI().embeddings.create({
     model: 'text-embedding-3-small',
     input: query.slice(0, 8000),
   })

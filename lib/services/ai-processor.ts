@@ -7,16 +7,24 @@ import slugify from 'slugify';
 import { isArticleCategory, type ArticleCategory } from '@/lib/article-category';
 import { calculateReadTime, nextAiRetryState } from '@/lib/articles/quality';
 
-// Ollama Cloud API (for chat completions)
+// Ollama Cloud API (for chat completions) — has a fallback key, safe at import time
 const ollama = new OpenAI({
   apiKey: process.env.OLLAMA_API_KEY || 'ollama',
   baseURL: 'https://ollama.com/v1',
 });
 
-// OpenAI API (for embeddings only)
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// OpenAI API (for embeddings only) — lazily constructed so module import
+// stays safe during credential-less builds (clean checkouts, page-data
+// collection). Only throws if an embedding is actually requested.
+let _openai: OpenAI | null = null;
+function getOpenAI(): OpenAI {
+  if (!_openai) {
+    _openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+  return _openai;
+}
 
 // ---------------------------------------------------------------------------
 // Model configuration — environment-configurable with safe defaults
@@ -151,7 +159,7 @@ export async function checkAIModelAvailability(): Promise<ModelAvailabilityResul
 
 async function generateEmbedding(text: string): Promise<number[] | null> {
   try {
-    const response = await openai.embeddings.create({
+    const response = await getOpenAI().embeddings.create({
       model: 'text-embedding-3-small',
       input: text.slice(0, 8000),
     });
