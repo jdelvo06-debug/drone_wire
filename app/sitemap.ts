@@ -56,25 +56,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  const [articles, systems, explainers, newestContract] = await Promise.all([
-    prisma.article.findMany({
-      where: { status: 'published' },
-      select: { id: true, updatedAt: true, publishedAt: true },
-      orderBy: { publishedAt: 'desc' },
-    }),
-    prisma.system.findMany({
-      select: { slug: true, updatedAt: true },
-      orderBy: { updatedAt: 'desc' },
-    }),
-    prisma.explainer.findMany({
-      select: { slug: true, updatedAt: true },
-      orderBy: { updatedAt: 'desc' },
-    }),
-    prisma.contract.findFirst({
-      select: { updatedAt: true },
-      orderBy: { updatedAt: 'desc' },
-    }),
-  ])
+  let articles: Array<{ id: string; updatedAt: Date; publishedAt: Date }> = []
+  let systems: Array<{ slug: string; updatedAt: Date }> = []
+  let explainers: Array<{ slug: string; updatedAt: Date }> = []
+  let newestContract: { updatedAt: Date } | null = null
+
+  try {
+    ;[articles, systems, explainers, newestContract] = await Promise.all([
+      prisma.article.findMany({
+        where: { status: 'published' },
+        select: { id: true, updatedAt: true, publishedAt: true },
+        orderBy: { publishedAt: 'desc' },
+      }),
+      prisma.system.findMany({
+        select: { slug: true, updatedAt: true },
+        orderBy: { updatedAt: 'desc' },
+      }),
+      prisma.explainer.findMany({
+        select: { slug: true, updatedAt: true },
+        orderBy: { updatedAt: 'desc' },
+      }),
+      prisma.contract.findFirst({
+        select: { updatedAt: true },
+        orderBy: { updatedAt: 'desc' },
+      }),
+    ])
+  } catch (e) {
+    if (process.env.DATABASE_URL) throw e
+    console.warn(
+      '[sitemap] DATABASE_URL not set at build time — emitting static routes only'
+    )
+  }
 
   // --- Dynamic article URLs (only published) -------------------------------
   const articleUrls: MetadataRoute.Sitemap = articles.map((article) => ({
