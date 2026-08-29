@@ -4,10 +4,21 @@ jest.mock('rss-parser', () => {
   return {
     __esModule: true,
     default: jest.fn().mockImplementation(() => ({
-      parseURL: mockParseURL,
+      parseString: mockParseURL,
     })),
   }
 })
+
+const makeXmlResponse = () => ({
+  status: 200,
+  ok: true,
+  headers: { get: (name: string) => name.toLowerCase() === 'content-type' ? 'application/rss+xml' : null },
+  text: async () => '<rss/>',
+})
+const mockFetchPinnedExternal = jest.fn().mockResolvedValue(makeXmlResponse())
+jest.mock('@/lib/services/content-extractor', () => ({
+  fetchPinnedExternal: (...args: unknown[]) => mockFetchPinnedExternal(...args),
+}))
 
 // Mock prisma
 const mockPrisma = {
@@ -59,6 +70,7 @@ const {
 
 afterEach(() => {
   jest.clearAllMocks()
+  mockFetchPinnedExternal.mockResolvedValue(makeXmlResponse())
 })
 
 describe('chunkArray', () => {
@@ -168,6 +180,18 @@ describe('scrapeRssFeeds', () => {
     expect(result.errors[0].feed).toBe('Feed 1')
     expect(result.errors[0].error).toBe('Network timeout')
     expect(result.feedsProcessed).toBe(1) // only Feed 2 succeeded
+  })
+
+  it('rejects unsafe feed destinations before parsing', async () => {
+    const feeds = [makeFeed('f1', 'Unsafe Feed', 'http://127.0.0.1/feed')]
+    mockPrisma.rssFeed.findMany.mockResolvedValue(feeds)
+    mockPrisma.rssFeed.update.mockResolvedValue({ errorCount: 1 })
+    mockFetchPinnedExternal.mockResolvedValueOnce(null)
+
+    const result = await scrapeRssFeeds()
+
+    expect(result.errors).toEqual([{ feed: 'Unsafe Feed', error: 'Feed URL is not a safe external destination' }])
+    expect(mockParseURL).not.toHaveBeenCalled()
   })
 
   it('uses Unknown error for non-Error parser rejections', async () => {
