@@ -3563,9 +3563,9 @@ The lesson from these deployments is that effective coalition C-UAS requires inv
 NATO's current trajectory—accelerating STANAG implementation, expanding exercise programs, and using Ukraine lessons to drive urgency—represents the right direction. The gap between direction and operational effectiveness remains significant, and the threat is not waiting for the alliance to close it.`,
   },
   {
-    title: 'JIATF-401: The Pentagon\'s New Counter-Drone Authority',
+    title: 'JIATF 401: The Defense Department’s Counter-UAS Task Force',
     slug: 'jiatf-401-pentagons-counter-drone-authority',
-    description: 'How the Pentagon replaced the Joint Counter-sUAS Office with JIATF-401, a more powerful joint interagency task force that consolidates all DoD counter-drone RDT&E and Replicator 2 resources under direct deputy secretary oversight.',
+    description: 'JIATF 401 is the Defense Department task force established in August 2025 to align authorities and resources and accelerate delivery of joint counter-small-UAS capabilities.',
     category: 'policy',
     difficulty: 'intermediate',
     readTime: 12,
@@ -3599,7 +3599,7 @@ NATO's current trajectory—accelerating STANAG implementation, expanding exerci
         'Success depends on sustained deputy secretary-level attention',
     ],
     realWorldUse: 'JIATF-401 was established by Secretary of Defense memorandum on August 27, 2025, simultaneously disestablishing the JCO. It implements priorities from Executive Order 14305 "Restoring American Airspace Sovereignty" (June 6, 2025) and the DoD Strategy for Countering Unmanned Systems (December 1, 2024). Army provides administrative support through WHS facilities and staffing.',
-    content: `# JIATF-401: The Pentagon's New Counter-Drone Authority
+    content: `# JIATF 401: The Defense Department’s Counter-UAS Task Force
 
 On August 27, 2025, the Secretary of Defense signed a memorandum that simultaneously disestablished the Joint Counter-small UAS Office (JCO) and stood up Joint Interagency Task Force 401 (JIATF-401). The move represents the most significant reorganization of the Pentagon's counter-drone enterprise since the JCO was created in 2019, elevating counter-UAS from a coordination office buried in the Army's executive agent chain to a task force reporting directly to the Deputy Secretary of Defense.
 

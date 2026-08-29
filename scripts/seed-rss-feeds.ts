@@ -46,6 +46,7 @@ const RSS_FEEDS = [
     url: 'https://dronelife.com/feed/',
     category: 'industry',
     description: 'Commercial drone industry news',
+    isActive: false,
   },
   {
     name: 'sUAS News',
@@ -110,12 +111,13 @@ async function seedRssFeeds() {
         url: feed.url,
         category: feed.category,
         description: feed.description,
-        isActive: true,
+        isActive: feed.isActive ?? true,
       },
       update: {
         name: feed.name,
         category: feed.category,
         description: feed.description,
+        isActive: feed.isActive ?? true,
       },
     });
     console.log(`  ✓ ${result.name}`);
