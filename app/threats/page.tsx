@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
+import { canOptimizeImage } from '@/lib/constants/images'
 import { ArrowRight, Eye, AlertTriangle, Crosshair, Radar, Zap, Plane } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -11,6 +12,7 @@ export const revalidate = 600 // ISR: revalidate every 10 minutes
 export const metadata: Metadata = {
   title: 'UAS Threat Database',
   description: 'Adversary drones and UAS systems used in modern warfare. Loitering munitions, reconnaissance UAVs, and weaponized commercial drones.',
+  alternates: { canonical: '/threats' },
 }
 
 async function getThreatSystems() {
@@ -24,6 +26,19 @@ async function getThreatSystems() {
       { featured: 'desc' },
       { name: 'asc' },
     ],
+    select: {
+      id: true,
+      slug: true,
+      name: true,
+      category: true,
+      status: true,
+      country: true,
+      manufacturer: true,
+      primaryCapability: true,
+      imageUrl: true,
+      views: true,
+      featured: true,
+    },
   })
   return systems
 }
@@ -96,6 +111,7 @@ export default async function ThreatsPage() {
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-300"
               sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              unoptimized={!canOptimizeImage(system.imageUrl)}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-red-950/20 to-muted/50 dark:from-red-950/40">

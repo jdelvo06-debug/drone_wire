@@ -28,7 +28,7 @@ async function getStats() {
   ] = await Promise.all([
     prisma.article.count(),
     prisma.article.count({ where: { status: 'published' } }),
-    prisma.article.count({ where: { status: 'pending' } }),
+    prisma.article.count({ where: { status: 'pending_ai' } }),
     prisma.explainer.count(),
     prisma.newsletterSubscriber.count(),
     prisma.contactSubmission.count(),

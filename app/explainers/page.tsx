@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 export const revalidate = 600 // ISR: revalidate every 10 minutes
 import Image from 'next/image'
+import { canOptimizeImage } from '@/lib/constants/images'
 import { Clock, ArrowRight, Users, BookOpen } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -12,10 +13,25 @@ import ExplainersHeader from '@/components/explainers/explainers-header'
 export const metadata: Metadata = {
   title: 'Explainers Library',
   description: 'Guides to counter-drone tech: how systems work, threat types, and defense policy basics.',
+  alternates: { canonical: '/explainers' },
 }
 
 async function getExplainers() {
   const explainers = await prisma.explainer.findMany({
+    select: {
+      id: true,
+      slug: true,
+      title: true,
+      description: true,
+      imageUrl: true,
+      category: true,
+      difficulty: true,
+      readTime: true,
+      views: true,
+      featured: true,
+      keyFeatures: true,
+      updatedAt: true,
+    },
     orderBy: [
       { featured: 'desc' },
       { views: 'desc' },
@@ -55,11 +71,17 @@ function getCategoryColor(category: string) {
 export default async function ExplainersPage() {
   const explainers = await getExplainers()
   const featuredExplainers = explainers.filter(e => e.featured).slice(0, 2)
+  const categoryCounts = explainers.reduce<Record<string, number>>((counts, explainer) => {
+    counts[explainer.category] = (counts[explainer.category] || 0) + 1
+    return counts
+  }, {})
+  const lastUpdated = explainers.reduce<Date | null>((latest, explainer) => !latest || explainer.updatedAt > latest ? explainer.updatedAt : latest, null)
 
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-12">
-        <ExplainersHeader />
+        <ExplainersHeader categoryCounts={categoryCounts} />
+        {lastUpdated && <p className="mt-4 text-center text-sm text-muted-foreground">Library last updated {lastUpdated.toLocaleDateString('en-US', { dateStyle: 'long' })}</p>}
 
         <div className="mt-12">
           {/* Featured Section */}
@@ -82,6 +104,7 @@ export default async function ExplainersPage() {
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
                             sizes="(max-width: 1024px) 100vw, 50vw"
+                            unoptimized={!canOptimizeImage(explainer.imageUrl)}
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
@@ -155,6 +178,7 @@ export default async function ExplainersPage() {
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-300"
                           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          unoptimized={!canOptimizeImage(explainer.imageUrl)}
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">

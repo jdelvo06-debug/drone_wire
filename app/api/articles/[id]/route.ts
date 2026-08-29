@@ -29,12 +29,6 @@ export async function GET(
       );
     }
 
-    // Increment view count
-    await prisma.article.update({
-      where: { id },
-      data: { views: { increment: 1 } },
-    });
-
     // Transform tags
     const transformedArticle = {
       ...article,

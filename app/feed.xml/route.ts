@@ -11,6 +11,10 @@ function escapeXml(str: string): string {
     .replace(/'/g, '&apos;')
 }
 
+function escapeCdata(str: string): string {
+  return str.replace(/\]\]>/g, ']]]]><![CDATA[>')
+}
+
 export async function GET() {
   const siteUrl = process.env.SITE_URL || 'https://dronewire.org'
 
@@ -44,7 +48,7 @@ export async function GET() {
       <title>${escapeXml(article.title)}</title>
       <link>${siteUrl}/articles/${article.id}</link>
       <guid isPermaLink="true">${siteUrl}/articles/${article.id}</guid>
-      <description><![CDATA[${description}]]></description>
+      <description><![CDATA[${escapeCdata(description)}]]></description>
       <pubDate>${pubDate}</pubDate>
       <category>${escapeXml(article.category)}</category>
       <source url="${escapeXml(article.sourceUrl || siteUrl)}">${escapeXml(article.sourceName)}</source>
@@ -63,7 +67,7 @@ export async function GET() {
     <lastBuildDate>${lastBuildDate.toUTCString()}</lastBuildDate>
     <atom:link href="${siteUrl}/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
-      <url>${siteUrl}/logo.png</url>
+      <url>${siteUrl}/images/drone-swarm-formation.jpg</url>
       <title>DroneWire</title>
       <link>${siteUrl}</link>
     </image>

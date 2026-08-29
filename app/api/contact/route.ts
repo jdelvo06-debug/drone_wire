@@ -3,6 +3,11 @@ import { prisma } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import { sendContactNotification } from '@/lib/services/email'
 import { requireAdminBearer } from '@/lib/auth'
+import {
+  enforcePublicRequest,
+  parseBoundedJson,
+  RequestBodyError,
+} from '@/lib/security/request-guard'
 
 export const dynamic = "force-dynamic"
 
@@ -10,13 +15,20 @@ export const dynamic = "force-dynamic"
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/
 
 export async function POST(req: NextRequest) {
+  const blocked = await enforcePublicRequest(req, {
+    route: 'contact',
+    limit: 5,
+    windowSeconds: 60 * 60,
+  })
+  if (blocked) return blocked
+
   let body: Record<string, unknown>
   try {
-    body = await req.json()
-  } catch {
+    body = await parseBoundedJson<Record<string, unknown>>(req, 8 * 1024)
+  } catch (error) {
     return NextResponse.json(
-      { error: 'Invalid JSON body' },
-      { status: 400 }
+      { error: error instanceof RequestBodyError ? error.message : 'Invalid JSON body' },
+      { status: error instanceof RequestBodyError ? error.status : 400 }
     )
   }
 
@@ -30,44 +42,81 @@ export async function POST(req: NextRequest) {
       message?: string
     }
 
-    // Validate required fields
-    if (!name || !email || !subject || !message) {
+    // Validate required fields and types before using or storing them.
+    if (
+      typeof name !== 'string' ||
+      typeof email !== 'string' ||
+      typeof subject !== 'string' ||
+      typeof message !== 'string'
+    ) {
       return NextResponse.json(
         { error: 'Missing required fields: name, email, subject, and message are required' },
         { status: 400 }
       )
     }
 
+    const normalized = {
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      company: typeof company === 'string' ? company.trim() : '',
+      subject: subject.trim(),
+      type: typeof type === 'string' ? type : 'general',
+      message: message.trim(),
+    }
+    const allowedTypes = new Set(['general', 'press', 'partnership', 'tip'])
+    if (
+      !normalized.name || normalized.name.length > 100 ||
+      !normalized.email || normalized.email.length > 254 ||
+      normalized.company.length > 200 ||
+      !normalized.subject || normalized.subject.length > 200 ||
+      !normalized.message || normalized.message.length > 5000 ||
+      !allowedTypes.has(normalized.type)
+    ) {
+      return NextResponse.json({ error: 'Invalid contact form fields' }, { status: 400 })
+    }
+
     // Validate email format
-    if (!EMAIL_REGEX.test(email)) {
+    if (!EMAIL_REGEX.test(normalized.email)) {
       return NextResponse.json(
         { error: 'Invalid email format' },
         { status: 400 }
       )
     }
 
+    const emailBlocked = await enforcePublicRequest(req, {
+      route: 'contact-email',
+      limit: 1,
+      windowSeconds: 10 * 60,
+      identifierSuffix: normalized.email,
+      checkBot: false,
+    })
+    if (emailBlocked) return emailBlocked
+
     // Create contact submission
     const submission = await prisma.contactSubmission.create({
       data: {
-        name,
-        email,
-        company: company || null,
-        subject,
-        type,
-        message,
+        name: normalized.name,
+        email: normalized.email,
+        company: normalized.company || null,
+        subject: normalized.subject,
+        type: normalized.type,
+        message: normalized.message,
         status: 'new',
       }
     })
 
-    // Send email notification to admin (fire and forget)
-    sendContactNotification({
-      name,
-      email,
-      company,
-      subject,
-      message,
-      type,
-    }).catch(logger.error)
+    // Await the attempt so failures are observable while preserving the submission.
+    const notification = await sendContactNotification({
+      name: normalized.name,
+      email: normalized.email,
+      company: normalized.company || undefined,
+      subject: normalized.subject,
+      message: normalized.message,
+      type: normalized.type,
+    })
+    if (!notification.success) {
+      logger.error('Contact notification failed after submission was stored')
+    }
 
     return NextResponse.json({
       message: 'Message sent successfully!',

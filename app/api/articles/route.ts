@@ -68,9 +68,22 @@ export async function GET(req: NextRequest) {
     const [articles, total] = await Promise.all([
       prisma.article.findMany({
         where,
-        include: {
+        select: {
+          id: true,
+          title: true,
+          excerpt: true,
+          sourceName: true,
+          sourceUrl: true,
+          publishedAt: true,
+          imageUrl: true,
+          category: true,
+          status: true,
+          views: true,
+          readTime: true,
+          aiSummary: true,
+          confidence: true,
           tags: {
-            include: {
+            select: {
               tag: true,
             },
           },
@@ -102,35 +115,6 @@ export async function GET(req: NextRequest) {
     logger.error('Articles API error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch articles' },
-      { status: 500 }
-    );
-  }
-}
-
-// Increment view count
-export async function POST(req: NextRequest) {
-  try {
-    const { articleId } = await req.json();
-
-    if (!articleId) {
-      return NextResponse.json(
-        { error: 'Article ID required' },
-        { status: 400 }
-      );
-    }
-
-    await prisma.article.update({
-      where: { id: articleId },
-      data: {
-        views: { increment: 1 },
-      },
-    });
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    logger.error('View increment error:', error);
-    return NextResponse.json(
-      { error: 'Failed to update views' },
       { status: 500 }
     );
   }

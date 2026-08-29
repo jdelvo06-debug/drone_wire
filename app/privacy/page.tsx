@@ -5,6 +5,7 @@ import { Shield } from 'lucide-react'
 export const metadata: Metadata = {
   title: 'Privacy Policy',
   description: 'Privacy policy for Counter-UAS Knowledge Hub',
+  alternates: { canonical: '/privacy' },
 }
 
 export default function PrivacyPage() {

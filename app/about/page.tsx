@@ -7,6 +7,7 @@ import ContactForm from '@/components/about/contact-form'
 export const metadata: Metadata = {
   title: 'About Us',
   description: 'DroneWire aggregates news, contracts, and technical info on counter-drone systems. Learn what we do and why.',
+  alternates: { canonical: '/about' },
 }
 
 export default function AboutPage() {

@@ -22,6 +22,7 @@ export const metadata: Metadata = {
   creator: 'DroneWire',
   publisher: 'DroneWire',
   alternates: {
+    canonical: '/',
     types: {
       'application/rss+xml': '/feed.xml',
     },
@@ -33,11 +34,13 @@ export const metadata: Metadata = {
     title: 'DroneWire',
     description: 'AI-curated news and explainers focused on drone warfare and counter-UAS technology',
     siteName: 'DroneWire',
+    images: ['/images/drone-swarm-formation.jpg'],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'DroneWire',
     description: 'AI-curated news and explainers focused on drone warfare and counter-UAS technology',
+    images: ['/images/drone-swarm-formation.jpg'],
   },
   robots: {
     index: true,
@@ -73,8 +76,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="flex min-h-screen flex-col">
+            <a href="#main-content" className="skip-link">Skip to main content</a>
             <Header />
-            <main className="flex-1">
+            <main id="main-content" className="flex-1" tabIndex={-1}>
               {children}
             </main>
             <Footer />

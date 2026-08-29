@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ADMIN_COOKIE, generateSessionToken, timingSafeEqual, isValidAdminRedirect } from '@/lib/auth'
+import {
+  enforcePublicRequest,
+  parseBoundedJson,
+  RequestBodyError,
+} from '@/lib/security/request-guard'
 
 export const dynamic = 'force-dynamic'
 
@@ -10,16 +15,26 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Admin access not configured' }, { status: 503 })
   }
 
+  const blocked = await enforcePublicRequest(req, {
+    route: 'admin-login',
+    limit: 5,
+    windowSeconds: 15 * 60,
+  })
+  if (blocked) return blocked
+
   let body: { password?: string; from?: string }
   try {
-    body = await req.json()
-  } catch {
-    return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
+    body = await parseBoundedJson(req, 4 * 1024)
+  } catch (error) {
+    return NextResponse.json(
+      { error: error instanceof RequestBodyError ? error.message : 'Invalid request' },
+      { status: error instanceof RequestBodyError ? error.status : 400 },
+    )
   }
 
   const { password, from } = body
 
-  if (!password) {
+  if (!password || typeof password !== 'string' || password.length > 512) {
     return NextResponse.json({ error: 'Password required' }, { status: 400 })
   }
 

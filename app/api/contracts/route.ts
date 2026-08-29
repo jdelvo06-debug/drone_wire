@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
+import { Prisma } from '@prisma/client';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,21 +10,25 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
 
     // Pagination params
-    const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
-    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') || '20', 10)));
+    const parsedPage = Number.parseInt(searchParams.get('page') || '', 10);
+    const parsedLimit = Number.parseInt(searchParams.get('limit') || '', 10);
+    const page = Number.isFinite(parsedPage) ? Math.max(1, parsedPage) : 1;
+    const limit = Number.isFinite(parsedLimit) ? Math.min(100, Math.max(1, parsedLimit)) : 20;
     const skip = (page - 1) * limit;
 
     // Filter params
     const category = searchParams.get('category');
     const agency = searchParams.get('agency');
     const company = searchParams.get('company');
+    const status = searchParams.get('status');
     const search = searchParams.get('search');
     const minValue = searchParams.get('minValue');
     const maxValue = searchParams.get('maxValue');
 
     // Sort params
     const sortBy = searchParams.get('sortBy') || 'awardDate';
-    const sortOrder = searchParams.get('sortOrder') === 'asc' ? 'asc' : 'desc';
+    const requestedSortOrder = searchParams.get('sortOrder') || searchParams.get('sortDir');
+    const sortOrder = requestedSortOrder === 'asc' ? 'asc' : 'desc';
 
     // Build where clause
     const where: Record<string, unknown> = {};
@@ -32,12 +37,16 @@ export async function GET(req: NextRequest) {
       where.category = category;
     }
 
-    if (agency) {
+    if (agency && agency !== 'all') {
       where.agency = { contains: agency, mode: 'insensitive' };
     }
 
     if (company) {
       where.company = { contains: company, mode: 'insensitive' };
+    }
+
+    if (status && status !== 'all') {
+      where.status = status;
     }
 
     if (search) {
@@ -64,9 +73,30 @@ export async function GET(req: NextRequest) {
       }
     }
 
+    const sqlConditions: Prisma.Sql[] = [];
+    if (category && category !== 'all') sqlConditions.push(Prisma.sql`"category" = ${category}`);
+    if (agency && agency !== 'all') sqlConditions.push(Prisma.sql`"agency" ILIKE ${`%${agency}%`}`);
+    if (company) sqlConditions.push(Prisma.sql`"company" ILIKE ${`%${company}%`}`);
+    if (status && status !== 'all') sqlConditions.push(Prisma.sql`"status" = ${status}`);
+    if (search) {
+      const pattern = `%${search}%`;
+      sqlConditions.push(Prisma.sql`(
+        "title" ILIKE ${pattern} OR
+        "description" ILIKE ${pattern} OR
+        "company" ILIKE ${pattern}
+      )`);
+    }
+    const parsedMin = minValue ? Number(minValue) : Number.NaN;
+    const parsedMax = maxValue ? Number(maxValue) : Number.NaN;
+    if (Number.isFinite(parsedMin)) sqlConditions.push(Prisma.sql`"value" >= ${parsedMin}`);
+    if (Number.isFinite(parsedMax)) sqlConditions.push(Prisma.sql`"value" <= ${parsedMax}`);
+    const sqlWhere = sqlConditions.length > 0
+      ? Prisma.sql`WHERE ${Prisma.join(sqlConditions, ' AND ')}`
+      : Prisma.empty;
+
     // Build orderBy
     const orderBy: Record<string, string> = {};
-    if (['awardDate', 'value', 'company', 'agency', 'createdAt'].includes(sortBy)) {
+    if (['awardDate', 'title', 'value', 'company', 'agency', 'createdAt'].includes(sortBy)) {
       orderBy[sortBy] = sortOrder;
     } else {
       orderBy.awardDate = 'desc';
@@ -76,6 +106,22 @@ export async function GET(req: NextRequest) {
     const [contracts, total, aggregates] = await Promise.all([
       prisma.contract.findMany({
         where,
+        select: {
+          id: true,
+          contractNumber: true,
+          title: true,
+          company: true,
+          awardDate: true,
+          value: true,
+          currency: true,
+          agency: true,
+          category: true,
+          status: true,
+          duration: true,
+          description: true,
+          sourceUrl: true,
+          location: true,
+        },
         orderBy,
         skip,
         take: limit,
@@ -100,15 +146,13 @@ export async function GET(req: NextRequest) {
         orderBy: { _sum: { value: 'desc' } },
         take: 10, // Top 10 agencies
       }),
-      // Group by month - get all contracts and aggregate in JS
-      prisma.contract.findMany({
-        where,
-        select: {
-          awardDate: true,
-          value: true,
-        },
-        orderBy: { awardDate: 'asc' },
-      }),
+      prisma.$queryRaw<Array<{ month: Date; totalValue: Prisma.Decimal }>>(Prisma.sql`
+        SELECT date_trunc('month', "awardDate") AS "month", SUM("value") AS "totalValue"
+        FROM "contracts"
+        ${sqlWhere}
+        GROUP BY date_trunc('month', "awardDate")
+        ORDER BY "month" ASC
+      `),
     ]);
 
     // Transform by agency data
@@ -118,19 +162,10 @@ export async function GET(req: NextRequest) {
       totalValue: item._sum.value?.toNumber() || 0,
     }));
 
-    // Aggregate by month
-    const monthlyMap = new Map<string, number>();
-    for (const contract of byMonthRaw) {
-      const monthKey = `${contract.awardDate.getFullYear()}-${String(contract.awardDate.getMonth() + 1).padStart(2, '0')}`;
-      const currentValue = monthlyMap.get(monthKey) || 0;
-      monthlyMap.set(monthKey, currentValue + contract.value.toNumber());
-    }
-
-    // Convert to sorted array (last 12 months or all available)
-    const byMonth = Array.from(monthlyMap.entries())
-      .map(([month, totalValue]) => ({ month, totalValue }))
-      .sort((a, b) => a.month.localeCompare(b.month))
-      .slice(-12); // Last 12 months
+    const byMonth = byMonthRaw.slice(-12).map((row) => ({
+      month: row.month.toISOString().slice(0, 7),
+      totalValue: row.totalValue.toNumber(),
+    }));
 
     // Transform decimal values to numbers for JSON
     const transformedContracts = contracts.map((contract) => ({
@@ -167,7 +202,7 @@ export async function GET(req: NextRequest) {
 // Get unique agencies and categories for filters
 export async function OPTIONS() {
   try {
-    const [agencies, categories, companies] = await Promise.all([
+    const [agencies, categories, companies, statuses] = await Promise.all([
       prisma.contract.findMany({
         select: { agency: true },
         distinct: ['agency'],
@@ -181,12 +216,14 @@ export async function OPTIONS() {
         distinct: ['company'],
         take: 50, // Limit companies
       }),
+      prisma.contract.findMany({ select: { status: true }, distinct: ['status'] }),
     ]);
 
     return NextResponse.json({
       agencies: agencies.map((a) => a.agency),
       categories: categories.map((c) => c.category),
       companies: companies.map((c) => c.company),
+      statuses: statuses.map((entry) => entry.status),
     });
   } catch (error) {
     logger.error('Contracts filters API error:', error);

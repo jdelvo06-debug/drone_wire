@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Admin Dashboard',
   description: 'DroneWire analytics and administration',
+  robots: { index: false, follow: false, nocache: true },
 }
 
 export default function AdminLayout({

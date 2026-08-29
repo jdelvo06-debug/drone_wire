@@ -21,14 +21,14 @@ export async function GET() {
     checks.push({
       name: 'database',
       status: 'ok',
-      message: 'Connected to Supabase',
+      message: 'Database check passed',
       latency: Date.now() - dbStart,
     })
-  } catch (error) {
+  } catch {
     checks.push({
       name: 'database',
       status: 'error',
-      message: error instanceof Error ? error.message : 'Connection failed',
+      message: 'Database check failed',
     })
   }
 
@@ -42,11 +42,11 @@ export async function GET() {
       message: `${count} articles in database`,
       latency: Date.now() - dbStart,
     })
-  } catch (error) {
+  } catch {
     checks.push({
       name: 'articles',
       status: 'error',
-      message: error instanceof Error ? error.message : 'Query failed',
+      message: 'Article count check failed',
     })
   }
 
@@ -60,11 +60,11 @@ export async function GET() {
       message: `${count} explainers in database`,
       latency: Date.now() - dbStart,
     })
-  } catch (error) {
+  } catch {
     checks.push({
       name: 'explainers',
       status: 'error',
-      message: error instanceof Error ? error.message : 'Query failed',
+      message: 'Explainer count check failed',
     })
   }
 
@@ -78,11 +78,11 @@ export async function GET() {
       message: `${count} contracts in database`,
       latency: Date.now() - dbStart,
     })
-  } catch (error) {
+  } catch {
     checks.push({
       name: 'contracts',
       status: 'error',
-      message: error instanceof Error ? error.message : 'Query failed',
+      message: 'Contract count check failed',
     })
   }
 
@@ -97,11 +97,11 @@ export async function GET() {
       message: `${activeFeeds}/${totalFeeds} active feeds`,
       latency: Date.now() - dbStart,
     })
-  } catch (error) {
+  } catch {
     checks.push({
       name: 'rss_feeds',
       status: 'error',
-      message: error instanceof Error ? error.message : 'Query failed',
+      message: 'Feed count check failed',
     })
   }
 
@@ -110,7 +110,7 @@ export async function GET() {
     const dbStart = Date.now()
     const recentArticle = await prisma.article.findFirst({
       orderBy: { createdAt: 'desc' },
-      select: { createdAt: true, title: true },
+      select: { createdAt: true },
     })
 
     if (recentArticle) {
@@ -130,11 +130,11 @@ export async function GET() {
         message: 'No articles found',
       })
     }
-  } catch (error) {
+  } catch {
     checks.push({
       name: 'pipeline',
       status: 'error',
-      message: error instanceof Error ? error.message : 'Query failed',
+      message: 'Pipeline freshness check failed',
     })
   }
 
@@ -145,8 +145,8 @@ export async function GET() {
   const response = {
     status: allPassed ? 'healthy' : 'unhealthy',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
     version: '1.0.0',
+    deploymentCommit: process.env.VERCEL_GIT_COMMIT_SHA || null,
     totalLatency: `${totalLatency}ms`,
     checks,
   }

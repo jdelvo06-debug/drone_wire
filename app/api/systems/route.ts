@@ -73,9 +73,25 @@ export async function GET(req: NextRequest) {
     const [systems, total] = await Promise.all([
       prisma.system.findMany({
         where,
-        include: {
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          description: true,
+          imageUrl: true,
+          category: true,
+          status: true,
+          country: true,
+          manufacturer: true,
+          primaryCapability: true,
+          platforms: true,
+          estimatedPriceRange: true,
+          trl: true,
+          jiatf401Approved: true,
+          featured: true,
+          views: true,
           tags: {
-            include: {
+            select: {
               tag: true,
             },
           },
@@ -107,35 +123,6 @@ export async function GET(req: NextRequest) {
     logger.error('Systems API error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch systems' },
-      { status: 500 }
-    );
-  }
-}
-
-// Increment view count
-export async function POST(req: NextRequest) {
-  try {
-    const { systemId } = await req.json();
-
-    if (!systemId) {
-      return NextResponse.json(
-        { error: 'System ID required' },
-        { status: 400 }
-      );
-    }
-
-    await prisma.system.update({
-      where: { id: systemId },
-      data: {
-        views: { increment: 1 },
-      },
-    });
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    logger.error('View increment error:', error);
-    return NextResponse.json(
-      { error: 'Failed to update views' },
       { status: 500 }
     );
   }
