@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { getImageWithFallback } from '@/lib/constants/images'
+import { canOptimizeImage, getImageWithFallback } from '@/lib/constants/images'
 
 export const revalidate = 300 // ISR: revalidate every 5 minutes
 import { Clock, ExternalLink, Calendar, Tag as TagIcon } from 'lucide-react'
@@ -10,22 +10,26 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { prisma } from '@/lib/db'
 import ArticleFilters from '@/components/articles/article-filters'
+import { safeHttpUrl } from '@/lib/security/html'
 
 export const metadata: Metadata = {
   title: 'All Articles',
   description: 'Latest articles and analysis on counter-UAS technology and drone warfare',
+  alternates: { canonical: '/articles' },
 }
 
 interface ArticlesPageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string
     category?: string
     search?: string
     sortBy?: string
-  }
+  }>
 }
 
-async function getArticles(searchParams: ArticlesPageProps['searchParams']) {
+type ArticleSearchParams = Awaited<ArticlesPageProps['searchParams']>
+
+async function getArticles(searchParams: ArticleSearchParams) {
   const page = Math.max(1, parseInt(searchParams.page || '1'))
   const limit = 10
   const skip = (page - 1) * limit
@@ -59,10 +63,21 @@ async function getArticles(searchParams: ArticlesPageProps['searchParams']) {
   const [articles, total] = await Promise.all([
     prisma.article.findMany({
       where,
-      include: {
+      select: {
+        id: true,
+        title: true,
+        excerpt: true,
+        sourceName: true,
+        sourceUrl: true,
+        publishedAt: true,
+        imageUrl: true,
+        category: true,
+        views: true,
+        readTime: true,
+        aiSummary: true,
         tags: {
-          include: {
-            tag: true,
+          select: {
+            tag: { select: { name: true } },
           },
         },
       },
@@ -88,7 +103,9 @@ async function getArticles(searchParams: ArticlesPageProps['searchParams']) {
 }
 
 export default async function ArticlesPage({ searchParams }: ArticlesPageProps) {
-  const { articles, pagination } = await getArticles(searchParams)
+  const resolvedSearchParams = await searchParams
+  const { articles, pagination } = await getArticles(resolvedSearchParams)
+  const newestPublishedAt = articles[0]?.publishedAt || null
 
   const formatDate = (date: Date | null) => {
     if (!date) return ''
@@ -112,6 +129,14 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
     }
   }
 
+  const pageHref = (page: number) => {
+    const params = new URLSearchParams({ page: String(page) })
+    if (resolvedSearchParams.category) params.set('category', resolvedSearchParams.category)
+    if (resolvedSearchParams.search) params.set('search', resolvedSearchParams.search)
+    if (resolvedSearchParams.sortBy) params.set('sortBy', resolvedSearchParams.sortBy)
+    return `/articles?${params.toString()}`
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-12">
@@ -121,19 +146,20 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
           <p className="text-xl text-muted-foreground">
             Latest articles and analysis on counter-UAS technology and drone warfare
           </p>
+          {newestPublishedAt && <p className="mt-3 text-sm text-muted-foreground">Latest published update {formatDate(newestPublishedAt)}</p>}
         </div>
 
         {/* Filters */}
         <ArticleFilters
-          currentCategory={searchParams.category}
-          currentSearch={searchParams.search}
-          currentSort={searchParams.sortBy}
+          currentCategory={resolvedSearchParams.category}
+          currentSearch={resolvedSearchParams.search}
+          currentSort={resolvedSearchParams.sortBy}
         />
 
         {/* Results count */}
         <div className="text-sm text-muted-foreground mb-6">
           Showing {articles.length} of {pagination.total} articles
-          {searchParams.search && ` for "${searchParams.search}"`}
+          {resolvedSearchParams.search && ` for "${resolvedSearchParams.search}"`}
         </div>
 
         {/* Articles */}
@@ -159,6 +185,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
                           fill
                           className="object-cover"
                           sizes="(max-width: 1024px) 100vw, 256px"
+                          unoptimized={!canOptimizeImage(getImageWithFallback(article.imageUrl))}
                         />
                       </div>
                     </div>
@@ -215,8 +242,8 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
                               Read Full Analysis
                             </Button>
                           </Link>
-                          {article.sourceUrl && (
-                          <Link href={article.sourceUrl} target="_blank" rel="noopener noreferrer">
+                          {safeHttpUrl(article.sourceUrl) && (
+                          <Link href={safeHttpUrl(article.sourceUrl)!} target="_blank" rel="noopener noreferrer">
                             <Button variant="ghost" size="sm">
                               <ExternalLink className="w-4 h-4 mr-1" />
                               Source
@@ -247,7 +274,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
           <div className="flex justify-center gap-2 mt-12">
             {pagination.page > 1 && (
               <Link
-                href={`/articles?page=${pagination.page - 1}${searchParams.category ? `&category=${searchParams.category}` : ''}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+                href={pageHref(pagination.page - 1)}
               >
                 <Button variant="outline">Previous</Button>
               </Link>
@@ -257,7 +284,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
             </div>
             {pagination.page < pagination.totalPages && (
               <Link
-                href={`/articles?page=${pagination.page + 1}${searchParams.category ? `&category=${searchParams.category}` : ''}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+                href={pageHref(pagination.page + 1)}
               >
                 <Button variant="outline">Next</Button>
               </Link>
