@@ -6,7 +6,6 @@ import { ArrowRight, BookOpen, TrendingUp, Users, Share2 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import NewsletterSignup from '@/components/home/newsletter-signup'
 
 interface Article {
   id: string
@@ -71,9 +70,6 @@ export default function ArticleSidebar({ article, relatedArticles = [], relatedE
           </Button>
         </CardContent>
       </Card>
-
-      {/* Newsletter Signup */}
-      <NewsletterSignup />
 
       {/* Related Articles */}
       {relatedArticles.length > 0 && (

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
 import { processPendingArticles } from '@/lib/services/ai-processor';
+import { cleanupExpiredRequestLimits } from '@/lib/security/request-guard';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300; // 5 minutes max for Vercel
@@ -30,11 +31,15 @@ export async function GET(req: NextRequest) {
     logger.info('Starting AI processing...');
     const startTime = Date.now();
 
-    // Read optional limit from query params, default 10 for scheduled cron, max 50
+    // Use a small scheduled batch by default; explicit manual runs may request up to 50.
     const url = new URL(req.url);
-    const limit = Math.min(parseInt(url.searchParams.get('limit') || '25'), 50);
+    const limit = Math.min(parseInt(url.searchParams.get('limit') || '5'), 50);
 
     const result = await processPendingArticles(limit);
+    const expiredRateLimitsRemoved = await cleanupExpiredRequestLimits().catch((error) => {
+      logger.warn('Rate-limit cleanup failed:', error instanceof Error ? error.message : 'unknown error');
+      return 0;
+    });
 
     const duration = (Date.now() - startTime) / 1000;
 
@@ -46,6 +51,7 @@ export async function GET(req: NextRequest) {
       duration: `${duration.toFixed(1)}s`,
       processed: result.processed,
       failed: result.failed,
+      expiredRateLimitsRemoved,
       errors: result.errors,
     });
   } catch (error) {

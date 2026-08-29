@@ -2,11 +2,12 @@
 import HeroSection from '@/components/home/hero-section'
 import NewsSection from '@/components/home/news-section'
 import FeaturedExplainers from '@/components/home/featured-explainers'
-import NewsletterSignup from '@/components/home/newsletter-signup'
 import StatsSection from '@/components/home/stats-section'
 import SemanticSearch from '@/components/search/semantic-search'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Search } from 'lucide-react'
+
+export const revalidate = 600
 
 export default function HomePage() {
   return (
@@ -40,9 +41,6 @@ export default function HomePage() {
               </CardContent>
             </Card>
 
-            {/* Newsletter Signup */}
-            <NewsletterSignup />
-            
             {/* Featured Explainers */}
             <FeaturedExplainers />
           </div>
