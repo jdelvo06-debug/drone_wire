@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
+import { canOptimizeImage } from '@/lib/constants/images'
 import Link from 'next/link'
 import { ArrowLeft, Shield, Target, Zap, Crosshair, MapPin, Building2, Flag, Calendar, Users, Radar, Radio, DollarSign, CheckCircle2, XCircle, HelpCircle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -8,34 +9,63 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { prisma } from '@/lib/db'
+import { logger } from '@/lib/logger'
 import ReactMarkdown from 'react-markdown'
+import ViewTracker from '@/components/analytics/view-tracker'
+import JsonLd from '@/components/seo/json-ld'
+import {
+  ProvenanceBadge,
+  SourceBibliography,
+  ClaimProvenance,
+  resolveRecordProvenanceLabel,
+} from '@/components/content/provenance'
 
 export const dynamic = 'force-dynamic'
 
 interface SystemPageProps {
-  params: {
-    slug: string
-  }
+  params: Promise<{ slug: string }>
 }
 
 async function getSystem(slug: string) {
   const system = await prisma.system.findUnique({
     where: { slug },
+    select: {
+      id: true, name: true, slug: true, description: true, content: true, imageUrl: true,
+      provenanceLabel: true,
+      category: true, subcategory: true, manufacturer: true, country: true,
+      primaryCapability: true, specifications: true, detectionRange: true, effectiveRange: true,
+      platforms: true, status: true, inServiceDate: true, deployedBy: true, whatItIs: true,
+      howItWorks: true, keyFeatures: true, advantages: true, disadvantages: true, combatRecord: true,
+      trl: true, trlLabel: true, estimatedPriceRange: true, procurementStatus: true,
+      ndaaCompliant: true, targetSet: true, defeatMechanism: true, unitWeightKg: true,
+      jiatf401Approved: true, relatedSystems: true, views: true, featured: true,
+      createdAt: true, updatedAt: true,
+    },
   })
 
   if (!system) return null
-
-  // Increment view count (fire and forget)
-  prisma.system.update({
-    where: { slug },
-    data: { views: { increment: 1 } },
-  }).catch(() => {})
-
-  return system
+  const [citationResult, mediaAssets] = await Promise.all([
+    prisma.systemCitation.findMany({
+      where: { systemId: system.id }, include: { source: true }, orderBy: { createdAt: 'asc' },
+    }).then((citations) => ({ citations, unavailable: false })).catch(() => {
+      logger.warn('System citations are temporarily unavailable')
+      return { citations: [], unavailable: true }
+    }),
+    prisma.mediaAsset.findMany({
+      where: { systemId: system.id }, include: { source: true }, orderBy: { createdAt: 'asc' },
+    }).catch(() => []),
+  ])
+  return {
+    ...system,
+    citations: citationResult.citations,
+    citationsUnavailable: citationResult.unavailable,
+    mediaAssets,
+  }
 }
 
 export async function generateMetadata({ params }: SystemPageProps): Promise<Metadata> {
-  const system = await getSystem(params.slug)
+  const { slug } = await params
+  const system = await getSystem(slug)
 
   if (!system) {
     return {
@@ -46,10 +76,12 @@ export async function generateMetadata({ params }: SystemPageProps): Promise<Met
   return {
     title: `${system.name} - C-UAS Systems`,
     description: system.description,
+    alternates: { canonical: `/systems/${system.slug}` },
     openGraph: {
       title: system.name,
       description: system.description,
       type: 'article',
+      url: `/systems/${system.slug}`,
       images: system.imageUrl ? [system.imageUrl] : undefined,
     },
   }
@@ -136,14 +168,53 @@ function getCategoryIcon(category: string) {
 }
 
 export default async function SystemPage({ params }: SystemPageProps) {
-  const system = await getSystem(params.slug)
+  const { slug } = await params
+  const system = await getSystem(slug)
 
   if (!system) {
     notFound()
   }
 
+  const siteUrl = process.env.SITE_URL || 'https://dronewire.org'
+  const systemUrl = `${siteUrl}/systems/${system.slug}`
+  const requiredClaimKeys = [
+    system.manufacturer && 'manufacturer', system.status && 'status', system.detectionRange && 'detectionRange',
+    system.effectiveRange && 'effectiveRange', system.estimatedPriceRange && 'estimatedPriceRange',
+    system.procurementStatus && 'procurementStatus', system.ndaaCompliant !== null && 'ndaaCompliant',
+    system.jiatf401Approved !== null && 'jiatf401Approved', system.combatRecord && 'combatRecord',
+    system.trl && 'trl', system.unitWeightKg && 'unitWeightKg',
+    system.specifications.length > 0 && 'specifications', system.content && 'content',
+  ].filter((value): value is string => Boolean(value))
+  const provenanceLabel = resolveRecordProvenanceLabel(system.provenanceLabel, system.citations, requiredClaimKeys)
+  const sources = Array.from(
+    new Map(system.citations.map((citation) => [citation.source.id, citation.source])).values(),
+  )
+  const heroMedia = system.mediaAssets.find((asset) => asset.controlledUrl === system.imageUrl || asset.remoteUrl === system.imageUrl)
+
   return (
     <div className="min-h-screen bg-background">
+      <JsonLd data={{
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'TechArticle',
+            headline: system.name,
+            description: system.description,
+            image: system.imageUrl || undefined,
+            mainEntityOfPage: systemUrl,
+            publisher: { '@type': 'Organization', name: 'DroneWire', url: siteUrl },
+          },
+          {
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+              { '@type': 'ListItem', position: 2, name: 'Systems', item: `${siteUrl}/systems` },
+              { '@type': 'ListItem', position: 3, name: system.name, item: systemUrl },
+            ],
+          },
+        ],
+      }} />
+      <ViewTracker entityType="system" entityId={system.id} />
       <div className="container mx-auto px-4 py-12">
         {/* Back Navigation */}
         <div className="mb-6">
@@ -164,9 +235,10 @@ export default async function SystemPage({ params }: SystemPageProps) {
                 <Badge className={getCategoryColor(system.category)}>
                   {getCategoryLabel(system.category)}
                 </Badge>
-                <Badge className={getStatusColor(system.status)}>
-                  {system.status}
-                </Badge>
+                <div>
+                  <Badge className={getStatusColor(system.status)}>{system.status}</Badge>
+                  <ClaimProvenance claimKey="status" citations={system.citations} unavailable={system.citationsUnavailable} />
+                </div>
                 {system.inServiceDate && (
                   <div className="flex items-center">
                     <Calendar className="w-4 h-4 mr-1" />
@@ -183,6 +255,7 @@ export default async function SystemPage({ params }: SystemPageProps) {
                 <div className="flex items-center">
                   <Building2 className="w-4 h-4 mr-2" />
                   {system.manufacturer}
+                  <ClaimProvenance claimKey="manufacturer" citations={system.citations} unavailable={system.citationsUnavailable} />
                 </div>
                 <div className="flex items-center">
                   <Flag className="w-4 h-4 mr-2" />
@@ -193,25 +266,38 @@ export default async function SystemPage({ params }: SystemPageProps) {
               <p className="text-xl text-muted-foreground">
                 {system.description}
               </p>
+              <div className="mt-4">
+                <ProvenanceBadge label={provenanceLabel} />
+              </div>
             </div>
 
             {/* Hero Image */}
-            <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
-              {system.imageUrl ? (
-                <Image
-                  src={system.imageUrl}
-                  alt={system.name}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 75vw"
-                  priority
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted to-muted/50">
-                  {getCategoryIcon(system.category)}
-                </div>
+            <figure>
+              <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
+                {system.imageUrl ? (
+                  <Image
+                    src={system.imageUrl}
+                    alt={system.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 75vw"
+                    priority
+                    unoptimized={!canOptimizeImage(system.imageUrl)}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted to-muted/50">
+                    {getCategoryIcon(system.category)}
+                  </div>
+                )}
+              </div>
+              {system.imageUrl && (
+                <figcaption className="mt-2 text-xs text-muted-foreground">
+                  {heroMedia
+                    ? `Image: ${heroMedia.attribution} · ${heroMedia.license} · ${heroMedia.verificationState}`
+                    : 'Image attribution and license metadata have not yet been published; treat this legacy image as unverified.'}
+                </figcaption>
               )}
-            </div>
+            </figure>
 
             {/* Quick Overview */}
             {(system.whatItIs || system.howItWorks) && (
@@ -264,6 +350,7 @@ export default async function SystemPage({ params }: SystemPageProps) {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">{system.combatRecord}</p>
+                  <ClaimProvenance claimKey="combatRecord" citations={system.citations} unavailable={system.citationsUnavailable} />
                 </CardContent>
               </Card>
             )}
@@ -295,6 +382,7 @@ export default async function SystemPage({ params }: SystemPageProps) {
                             <span className="text-sm text-muted-foreground">{system.trlLabel}</span>
                           )}
                         </div>
+                        <ClaimProvenance claimKey="trl" citations={system.citations} unavailable={system.citationsUnavailable} />
                       </div>
                     )}
 
@@ -303,6 +391,7 @@ export default async function SystemPage({ params }: SystemPageProps) {
                       <div className="flex flex-col space-y-1">
                         <span className="text-sm font-medium text-foreground">Est. Price Range</span>
                         <span className="text-sm text-muted-foreground">{system.estimatedPriceRange}</span>
+                        <ClaimProvenance claimKey="estimatedPriceRange" citations={system.citations} unavailable={system.citationsUnavailable} />
                       </div>
                     )}
 
@@ -328,6 +417,7 @@ export default async function SystemPage({ params }: SystemPageProps) {
                             </>
                           )}
                         </div>
+                        <ClaimProvenance claimKey="ndaaCompliant" citations={system.citations} unavailable={system.citationsUnavailable} />
                       </div>
                     )}
 
@@ -348,6 +438,7 @@ export default async function SystemPage({ params }: SystemPageProps) {
                             </>
                           )}
                         </div>
+                        <ClaimProvenance claimKey="jiatf401Approved" citations={system.citations} unavailable={system.citationsUnavailable} />
                       </div>
                     )}
 
@@ -372,6 +463,7 @@ export default async function SystemPage({ params }: SystemPageProps) {
                       <div className="flex flex-col space-y-1">
                         <span className="text-sm font-medium text-foreground">Unit Weight</span>
                         <span className="text-sm text-muted-foreground">{system.unitWeightKg} kg</span>
+                        <ClaimProvenance claimKey="unitWeightKg" citations={system.citations} unavailable={system.citationsUnavailable} />
                       </div>
                     )}
                   </div>
@@ -381,6 +473,7 @@ export default async function SystemPage({ params }: SystemPageProps) {
                     <div className="mt-4 pt-4 border-t">
                       <span className="text-sm font-medium text-foreground">Procurement Status</span>
                       <p className="text-sm text-muted-foreground mt-1">{system.procurementStatus}</p>
+                      <ClaimProvenance claimKey="procurementStatus" citations={system.citations} unavailable={system.citationsUnavailable} />
                     </div>
                   )}
                 </CardContent>
@@ -390,9 +483,14 @@ export default async function SystemPage({ params }: SystemPageProps) {
             {/* Main Content */}
             {system.content && (
               <div className="prose prose-gray dark:prose-invert max-w-none">
-                <ReactMarkdown>{system.content}</ReactMarkdown>
+                <ReactMarkdown components={{ h1: ({ children }) => <h2>{children}</h2> }}>
+                  {system.content}
+                </ReactMarkdown>
+                <ClaimProvenance claimKey="content" citations={system.citations} unavailable={system.citationsUnavailable} />
               </div>
             )}
+
+            <SourceBibliography sources={sources} unavailable={system.citationsUnavailable} />
           </div>
 
           {/* Sidebar */}
@@ -409,6 +507,7 @@ export default async function SystemPage({ params }: SystemPageProps) {
                       <li key={index} className="flex items-start space-x-2">
                         <span className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0"></span>
                         <span className="text-sm text-muted-foreground">{spec}</span>
+                        <ClaimProvenance claimKey={`specifications:${index}`} citations={system.citations} unavailable={system.citationsUnavailable} />
                       </li>
                     ))}
                   </ul>
@@ -430,12 +529,14 @@ export default async function SystemPage({ params }: SystemPageProps) {
                     <div>
                       <span className="text-sm font-medium text-foreground">Detection Range</span>
                       <p className="text-sm text-muted-foreground">{system.detectionRange}</p>
+                      <ClaimProvenance claimKey="detectionRange" citations={system.citations} unavailable={system.citationsUnavailable} />
                     </div>
                   )}
                   {system.effectiveRange && (
                     <div>
                       <span className="text-sm font-medium text-foreground">Effective Range</span>
                       <p className="text-sm text-muted-foreground">{system.effectiveRange}</p>
+                      <ClaimProvenance claimKey="effectiveRange" citations={system.citations} unavailable={system.citationsUnavailable} />
                     </div>
                   )}
                 </CardContent>

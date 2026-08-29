@@ -7,11 +7,10 @@ import { getRelatedArticles as getRelatedByEmbedding } from '@/lib/services/sema
 export const dynamic = 'force-dynamic'
 import ArticleContent from '@/components/articles/article-content'
 import ArticleSidebar from '@/components/articles/article-sidebar'
+import JsonLd from '@/components/seo/json-ld'
 
 interface ArticlePageProps {
-  params: {
-    id: string
-  }
+  params: Promise<{ id: string }>
 }
 
 // Cache the article fetch to prevent duplicate queries between generateMetadata and page render
@@ -153,7 +152,8 @@ async function getRelatedArticles(articleId: string, category: string, limit = 3
 }
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
-  const article = await getArticle(params.id)
+  const { id } = await params
+  const article = await getArticle(id)
 
   if (!article) {
     return {
@@ -164,10 +164,12 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   return {
     title: article.title,
     description: article.excerpt || article.aiSummary || undefined,
+    alternates: { canonical: `/articles/${article.id}` },
     openGraph: {
       title: article.title,
       description: article.excerpt || article.aiSummary || undefined,
       type: 'article',
+      url: `/articles/${article.id}`,
       publishedTime: article.publishedAt?.toISOString(),
       images: article.imageUrl ? [article.imageUrl] : undefined,
     },
@@ -181,14 +183,15 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
-  const article = await getArticle(params.id)
+  const { id } = await params
+  const article = await getArticle(id)
 
   if (!article) {
     notFound()
   }
 
   const [relatedArticles, relatedExplainers, trendingTopics] = await Promise.all([
-    getRelatedArticles(params.id, article.category),
+    getRelatedArticles(id, article.category),
     getRelatedExplainers(article.category),
     getTrendingTopics(),
   ])
@@ -213,9 +216,35 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     views: article.views,
     confidence: article.confidence || undefined,
   }
+  const siteUrl = process.env.SITE_URL || 'https://dronewire.org'
+  const articleUrl = `${siteUrl}/articles/${article.id}`
 
   return (
     <div className="min-h-screen bg-background">
+      <JsonLd data={{
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'NewsArticle',
+            headline: article.title,
+            description: article.excerpt || article.aiSummary || undefined,
+            datePublished: article.publishedAt.toISOString(),
+            dateModified: article.updatedAt.toISOString(),
+            image: article.imageUrl || undefined,
+            mainEntityOfPage: articleUrl,
+            publisher: { '@type': 'Organization', name: 'DroneWire', url: siteUrl },
+            isBasedOn: article.sourceUrl || undefined,
+          },
+          {
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+              { '@type': 'ListItem', position: 2, name: 'Articles', item: `${siteUrl}/articles` },
+              { '@type': 'ListItem', position: 3, name: article.title, item: articleUrl },
+            ],
+          },
+        ],
+      }} />
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main Content */}
