@@ -6,13 +6,13 @@ export const dynamic = 'force-dynamic'
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   // Defense-in-depth: middleware already covers /api/admin, but enforce at route level too
   const authError = await requireAdmin(req)
   if (authError) return authError
 
-  const { slug } = params
+  const { slug } = await params
 
   let body: { imageUrl: string | null }
   try {
