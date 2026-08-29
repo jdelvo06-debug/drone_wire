@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { canOptimizeImage } from '@/lib/constants/images'
 import { ArrowRight, Eye, Crosshair, Radar, Zap, Radio, CheckCircle2 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -74,7 +75,23 @@ function getTrlBadgeClass(trl: number) {
 }
 
 interface SystemsGridProps {
-  systems: System[]
+  systems: Array<Pick<System,
+    | 'id'
+    | 'slug'
+    | 'name'
+    | 'category'
+    | 'status'
+    | 'country'
+    | 'manufacturer'
+    | 'primaryCapability'
+    | 'imageUrl'
+    | 'platforms'
+    | 'views'
+    | 'featured'
+    | 'trl'
+    | 'estimatedPriceRange'
+    | 'jiatf401Approved'
+  >>
 }
 
 export default function SystemsGrid({ systems }: SystemsGridProps) {
@@ -121,6 +138,7 @@ export default function SystemsGrid({ systems }: SystemsGridProps) {
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                         sizes="(max-width: 1024px) 100vw, 33vw"
+                        unoptimized={!canOptimizeImage(system.imageUrl)}
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted to-muted/50">
@@ -211,6 +229,7 @@ export default function SystemsGrid({ systems }: SystemsGridProps) {
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        unoptimized={!canOptimizeImage(system.imageUrl)}
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted to-muted/50">

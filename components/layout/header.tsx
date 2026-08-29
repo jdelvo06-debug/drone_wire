@@ -34,7 +34,7 @@ export default function Header() {
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchQuery.trim()) {
-      router.push(`/articles?search=${encodeURIComponent(searchQuery.trim())}`)
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
       setSearchQuery('')
       setMobileMenuOpen(false)
     }
@@ -55,11 +55,12 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex md:items-center md:space-x-6">
+          <nav aria-label="Primary navigation" className="hidden lg:flex lg:items-center lg:space-x-6">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
+                aria-current={pathname === item.href ? 'page' : undefined}
                 className={`nav-link ${
                   pathname === item.href
                     ? 'text-foreground border-b-2 border-primary'
@@ -78,6 +79,7 @@ export default function Header() {
               <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
+                  aria-label="Search DroneWire"
                   type="search"
                   placeholder="Search..."
                   className="w-64 pl-8"
@@ -92,7 +94,7 @@ export default function Header() {
 
             {/* Mobile menu button */}
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-              <SheetTrigger asChild className="md:hidden">
+              <SheetTrigger asChild className="lg:hidden">
                 <Button variant="ghost" size="icon">
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Open menu</span>
@@ -115,6 +117,7 @@ export default function Header() {
                   <div className="relative">
                     <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
+                      aria-label="Search DroneWire"
                       type="search"
                       placeholder="Search..."
                       className="pl-8"
@@ -125,11 +128,12 @@ export default function Header() {
                   </div>
 
                   {/* Mobile Navigation */}
-                  <nav className="flex flex-col space-y-4">
+                  <nav aria-label="Mobile navigation" className="flex flex-col space-y-4">
                     {navigation.map((item) => (
                       <Link
                         key={item.name}
                         href={item.href}
+                        aria-current={pathname === item.href ? 'page' : undefined}
                         className={`text-lg nav-link ${
                           pathname === item.href
                             ? 'text-primary font-semibold'

@@ -1,16 +1,18 @@
 
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getImageWithFallback } from '@/lib/constants/images'
+import { canOptimizeImage, getImageWithFallback } from '@/lib/constants/images'
 import { Calendar, Clock, ExternalLink, User, TrendingUp, Share2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import ReactMarkdown from 'react-markdown'
+import ViewTracker from '@/components/analytics/view-tracker'
+import { safeHttpUrl } from '@/lib/security/html'
 
 interface Article {
   id: string
@@ -38,22 +40,7 @@ interface ArticleContentProps {
 
 export default function ArticleContent({ article }: ArticleContentProps) {
   const [isSharing, setIsSharing] = useState(false)
-  const viewTracked = useRef(false)
-
-  // Track view once on mount
-  useEffect(() => {
-    if (viewTracked.current) return
-    viewTracked.current = true
-
-    fetch('/api/articles', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ articleId: article.id }),
-    }).catch(() => {
-      // Silently fail - view tracking is not critical
-    })
-  }, [article.id])
-
+  const sourceUrl = safeHttpUrl(article.sourceUrl)
   const handleShare = async () => {
     setIsSharing(true)
     
@@ -100,6 +87,7 @@ export default function ArticleContent({ article }: ArticleContentProps) {
 
   return (
     <article className="space-y-8">
+      <ViewTracker entityType="article" entityId={article.id} />
       {/* Header */}
       <div className="space-y-6">
         {/* Category & Meta */}
@@ -132,12 +120,12 @@ export default function ArticleContent({ article }: ArticleContentProps) {
 
         {/* Actions */}
         <div className="flex items-center space-x-4">
-          <Link href={article.sourceUrl} target="_blank" rel="noopener noreferrer">
+          {sourceUrl && <Link href={sourceUrl} target="_blank" rel="noopener noreferrer">
             <Button variant="outline">
               <ExternalLink className="w-4 h-4 mr-2" />
               View Source
             </Button>
-          </Link>
+          </Link>}
           <Button variant="ghost" onClick={handleShare} disabled={isSharing}>
             <Share2 className="w-4 h-4 mr-2" />
             {isSharing ? 'Sharing...' : 'Share'}
@@ -154,6 +142,7 @@ export default function ArticleContent({ article }: ArticleContentProps) {
           className="object-cover"
           sizes="(max-width: 1024px) 100vw, 75vw"
           priority
+          unoptimized={!canOptimizeImage(getImageWithFallback(article.imageUrl))}
         />
       </div>
 
@@ -232,12 +221,12 @@ export default function ArticleContent({ article }: ArticleContentProps) {
               <h4 className="font-semibold text-foreground">Original Source</h4>
               <p className="text-sm text-muted-foreground mt-1">{article.sourceName}</p>
             </div>
-            <Link href={article.sourceUrl} target="_blank" rel="noopener noreferrer">
+            {sourceUrl && <Link href={sourceUrl} target="_blank" rel="noopener noreferrer">
               <Button variant="outline" size="sm">
                 <ExternalLink className="w-4 h-4 mr-2" />
                 Read Original
               </Button>
-            </Link>
+            </Link>}
           </div>
         </CardContent>
       </Card>

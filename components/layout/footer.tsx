@@ -1,6 +1,6 @@
 
 import Link from 'next/link'
-import { Shield, Mail, Github, Twitter } from 'lucide-react'
+import { Shield, Mail } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export default function Footer() {
@@ -22,18 +22,6 @@ export default function Footer() {
               rapidly evolving unmanned systems landscape.
             </p>
             <div className="mt-6 flex space-x-4">
-              <Link href="https://twitter.com/dronewire" target="_blank" rel="noopener noreferrer">
-                <Button variant="ghost" size="icon">
-                  <Twitter className="h-4 w-4" />
-                  <span className="sr-only">Twitter</span>
-                </Button>
-              </Link>
-              <Link href="https://github.com/dronewire" target="_blank" rel="noopener noreferrer">
-                <Button variant="ghost" size="icon">
-                  <Github className="h-4 w-4" />
-                  <span className="sr-only">GitHub</span>
-                </Button>
-              </Link>
               <Link href="mailto:info@dronewire.org">
                 <Button variant="ghost" size="icon">
                   <Mail className="h-4 w-4" />
@@ -87,7 +75,7 @@ export default function Footer() {
         <div className="mt-12 border-t pt-8">
           <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
             <p className="text-sm text-muted-foreground">
-              © 2025 DroneWire. All rights reserved.
+              © {new Date().getFullYear()} DroneWire. All rights reserved.
             </p>
             <p className="text-sm text-muted-foreground">
               Powered by AI • Built for Defense Professionals

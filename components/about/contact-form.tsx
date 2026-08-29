@@ -146,9 +146,9 @@ export default function ContactForm() {
               />
             </div>
             <div className="space-y-2">
-              <Label>Type of Inquiry</Label>
+              <Label htmlFor="contact-type">Type of Inquiry</Label>
               <Select value={formData.type} onValueChange={(value) => handleInputChange('type', value)}>
-                <SelectTrigger>
+                <SelectTrigger id="contact-type">
                   <SelectValue placeholder="Select inquiry type" />
                 </SelectTrigger>
                 <SelectContent>

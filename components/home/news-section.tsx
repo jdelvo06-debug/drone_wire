@@ -8,7 +8,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import Link from 'next/link'
 import Image from 'next/image'
-import { getImageWithFallback } from '@/lib/constants/images'
+import { canOptimizeImage, getImageWithFallback } from '@/lib/constants/images'
+import { safeHttpUrl } from '@/lib/security/html'
 
 interface Tag {
   id: string
@@ -173,6 +174,7 @@ export default function NewsSection() {
                       fill
                       className="object-cover"
                       sizes="(max-width: 1024px) 100vw, 256px"
+                      unoptimized={!canOptimizeImage(getImageWithFallback(article.imageUrl))}
                     />
                   </div>
                 </div>
@@ -240,8 +242,8 @@ export default function NewsSection() {
                         Read Analysis
                       </Button>
                     </Link>
-                    {article.sourceUrl && (
-                      <Link href={article.sourceUrl} target="_blank" rel="noopener noreferrer">
+                    {safeHttpUrl(article.sourceUrl) && (
+                      <Link href={safeHttpUrl(article.sourceUrl)!} target="_blank" rel="noopener noreferrer">
                         <Button variant="ghost" size="sm">
                           <ExternalLink className="w-4 h-4 mr-1" />
                           Source

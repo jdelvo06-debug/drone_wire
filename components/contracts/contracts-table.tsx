@@ -1,12 +1,16 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState } from 'react'
 import { ChevronUp, ChevronDown, Calendar, Building2, DollarSign, Info, Loader2, ExternalLink, Clock, MapPin, Tag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Separator } from '@/components/ui/separator'
+import { safeHttpUrl } from '@/lib/security/html'
+import { formatContractAwardDate } from '@/lib/contracts/date'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useContractsExplorer } from '@/components/contracts/contracts-explorer'
 
 interface Contract {
   id: string
@@ -26,64 +30,27 @@ interface Contract {
   office?: string | null
 }
 
-interface ContractsResponse {
-  contracts: Contract[]
-  pagination: {
-    page: number
-    limit: number
-    total: number
-    totalPages: number
-    hasMore: boolean
-  }
-  aggregates: {
-    totalValue: number
-    averageValue: number
-    maxValue: number
-  }
-}
-
 type SortField = 'awardDate' | 'company' | 'title' | 'value' | 'agency'
 type SortDirection = 'asc' | 'desc'
 
 export default function ContractsTable() {
-  const [contracts, setContracts] = useState<Contract[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [sortField, setSortField] = useState<SortField>('awardDate')
-  const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [totalContracts, setTotalContracts] = useState(0)
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const { data, loading: isLoading, error, refresh } = useContractsExplorer()
+  const contracts = (data?.contracts || []) as Contract[]
+  const requestedSort = searchParams.get('sortBy')
+  const sortField: SortField = ['awardDate', 'company', 'title', 'value', 'agency'].includes(requestedSort || '') ? requestedSort as SortField : 'awardDate'
+  const sortDirection: SortDirection = searchParams.get('sortOrder') === 'asc' ? 'asc' : 'desc'
+  const currentPage = data?.pagination.page || Math.max(1, Number(searchParams.get('page')) || 1)
+  const totalPages = data?.pagination.totalPages || 1
+  const totalContracts = data?.pagination.total || 0
   const [expandedContracts, setExpandedContracts] = useState<Set<string>>(new Set())
 
-  const fetchContracts = useCallback(async () => {
-    try {
-      setIsLoading(true)
-      const params = new URLSearchParams({
-        page: currentPage.toString(),
-        limit: '20',
-        sortBy: sortField,
-        sortDir: sortDirection,
-      })
-
-      const response = await fetch(`/api/contracts?${params}`)
-      if (!response.ok) throw new Error('Failed to fetch contracts')
-
-      const data: ContractsResponse = await response.json()
-      setContracts(data.contracts)
-      setTotalPages(data.pagination.totalPages)
-      setTotalContracts(data.pagination.total)
-      setError(null)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load contracts')
-    } finally {
-      setIsLoading(false)
-    }
-  }, [currentPage, sortField, sortDirection])
-
-  useEffect(() => {
-    fetchContracts()
-  }, [fetchContracts])
+  const updateUrl = (updates: Record<string, string>) => {
+    const params = new URLSearchParams(searchParams.toString())
+    Object.entries(updates).forEach(([key, value]) => params.set(key, value))
+    router.replace(`/contracts?${params.toString()}`)
+  }
 
   const toggleExpanded = (contractId: string) => {
     const newExpanded = new Set(expandedContracts)
@@ -96,13 +63,7 @@ export default function ContractsTable() {
   }
 
   const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
-    } else {
-      setSortField(field)
-      setSortDirection('desc')
-    }
-    setCurrentPage(1)
+    updateUrl({ sortBy: field, sortOrder: sortField === field && sortDirection === 'desc' ? 'asc' : 'desc', page: '1' })
   }
 
   const formatCurrency = (value: number) => {
@@ -119,15 +80,6 @@ export default function ContractsTable() {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(value)
-  }
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    })
   }
 
   const getRelativeTime = (dateString: string) => {
@@ -181,6 +133,7 @@ export default function ContractsTable() {
       size="sm"
       className="h-auto p-0 font-semibold hover:bg-transparent text-muted-foreground hover:text-foreground transition-colors"
       onClick={() => handleSort(field)}
+      type="button"
     >
       <span className="flex items-center gap-1">
         <span>{children}</span>
@@ -192,6 +145,11 @@ export default function ContractsTable() {
       </span>
     </Button>
   )
+
+  const getAriaSort = (field: SortField): 'ascending' | 'descending' | 'none' => {
+    if (sortField !== field) return 'none'
+    return sortDirection === 'asc' ? 'ascending' : 'descending'
+  }
 
   if (isLoading) {
     return (
@@ -208,7 +166,7 @@ export default function ContractsTable() {
     return (
       <div className="mt-12 text-center py-16">
         <p className="text-destructive mb-4">{error}</p>
-        <Button variant="outline" onClick={fetchContracts}>
+        <Button variant="outline" onClick={refresh}>
           Try Again
         </Button>
       </div>
@@ -224,23 +182,23 @@ export default function ContractsTable() {
   }
 
   return (
-    <div className="mt-8">
-      <Card className="overflow-hidden border-border/50">
-        <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <Table>
+    <div className="mt-8 min-w-0 max-w-full">
+      <Card className="min-w-0 max-w-full overflow-hidden border-border/50">
+        <CardContent className="min-w-0 p-0">
+          <div className="hidden max-w-full overflow-x-auto md:block">
+            <Table className="min-w-[760px]">
               <TableHeader>
                 <TableRow className="border-b border-border/50 bg-muted/30">
-                  <TableHead className="w-36 py-4">
+                  <TableHead className="w-36 py-4" aria-sort={getAriaSort('awardDate')}>
                     <SortButton field="awardDate">Award Date</SortButton>
                   </TableHead>
-                  <TableHead className="py-4">
+                  <TableHead className="py-4" aria-sort={getAriaSort('title')}>
                     <SortButton field="title">Contract</SortButton>
                   </TableHead>
-                  <TableHead className="py-4">
+                  <TableHead className="py-4" aria-sort={getAriaSort('company')}>
                     <SortButton field="company">Contractor</SortButton>
                   </TableHead>
-                  <TableHead className="text-right w-36 py-4">
+                  <TableHead className="text-right w-36 py-4" aria-sort={getAriaSort('value')}>
                     <SortButton field="value">Value</SortButton>
                   </TableHead>
                   <TableHead className="w-28 py-4">Status</TableHead>
@@ -260,7 +218,7 @@ export default function ContractsTable() {
                       >
                         <TableCell className="py-4">
                           <div className="flex flex-col gap-0.5">
-                            <span className="font-medium text-foreground">{formatDate(contract.awardDate)}</span>
+                            <span className="font-medium text-foreground">{formatContractAwardDate(contract.awardDate)}</span>
                             <span className="text-xs text-muted-foreground">{getRelativeTime(contract.awardDate)}</span>
                           </div>
                         </TableCell>
@@ -318,6 +276,9 @@ export default function ContractsTable() {
                             variant="ghost"
                             size="sm"
                             onClick={() => toggleExpanded(contract.id)}
+                            aria-label={`${isExpanded ? 'Hide' : 'Show'} details for ${contract.title}`}
+                            aria-expanded={isExpanded}
+                            aria-controls={`contract-details-${contract.id}`}
                             className={`h-8 w-8 p-0 rounded-full transition-colors ${isExpanded ? 'bg-primary/10 text-primary' : 'hover:bg-muted'}`}
                           >
                             {isExpanded ? <ChevronUp className="w-4 h-4" /> : <Info className="w-4 h-4" />}
@@ -327,7 +288,10 @@ export default function ContractsTable() {
 
                       {/* Expanded Details Row */}
                       {isExpanded && (
-                        <TableRow className="bg-muted/20 border-b border-border/30">
+                        <TableRow
+                          id={`contract-details-${contract.id}`}
+                          className="bg-muted/20 border-b border-border/30"
+                        >
                           <TableCell colSpan={6} className="p-0">
                             <div className="px-6 py-5">
                               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -356,16 +320,14 @@ export default function ContractsTable() {
                                     <div className="flex items-center gap-2 text-sm">
                                       <Calendar className="w-4 h-4 text-muted-foreground" />
                                       <span className="text-muted-foreground">Awarded:</span>
-                                      <span className="font-medium text-foreground">{formatDate(contract.awardDate)}</span>
+                                      <span className="font-medium text-foreground">{formatContractAwardDate(contract.awardDate)}</span>
                                     </div>
 
-                                    {contract.duration && (
-                                      <div className="flex items-center gap-2 text-sm">
-                                        <Clock className="w-4 h-4 text-muted-foreground" />
-                                        <span className="text-muted-foreground">Duration:</span>
-                                        <span className="font-medium text-foreground">{contract.duration} months</span>
-                                      </div>
-                                    )}
+                                    <div className="flex items-center gap-2 text-sm">
+                                      <Clock className="w-4 h-4 text-muted-foreground" />
+                                      <span className="text-muted-foreground">Duration:</span>
+                                      <span className="font-medium text-foreground">{contract.duration ? `${contract.duration} months` : 'Not reported'}</span>
+                                    </div>
 
                                     <div className="flex items-center gap-2 text-sm">
                                       <DollarSign className="w-4 h-4 text-muted-foreground" />
@@ -373,26 +335,24 @@ export default function ContractsTable() {
                                       <span className="font-medium text-foreground">{formatCurrency(contract.value)}</span>
                                     </div>
 
-                                    {contract.location && (
-                                      <div className="flex items-center gap-2 text-sm">
-                                        <MapPin className="w-4 h-4 text-muted-foreground" />
-                                        <span className="text-muted-foreground">Location:</span>
-                                        <span className="font-medium text-foreground">{contract.location}</span>
-                                      </div>
-                                    )}
+                                    <div className="flex items-center gap-2 text-sm">
+                                      <MapPin className="w-4 h-4 text-muted-foreground" />
+                                      <span className="text-muted-foreground">Location:</span>
+                                      <span className="font-medium text-foreground">{contract.location || 'Not reported'}</span>
+                                    </div>
                                   </div>
 
-                                  {contract.sourceUrl && (
+                                  {safeHttpUrl(contract.sourceUrl) && (
                                     <>
                                       <Separator className="my-3" />
                                       <a
-                                        href={contract.sourceUrl}
+                                        href={safeHttpUrl(contract.sourceUrl)!}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 font-medium transition-colors"
                                       >
                                         <ExternalLink className="w-3.5 h-3.5" />
-                                        View on SAM.gov
+                                        View source award
                                       </a>
                                     </>
                                   )}
@@ -408,21 +368,44 @@ export default function ContractsTable() {
               </TableBody>
             </Table>
           </div>
+          <div className="grid gap-4 p-4 md:hidden">
+            {contracts.map((contract) => {
+              const sourceUrl = safeHttpUrl(contract.sourceUrl)
+              return (
+                <article key={contract.id} className="rounded-lg border p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <h2 className="font-semibold leading-snug">{contract.title}</h2>
+                    <Badge variant="outline">{contract.category.replace('-', ' ')}</Badge>
+                  </div>
+                  <dl className="mt-4 grid grid-cols-[auto_1fr] gap-x-3 gap-y-2 text-sm">
+                    <dt className="text-muted-foreground">Agency</dt><dd>{contract.agency}</dd>
+                    <dt className="text-muted-foreground">Company</dt><dd>{contract.company}</dd>
+                    <dt className="text-muted-foreground">Award</dt><dd>{formatContractAwardDate(contract.awardDate)}</dd>
+                    <dt className="text-muted-foreground">Value</dt><dd>{formatCurrency(contract.value)}</dd>
+                    <dt className="text-muted-foreground">Status</dt><dd>{contract.status || 'Not reported'}</dd>
+                    <dt className="text-muted-foreground">Duration</dt><dd>{contract.duration ? `${contract.duration} months` : 'Not reported'}</dd>
+                    <dt className="text-muted-foreground">Location</dt><dd>{contract.location || 'Not reported'}</dd>
+                  </dl>
+                  {sourceUrl && <a href={sourceUrl} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-1 text-sm text-primary">View source award <ExternalLink className="h-3.5 w-3.5" /></a>}
+                </article>
+              )
+            })}
+          </div>
         </CardContent>
       </Card>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between mt-6 px-1">
+      <div className="mt-6 flex flex-col gap-4 px-1 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-muted-foreground">
           Showing <span className="font-medium text-foreground">{contracts.length}</span> of{' '}
           <span className="font-medium text-foreground">{totalContracts}</span> contracts
         </p>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <Button
             variant="outline"
             size="sm"
             disabled={currentPage <= 1}
-            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            onClick={() => updateUrl({ page: String(Math.max(1, currentPage - 1)) })}
             className="h-9"
           >
             Previous
@@ -435,7 +418,7 @@ export default function ContractsTable() {
             variant="outline"
             size="sm"
             disabled={currentPage >= totalPages}
-            onClick={() => setCurrentPage(prev => prev + 1)}
+            onClick={() => updateUrl({ page: String(currentPage + 1) })}
             className="h-9"
           >
             Next

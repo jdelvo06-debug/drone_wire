@@ -8,18 +8,25 @@ import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 
-export default function ExplainersHeader() {
+export type ExplainerCategoryCounts = Record<string, number>
+
+export function buildExplainerCategories(counts: ExplainerCategoryCounts) {
+  return [
+    { value: 'all', label: 'All Categories', count: Object.values(counts).reduce((sum, count) => sum + count, 0) },
+    { value: 'systems', label: 'Defense Systems', count: counts.systems || 0 },
+    { value: 'threats', label: 'Threat Analysis', count: counts.threats || 0 },
+    { value: 'countermeasures', label: 'Countermeasures', count: counts.countermeasures || 0 },
+    { value: 'policy', label: 'Policy & Strategy', count: counts.policy || 0 },
+    { value: 'concepts', label: 'Core Concepts', count: counts.concepts || 0 },
+  ]
+}
+
+export default function ExplainersHeader({ categoryCounts }: { categoryCounts: ExplainerCategoryCounts }) {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
-  const categories = [
-    { value: 'all', label: 'All Categories', count: 24 },
-    { value: 'systems', label: 'Defense Systems', count: 8 },
-    { value: 'threats', label: 'Threat Analysis', count: 6 },
-    { value: 'countermeasures', label: 'Countermeasures', count: 7 },
-    { value: 'policy', label: 'Policy & Strategy', count: 3 },
-  ]
+  const categories = buildExplainerCategories(categoryCounts)
 
   return (
     <div className="space-y-8">
@@ -43,6 +50,7 @@ export default function ExplainersHeader() {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             type="search"
+            aria-label="Search explainers"
             placeholder="Search explainers..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -56,7 +64,7 @@ export default function ExplainersHeader() {
           <div className="flex items-center space-x-2">
             <Filter className="w-4 h-4 text-muted-foreground" />
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-48">
+              <SelectTrigger className="w-48" aria-label="Filter explainers by category">
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
@@ -80,6 +88,8 @@ export default function ExplainersHeader() {
               variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
               size="sm"
               onClick={() => setViewMode('grid')}
+              aria-label="Grid view"
+              aria-pressed={viewMode === 'grid'}
             >
               <Grid className="w-4 h-4" />
             </Button>
@@ -87,6 +97,8 @@ export default function ExplainersHeader() {
               variant={viewMode === 'list' ? 'secondary' : 'ghost'}
               size="sm"
               onClick={() => setViewMode('list')}
+              aria-label="List view"
+              aria-pressed={viewMode === 'list'}
             >
               <List className="w-4 h-4" />
             </Button>

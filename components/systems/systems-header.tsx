@@ -72,6 +72,7 @@ export default function SystemsHeader({ onSearch, onCategoryChange, onStatusChan
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             type="search"
+            aria-label="Search systems"
             placeholder="Search systems..."
             value={searchTerm}
             onChange={(e) => handleSearchChange(e.target.value)}
@@ -85,7 +86,7 @@ export default function SystemsHeader({ onSearch, onCategoryChange, onStatusChan
           <div className="flex items-center space-x-2">
             <Filter className="w-4 h-4 text-muted-foreground" />
             <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-              <SelectTrigger className="w-44">
+              <SelectTrigger className="w-44" aria-label="Filter systems by category">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
@@ -100,7 +101,7 @@ export default function SystemsHeader({ onSearch, onCategoryChange, onStatusChan
 
           {/* Status Filter */}
           <Select value={selectedStatus} onValueChange={handleStatusChange}>
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-40" aria-label="Filter systems by status">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
@@ -118,6 +119,8 @@ export default function SystemsHeader({ onSearch, onCategoryChange, onStatusChan
               variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
               size="sm"
               onClick={() => setViewMode('grid')}
+              aria-label="Grid view"
+              aria-pressed={viewMode === 'grid'}
             >
               <Grid className="w-4 h-4" />
             </Button>
@@ -125,6 +128,8 @@ export default function SystemsHeader({ onSearch, onCategoryChange, onStatusChan
               variant={viewMode === 'list' ? 'secondary' : 'ghost'}
               size="sm"
               onClick={() => setViewMode('list')}
+              aria-label="List view"
+              aria-pressed={viewMode === 'list'}
             >
               <List className="w-4 h-4" />
             </Button>
