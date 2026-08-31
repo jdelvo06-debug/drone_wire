@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import type { Prisma } from '@prisma/client';
 import { randomUUID } from 'node:crypto';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
@@ -607,20 +608,38 @@ export async function processPendingArticles(limit: number = 25): Promise<Proces
     errors: [],
   };
 
-  // Get articles that need AI processing (skip those that failed too many times)
-  const articles = await prisma.article.findMany({
-    where: {
-      status: 'pending_ai',
-      aiRetryCount: { lt: 5 },
-      aiQuarantinedAt: null,
-      AND: [
-        { OR: [{ aiNextRetryAt: null }, { aiNextRetryAt: { lte: new Date() } }] },
-        { OR: [{ aiProcessingStartedAt: null }, { aiProcessingStartedAt: { lt: new Date(Date.now() - 30 * 60 * 1000) } }] },
-      ],
-    },
-    orderBy: { publishedAt: 'asc' },
-    take: Math.min(Math.max(limit, 1), 50),
+  // Prefer current news, then use the oldest backlog items to fill any room.
+  const selectionTime = new Date();
+  const freshnessCutoff = new Date(selectionTime.getTime() - 30 * 24 * 60 * 60 * 1000);
+  const staleClaimCutoff = new Date(selectionTime.getTime() - 30 * 60 * 1000);
+  const batchLimit = Math.min(Math.max(limit, 1), 50);
+  const eligibleWhere = {
+    status: 'pending_ai',
+    aiRetryCount: { lt: 5 },
+    aiQuarantinedAt: null,
+    AND: [
+      { OR: [{ aiNextRetryAt: null }, { aiNextRetryAt: { lte: selectionTime } }] },
+      {
+        OR: [
+          { aiProcessingStartedAt: null },
+          { aiProcessingStartedAt: { lt: staleClaimCutoff } },
+        ],
+      },
+    ],
+  } satisfies Prisma.ArticleWhereInput;
+
+  const freshArticles = await prisma.article.findMany({
+    where: { ...eligibleWhere, publishedAt: { gte: freshnessCutoff } },
+    orderBy: { publishedAt: 'desc' },
+    take: batchLimit,
   });
+  const articles = freshArticles.length === batchLimit
+    ? freshArticles
+    : freshArticles.concat(await prisma.article.findMany({
+      where: { ...eligibleWhere, publishedAt: { lt: freshnessCutoff } },
+      orderBy: { publishedAt: 'asc' },
+      take: batchLimit - freshArticles.length,
+    }));
 
   logger.debug(`Processing ${articles.length} articles...`);
 
@@ -637,16 +656,7 @@ export async function processPendingArticles(limit: number = 25): Promise<Proces
     const claim = await prisma.article.updateMany({
       where: {
         id: article.id,
-        status: 'pending_ai',
-        aiRetryCount: { lt: 5 },
-        aiQuarantinedAt: null,
-        AND: [
-          { OR: [{ aiNextRetryAt: null }, { aiNextRetryAt: { lte: new Date() } }] },
-          { OR: [
-            { aiProcessingStartedAt: null },
-            { aiProcessingStartedAt: { lt: new Date(Date.now() - 30 * 60 * 1000) } },
-          ] },
-        ],
+        ...eligibleWhere,
       },
       data: { aiProcessingStartedAt: new Date(), aiLastAttemptAt: new Date() },
     });
